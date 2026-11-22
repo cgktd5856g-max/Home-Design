@@ -27,7 +27,7 @@ REST_LIGHTS = os.environ.get('ROOM_LIGHTS', '1') == '1'
 
 W, D, H = 2.10, 3.90, 2.65
 FPS = 30
-DUR = 4.0 if REST else 15.0
+DUR = 4.0 if REST else 15.5
 
 CT, CB, PL = 0.85, 0.81, 0.10            # countertop top, countertop bottom (= carcass top), plinth height
 BD, UD = 0.60, 0.35                      # base depth (to door face), upper depth
@@ -37,7 +37,10 @@ WX0, WX1, WZ0, WZ1 = 0.475, 1.675, 1.05, 2.20     # window opening (far wall)
 BLIND_Z = 1.46                           # blind bottom when lowered
 SINK = (0.73, 1.42, 3.40, 3.80)          # countertop cut-out x0, x1, y0, y1
 DL = [(1.05, 1.45), (1.05, 2.75)]        # downlights
+PSH = [0.16, 0.56, 0.96, 1.36, 1.76, 2.16]   # pull-out pantry shelf heights
 T_ON = 12.45                             # lights switch on
+PO, PB = 12.80, 13.98                    # pull-out pantry: slides out / slides back
+CAPTIONS = [(0.0, 2.6, 'Designing a small kitchen\nin 15 sec'), (14.0, 15.5, 'Comment the room\nyou want next')]
 
 
 # ------------------------------------------------------------------------------------------- the scene
@@ -99,6 +102,12 @@ def materials():
     mat('rug', tex=7, col=srgb(216, 210, 198), col2=srgb(148, 144, 138), p=(1, 0.075))
     mat('board', tex=2, col=srgb(198, 152, 106), p=(2, 6.0))
     mat('soap', col=srgb(236, 234, 228), rough=0.25, f0=0.04, glossy=True)
+    for nm, c in (('can_red', (186, 52, 40)), ('can_green', (58, 128, 72)), ('can_yel', (232, 182, 52)),
+                  ('cer_a', (214, 70, 52)), ('cer_b', (240, 196, 70)), ('cer_c', (62, 118, 188)), ('tea', (52, 96, 70))):
+        mat(nm, col=srgb(*c), rough=0.32, f0=0.04, glossy=True)
+    mat('pasta', tex=3, col=srgb(232, 192, 96), p=(0.25,)); mat('beans', tex=3, col=srgb(118, 70, 42), p=(0.3,))
+    mat('rice', tex=3, col=srgb(240, 237, 228), p=(0.15,)); mat('oil', col=srgb(206, 156, 52), rough=0.08, f0=0.06, glossy=True)
+    mat('bag', tex=3, col=srgb(226, 214, 190), p=(0.12,))
 
 
 def ring_disc(inst, c, r, z0, z1, m, n=28):
@@ -202,11 +211,57 @@ def bowl(inst, x, y, z, r, h, m):
 
 
 def build_cabinets():
-    # tall pantry, white, one door
-    add('pantry', box(0.02, 0.80, PL, BD - 0.018, 1.40, UZ1), 'white_cab')
-    add('pantry', box(0.02, 0.80, 0.0, BD - 0.05, 1.40, PL), 'plinth')
-    add('pantry', box(BD - 0.018, 0.8015, PL + 0.0015, BD, 1.3985, UZ1 - 0.0015), 'white_cab')
-    add('pantry', box(BD, 1.345, 0.98, BD + 0.012, 1.357, 1.38), 'handle')
+    # tall pull-out pantry: the carcass stays, the front and its shelves slide out into the room
+    t = 0.018
+    py0, py1 = 0.80, 1.40
+    add('pantry', box(0.02, py0, PL, BD - t, py0 + t, UZ1), 'white_cab')
+    add('pantry', box(0.02, py1 - t, PL, BD - t, py1, UZ1), 'white_cab')
+    add('pantry', box(0.02, py0, PL, 0.038, py1, UZ1), 'white_in')
+    add('pantry', box(0.02, py0, UZ1 - t, BD - t, py1, UZ1), 'white_cab')
+    add('pantry', box(0.02, py0, PL, BD - t, py1, PL + t), 'white_in')
+    add('pantry', box(0.02, py0, 0.0, BD - 0.05, py1, PL), 'plinth')
+    add('pan_pull', box(BD - t, py0 + 0.0015, PL + 0.0015, BD, py1 - 0.0015, UZ1 - 0.0015), 'white_cab')
+    add('pan_pull', box(BD, py0 + 0.045, 0.98, BD + 0.012, py0 + 0.057, 1.38), 'handle')
+    add('pan_pull', box(0.06, py0 + 0.03, PL + t + 0.01, 0.075, py1 - 0.03, UZ1 - t - 0.01), 'white_in')
+    for z in PSH:
+        add('pan_pull', box(0.075, py0 + 0.03, z, BD - t, py1 - 0.03, z + 0.016), 'white_in')
+        for yy in (py0 + 0.03, py1 - 0.036):
+            add('pan_pull', box(0.075, yy, z + 0.05, BD - t, yy + 0.006, z + 0.058), 'steel_x')
+    for x in (0.075, BD - t - 0.012):
+        for yy in (py0 + 0.03, py1 - 0.042):
+            add('pan_pull', box(x, yy, PL + t + 0.01, x + 0.012, yy + 0.012, UZ1 - t - 0.01), 'steel_x')
+    # pantry contents, one piece per shelf (they fly in once the pantry is out)
+    z = PSH[0] + 0.016
+    for k, yy in enumerate((0.88, 0.99, 1.10)):
+        add('pan_c0', lathe([(0, z), (0.042, z), (0.044, z + 0.24), (0.018, z + 0.30), (0.014, z + 0.33), (0, z + 0.33)], 20, (0.17, yy)), 'oil')
+        add('pan_c0', lathe([(0, z + 0.33), (0.016, z + 0.33), (0.016, z + 0.36), (0, z + 0.36)], 12, (0.17, yy)), 'cap_white')
+    add('pan_c0', rbox((0.42, 1.08, z + 0.15), (0.26, 0.30, 0.30), 0.05, 5), 'bag')
+    add('pan_c0', rbox((0.42, 1.27, z + 0.12), (0.22, 0.12, 0.24), 0.04, 5), 'bag')
+    z = PSH[1] + 0.016
+    for i, xx in enumerate((0.16, 0.28, 0.40, 0.52)):
+        for j, yy in enumerate((0.89, 1.00, 1.11, 1.25)):
+            m = ('can_red', 'can_green', 'can_yel')[(i + j) % 3]
+            add('pan_c1', lathe([(0, z), (0.037, z), (0.038, z + 0.11), (0, z + 0.11)], 18, (xx, yy)), m)
+            add('pan_c1', lathe([(0, z + 0.11), (0.036, z + 0.11), (0.036, z + 0.116), (0, z + 0.116)], 18, (xx, yy)), 'steel')
+    z = PSH[2] + 0.016
+    for i, (xx, fill) in enumerate(((0.17, 'pasta'), (0.30, 'beans'), (0.43, 'rice'), (0.54, 'pasta'))):
+        for yy in (0.92, 1.20):
+            h = 0.22 if yy < 1.0 else 0.17
+            add('pan_c2', lathe([(0, z), (0.055, z), (0.058, z + 0.01), (0.058, z + h), (0.05, z + h + 0.005), (0, z + h + 0.005)], 22, (xx, yy)), 'jar')
+            add('pan_c2', lathe([(0, z + 0.01), (0.052, z + 0.01), (0.052, z + h * 0.8), (0, z + h * 0.8)], 18, (xx, yy)), fill)
+            add('pan_c2', lathe(rprof(0.056, z + h + 0.004, z + h + 0.03, 0.006, 3), 22, (xx, yy)), 'cork')
+    z = PSH[3] + 0.016
+    for i, (xx, m) in enumerate(((0.16, 'cer_a'), (0.30, 'cer_b'), (0.44, 'cer_c'))):
+        add('pan_c3', box(xx - 0.05, 0.85, z, xx + 0.05, 1.06, z + 0.30), m)
+        add('pan_c3', box(xx - 0.05, 1.12, z, xx + 0.05, 1.33, z + 0.27), ('cer_c', 'cer_a', 'cer_b')[i])
+    z = PSH[4] + 0.016
+    for i, xx in enumerate((0.14, 0.24, 0.34, 0.44, 0.54)):
+        for yy in (0.88, 0.98):
+            add('pan_c4', lathe([(0, z), (0.03, z), (0.03, z + 0.10), (0, z + 0.10)], 16, (xx, yy)), 'jar')
+            add('pan_c4', lathe([(0, z + 0.005), (0.027, z + 0.005), (0.027, z + 0.07), (0, z + 0.07)], 14, (xx, yy)), ('beans', 'pasta', 'can_red', 'tea', 'rice')[i])
+            add('pan_c4', lathe([(0, z + 0.10), (0.031, z + 0.10), (0.031, z + 0.125), (0, z + 0.125)], 16, (xx, yy)), 'handle')
+    add('pan_c4', box(0.10, 1.10, z, 0.30, 1.30, z + 0.14), 'tea')
+    add('pan_c4', box(0.34, 1.10, z, 0.54, 1.30, z + 0.16), 'cer_b')
     # west base run
     yA, yB, yC, yD = 1.40, 2.00, 2.70, 3.30
     t = 0.018
@@ -485,7 +540,7 @@ def timeline():
     slide('F2', 1.22, 1.42, (0, 0.64, 0), 1.0, 0.75)
     drop('CL', 1.50, 1.70, 0.55, 0.03, 1.0, 'thud')
     drop('CF', 1.62, 1.82, 0.55, 0.03, 0.9, 'thud')
-    grow('pantry', 1.92, 2.18, 'z', (0, 0, 0), 0.9)
+    sPan = grow('pantry', 1.92, 2.18, 'z', (0, 0, 0), 0.9)
     slide('heater', 2.26, 2.44, (0.30, 0, 0), 1.0, 0.5)
     grow('splash', 2.48, 2.72, 'y', (0, 1.40, 0), 0.6)
 
@@ -567,6 +622,46 @@ def timeline():
     drop('board', 12.04, 12.20, 0.30, 0.04, 0.4)
     tl.custom('led_on', lambda t: (I, t >= T_ON))
     ev(T_ON, 'lights', 0.9, 'chime')
+
+    # finale: the tall cabinet is a hidden pull-out pantry
+    OUT = 0.50
+
+    def pull(t):
+        if t < 1.92:
+            return I, False
+        if t < PO:
+            return sPan(t)[0], True
+        if t < PB:
+            return T(OUT * eob((t - PO) / 0.24, 1.2), 0, 0), True
+        x = OUT * (1 - smooth((t - PB) / 0.22))
+        tau = t - PB - 0.22
+        if tau > 0:
+            x += 0.008 * math.exp(-tau / 0.05) * math.sin(2 * math.pi * tau / 0.12)
+        return T(x, 0, 0), True
+    tl.custom('pan_pull', pull)
+    ev(PO + 0.14, 'pantry_out', 0.7, 'swish')
+    ev(PB + 0.22, 'pantry_in', 1.0, 'thud')
+    camD = np.array(STD['pos'])
+
+    def fill(name, t0, t1):
+        piv = np.array([*cen[name], 1.0])
+
+        def f(t):
+            if t < t0:
+                return I, False
+            Mp = pull(t)[0]
+            pc = (Mp @ piv)[:3]
+            if t < t1:
+                u = (t - t0) / (t1 - t0)
+                off = (1 - eoc(u)) * 0.28 * (camD - pc)
+                s = 0.45 + 0.55 * smooth(u / 0.3)
+                return T(*off) @ about(pc, S(s, s, s)) @ Mp, True
+            s = tl.settle(t - t1, 0.015)
+            return about(pc, S(s, s, s)) @ Mp, True
+        tl.custom(name, f)
+        ev(t1, name, 0.35, 'tick')
+    for k in range(5):
+        fill(f'pan_c{k}', 13.10 + 0.09 * k, 13.28 + 0.09 * k)
     return tl
 
 
