@@ -35,6 +35,22 @@ python3 pipeline/run.py $P/project.py $WORK final --out out/kitchen_build.mp4
 python3 pipeline/qa.py $WORK out/kitchen_build.mp4
 ```
 
+## Photo-real version (Blender Cycles)
+
+The same room file can be rendered in Blender's Cycles engine for a much more realistic look: real
+wood grain, glossy tiles with grout, reflections, a sunbeam through the window and motion blur. It's
+the same animation and is still driven entirely from code.
+
+```bash
+uv venv /root/bpyenv && uv pip install --python /root/bpyenv/bin/python bpy==5.3.0 numpy   # Blender as a Python module
+ROOM_REST=1 /root/bpyenv/bin/python pipeline/blender_render.py rooms/kitchen/project.py /tmp/bl --size 720x1280 --samples 20 --test 0.5,1.5,2.5
+/root/bpyenv/bin/python pipeline/blender_render.py rooms/kitchen/project.py /tmp/bl --fps 25 --size 720x1280 --samples 18 --adaptive 0.04 --bounces 4,2,2 --nobevel
+python3 pipeline/mkvideo_png.py /tmp/bl/frames 25 $WORK/frames.json out/kitchen_build_v2.mp4 1080 1920 $WORK/music.wav
+```
+
+On 4 CPU cores this takes about 35 s per frame; frames where nothing moves are copied. A GPU makes it many
+times faster. Re-running the render command resumes where it stopped.
+
 ## New room
 
 Copy `rooms/kitchen/project.py` and edit it:
