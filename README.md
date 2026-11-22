@@ -12,7 +12,7 @@ why we make originals instead.
 
 - `out/kitchen_build.mp4`: 1080x1920 with original music
 - `out/kitchen_build_sfx_only.mp4`: landing sounds only (add a trending sound in TikTok/IG)
-- `out/kitchen_preview.mp4`: quick low-res preview
+- previews (`out/*_preview*.mp4`) are not committed; regenerate them with `run.py ... preview`
 - `out/kitchen_still.jpg`: stills of the finished room
 
 ## Make a video

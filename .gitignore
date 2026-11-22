@@ -1,0 +1,4 @@
+# low-res previews and in-progress encodes are regenerated on demand; only final videos are committed
+out/*_preview*.mp4
+out/*.tmp.mp4
+__pycache__/
