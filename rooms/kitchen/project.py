@@ -40,7 +40,7 @@ DL = [(1.05, 1.45), (1.05, 2.75)]        # downlights
 PSH = [0.16, 0.56, 0.96, 1.36, 1.76, 2.16]   # pull-out pantry shelf heights
 T_ON = 12.45                             # lights switch on
 PO, PB = 12.80, 13.98                    # pull-out pantry: slides out / slides back
-CAPTIONS = [(0.0, 2.6, 'Designing a small kitchen\nin 15 sec'), (14.0, 15.5, 'Comment the room\nyou want next')]
+CAPTIONS = []                            # no on-screen text in these videos (owner's choice)
 
 
 # ------------------------------------------------------------------------------------------- the scene
