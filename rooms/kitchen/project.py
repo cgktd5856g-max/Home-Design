@@ -417,29 +417,48 @@ LDOWN = (1300.0, 1200.0, 1020.0)
 
 
 def lights(mats4, vis):
+    """Fixed slots (a light that is off has zero radiance) so a light keeps its index across frames (Blender)."""
     Ls = []
     top = WZ1 - 0.01
     if vis.get('blind'):
         top = float((mats4['blind'] @ np.array([1.0, D + 0.03, BLIND_Z - 0.022, 1.0]))[2])
         top = min(max(top, WZ0 + 0.02), WZ1 - 0.01)
-    # sky through the open part of the window (below the blind): shines toward -y
+    off = (0.0, 0.0, 0.0)
+    # 0 sky through the open part of the window (below the blind): shines toward -y
     Ls.append(rect_light((WX0, D + 0.16, WZ0), (WX1 - WX0, 0, 0), (0, 0, top - WZ0), LSKY, always=1))
-    Ls.append(rect_light((0.85, -0.11, 0.0), (0, 0, 2.10), (0.90, 0, 0), LDOOR, always=1))        # faces +y
-    Ls.append(rect_light((W - 0.01, 0.6, 0.9), (0, 0, 1.5), (0, 2.7, 0), LBOUNCE))                 # faces -x
-    if vis.get('blind') and top < WZ1 - 0.03:
-        Ls.append(rect_light((WX0 + 0.01, D + 0.024, top), (WX1 - WX0 - 0.02, 0, 0), (0, 0, WZ1 - 0.01 - top), LBLIND))
-    if vis.get('led_on'):
-        z0, h = BZ + 0.011, 0.022
-        L1 = D - 2 * BW
-        L2 = W - 2 * BW
-        Ls.append(rect_light((BW + 0.007, BW, z0), (0, L1, 0), (0, 0, h), LCOVE))
-        Ls.append(rect_light((W - BW - 0.007, BW, z0), (0, 0, h), (0, L1, 0), LCOVE))
-        Ls.append(rect_light((BW, BW + 0.007, z0), (0, 0, h), (L2, 0, 0), LCOVE))
-        Ls.append(rect_light((BW, D - BW - 0.007, z0), (L2, 0, 0), (0, 0, h), LCOVE))
-        Ls.append(rect_light((0.28, 1.42, UZ0 - 0.007), (0, 1.86, 0), (0.03, 0, 0), LUNDER))
-        for (x, y) in DL:
-            Ls.append(spot_rect((x, y, H - 0.006), (0, 0, -1), 0.05, LDOWN, 4.0))
+    Ls.append(rect_light((0.85, -0.11, 0.0), (0, 0, 2.10), (0.90, 0, 0), LDOOR, always=1))        # 1 faces +y
+    Ls.append(rect_light((W - 0.01, 0.6, 0.9), (0, 0, 1.5), (0, 2.7, 0), LBOUNCE))                 # 2 faces -x
+    blind_on = bool(vis.get('blind')) and top < WZ1 - 0.03
+    Ls.append(rect_light((WX0 + 0.01, D + 0.024, top), (WX1 - WX0 - 0.02, 0, 0), (0, 0, max(WZ1 - 0.01 - top, 0.002)),
+                         LBLIND if blind_on else off))                                              # 3 glow through the blind
+    led = bool(vis.get('led_on'))
+    z0, h = BZ + 0.011, 0.022
+    L1, L2 = D - 2 * BW, W - 2 * BW
+    lc, lu, ld = (LCOVE, LUNDER, LDOWN) if led else (off, off, off)
+    Ls.append(rect_light((BW + 0.007, BW, z0), (0, L1, 0), (0, 0, h), lc))                          # 4-7 cove strips
+    Ls.append(rect_light((W - BW - 0.007, BW, z0), (0, 0, h), (0, L1, 0), lc))
+    Ls.append(rect_light((BW, BW + 0.007, z0), (0, 0, h), (L2, 0, 0), lc))
+    Ls.append(rect_light((BW, D - BW - 0.007, z0), (L2, 0, 0), (0, 0, h), lc))
+    Ls.append(rect_light((0.28, 1.42, UZ0 - 0.007), (0, 1.86, 0), (0.03, 0, 0), lu))                # 8 under-cabinet strip
+    for (x, y) in DL:                                                                               # 9-10 downlights
+        Ls.append(spot_rect((x, y, H - 0.006), (0, 0, -1), 0.05, ld, 4.0))
     return Ls
+
+
+# Blender (Cycles) look: see pipeline/blender_render.py
+BLENDER = dict(
+    exposure=-0.35,
+    look='AgX - Medium High Contrast',
+    sun=dict(dir=(0.12, -0.80, -0.58), strength=26.0, color=(1.0, 0.93, 0.82), angle=1.0),
+    glass=['jar'],
+    bevel={'oakf_x': 0.004, 'oakf_y': 0.004, 'oakf_z': 0.004, 'white_cab': 0.003, 'quartz': 0.003, 'hood': 0.003,
+           'handle': 0.002, 'heater': 0.004, 'sill': 0.003, 'white_in': 0.002, 'birch_x': 0.002, 'birch_y': 0.002},
+    separate=['backdrop'],                 # own object: seen through the window, casts no shadow, lights nothing
+    fill_lights=[1, 2],                    # fake fill: not visible in reflections
+    wood_scale=(55.0, 1.6),                # grain: across, along
+    bake_rect={'backdrop': (-6.0, 8.0, -3.0, 6.0)},
+    bake_px={'backdrop': 0.006, 'floortile': 0.0012, 'marble': 0.0008},
+)
 
 
 # ------------------------------------------------------------------------------------------- timeline
