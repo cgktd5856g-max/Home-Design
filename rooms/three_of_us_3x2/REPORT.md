@@ -1,6 +1,6 @@
 # Three of Us in 3 × 2 m (C1) — render report
 
-**Status:** 15 s cut rendering in Blender (draft report; numbers below are filled in as each stage finishes).
+**Status:** 15 s cut done — `out/three_of_us_3x2_15s.mp4` (music), `out/three_of_us_3x2_15s_sfx_only.mp4`, `out/three_of_us_3x2_still.jpg`. Long cut: timeline written; preview, gates and render next.
 
 ## What I built
 
@@ -55,14 +55,41 @@ dmed 8.8 ok | s10 0.36 OFF (target 0.39) | calm 0.8 s ok | camera 4.84 ok | fb 0
 lum 166 ok | sat 0.24 ok | warm 35.4 ok
 ```
 
-## Final (to fill in)
+## Final 15 s cut
 
-- Render time, hh_metrics on the final, qa.py result.
+- Blender Cycles, 720x1280, 16 spp, adaptive 0.04, bounces 4/2/2, no bevel; 375 frames at about 25 s each =
+  **2 h 24 min** of render (8,632 s for 345 frames after a restart, plus 30 frames before the container slept).
+- Encoded to 1080x1920 with `--grade 1.35,0.03`. Frame brightness check: no black or outlier frames (one flag in a
+  camera swing, a false positive).
+- `qa.py`: 1080x1920 h264 25 fps, AAC 44.1 kHz stereo, 15.0 s. Landing sounds land within about 10 ms of their pieces
+  wherever the onset detector can separate them (dense clusters and chimes with long tails merge in its readout).
+- `hh_metrics.py` on the final:
+
+```
+dmed 8.6 ok | s10 0.36 OFF (0.39) | calm 0.6 s ok | camera 5.72 ok | fb 0.6 s OFF (0.4)
+lum 142 ok | sat 0.30 ok | warm 42.5 ok        (len n/a for a 15 s cut)
+```
+
+Two misses (the brief aims for at most one): the share of clearly changing steps (0.36) and first clear movement
+(0.6 s). Colour lands mid-band: no cream cast, saturation from the filled storage.
 
 ## What I'd improve
 
 - First clear movement is 0.8 s in the measurement (target 0.4 s): frame 1 is mostly white wall around the crib, so
   0.2 s steps change little until the deck lands.
 - The faceless mannequins still read as mannequins; reviewers found them a little cold.
+- A few thin black seams show on the wardrobe's end panel in the last 2 s (overlapping carcass boxes, like the ones I
+  fixed on the window frame and crib).
+- The share of clearly changing 0.2 s steps (0.36) is just under target: the wardrobe-fill stretch (8.6-10.4 s) changes
+  in small, many-piece steps; a faster camera there or bigger single landings would lift it.
+
+## Lessons for next time
+
+- Overlapping boxes (frame members, rails over posts) render black dots or seams in Cycles: build members that butt, never overlap.
+- A small, very bright light that most points can't see (a north-window sun under a deck) speckles the code renderer: mark it always-sampled.
+- Hidden walls leave black void in swings and odd angles: put a white studio box around the set from the start.
+- Choose each station by which way the moving fronts face (drawers facing south need a camera from the south), before modelling.
+- Long detached renders die when the session idles: keep a background until-loop waiter armed for the whole render.
+- Faces of hanging garments seen end-on read as one slab; to read "sparse", hang few short garments parallel to the front.
 - Long cut: the plan's "parent 1 pulls the skinny rail out" is not staged — the parents' rail now runs parallel to the
   front so the bay reads sparse, and the shrug carries the joke on its own.
