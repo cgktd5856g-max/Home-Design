@@ -458,7 +458,9 @@ def build_bed(rng):
 def build_south(rng):
     g = 0.01
     x0, x1, d = SU0, W, SUY
-    add('su_body', box(x0, 0.0, 0.0, x1, d - PNT, PT), 'white_in')
+    for bb in (box(x0, 0.0, 0.0, x1, d - PNT, DKZ - 0.012), box(x0, 0.0, DKZ + 0.462, x1, d - PNT, PT),
+               box(x0, 0.0, DKZ - 0.012, DK0 - 0.012, d - PNT, DKZ + 0.462), box(DK1 + 0.012, 0.0, DKZ - 0.012, x1, d - PNT, DKZ + 0.462)):
+        add('su_body', bb, 'white_in')
     add('su_body', box(x0, 0.0, PT + 0.045, x1, d, H), 'panel')
     add('su_body', box(x0, 0.0, PT + 0.005, x1, d - 0.03, PT + 0.045), 'gapc')
     add('su_body', box(x0, d - PNT - 0.004, 0.0, x1, d - 0.006, 0.05), 'gapc')
@@ -487,8 +489,9 @@ def build_south(rng):
     for b in (box(x0 + g, d - PNT, 1.62, DK0 - g, d, PT), box(DK1 + g, d - PNT, 1.62, x1 - g, d, PT)):
         add('su_side', b, 'panel')
     add('rack', box(DK0, d - PNT, 1.62, DK1, d, PT), 'panel')
-    add('rack', box(DK0 + 0.02, d - 0.26, 1.64, DK1 - 0.02, d - PNT, 1.655), 'birch_x')
-    add('rack', box(DK0 + 0.02, d - 0.26, 1.655, DK1 - 0.02, d - 0.245, 1.72), 'birch_x')
+    add('rack_sh', box(DK0 + 0.02, d - 0.26, 1.64, DK1 - 0.02, d - PNT - 0.01, 1.655), 'birch_x')
+    add('rack_sh', box(DK0 + 0.02, d - 0.26, 1.655, DK1 - 0.02, d - 0.245, 1.72), 'birch_x')
+    add('rack_sh', box(DK0 + 0.02, d - PNT - 0.025, 1.655, DK1 - 0.02, d - PNT - 0.01, 1.69), 'birch_x')
     for xs in (DK0 + 0.03, DK1 - 0.03):
         add('rack_arm', tube([(xs, 0.06, RACK_PZ), (xs, 0.06, RACK_PZ + RACK_R)], 0.008, 8), 'steel')
     books_row('rack_bk', 2.86 - 0.0, 2.93, d - 0.03, 1.655, 0.2, rng, ('bk_sky', 'bk_plum'), axis='x')
@@ -563,15 +566,15 @@ OVH = (P(1.48, 1.80, 2.08, 6.0, -88.5), P(1.48, 1.68, 2.24, -26.0, -88.5))     #
 L1 = (P(1.45, 0.55, 0.85, -22.0, -24.0), P(1.42, 1.40, 0.80, -42.0, -30.0))     # aisle, low: toe-kicks
 L2 = (P(1.62, 1.85, 1.30, -28.0, -24.0), P(1.48, 2.12, 1.22, -34.0, -22.0))     # bed head: the ledge
 L3 = (P(2.20, 0.70, 2.05, -30.0, -45.0), P(2.55, 0.85, 2.05, -40.0, -47.0))     # high over the bed foot: drawers
-L4 = (P(2.05, 1.75, 1.40, 165.0, -40.0), P(2.55, 1.75, 1.40, 180.0, -40.0))     # bench
-L5 = (P(2.40, 1.55, 1.35, 180.0, -22.0), P(2.38, 1.15, 1.10, 180.0, -14.0))     # desk
-L6 = (P(2.38, 1.40, 1.00, 180.0, 20.0), P(2.50, 1.30, 1.05, 186.0, 14.0))       # rack, from the bench
+L4 = (P(2.10, 1.25, 1.75, 175.0, -64.0), P(2.60, 1.20, 1.70, 185.0, -67.0))     # bench
+L5 = (P(2.42, 1.48, 1.26, 180.0, -22.0), P(2.40, 1.16, 1.12, 180.0, -16.0))     # desk
+L6 = (P(2.30, 1.45, 1.20, 178.0, 12.0), P(2.50, 1.32, 1.22, 186.0, 6.0))       # rack, from the bench
 L7 = (P(1.70, 0.95, 1.50, -42.0, -10.0), P(1.75, 1.62, 1.55, -68.0, -8.0))      # aisle, push in on door A
 LS3c = (S3c[0], P(0.66, 1.78, 1.50, -6.0, -9.0))
 LS3e = (LS3c[1], P(0.70, 1.72, 1.45, -55.0, 12.0))                               # back to the top shelf
-LS3d = (P(1.85, 2.05, 2.34, -78.0, -32.0), P(2.25, 1.90, 2.56, -72.0, -40.0))   # dollhouse
+LS3d = (P(2.08, 1.42, 2.38, -62.0, -34.0), P(2.58, 1.22, 2.62, -50.0, -39.0))   # dollhouse
 L9 = (P(1.65, 0.15, 1.55, -10.0, -14.0), P(1.70, 0.60, 1.50, -22.0, -14.0))     # aisle: she walks in
-L10 = (P(1.65, 0.30, 1.55, -55.0, -12.0), P(1.45, 0.45, 1.50, -48.0, -10.0))    # entry: out through the mirror
+L10 = (P(2.10, 0.42, 1.60, -68.0, -14.0), P(1.88, 0.52, 1.55, -60.0, -12.0))    # entry: out through the mirror
 if LONG:
     HOLDS = [(0.0, 3.0, S1), (3.3, 6.2, L1), (6.5, 9.2, L2), (9.5, 13.2, L3), (13.5, 16.2, L4), (16.5, 19.6, L5),
              (19.9, 22.6, L6), (22.9, 26.6, L7), (26.9, 27.45, S3a), (27.45, 27.75, S3b0), (27.75, 28.1, S3b), (28.1, 29.1, LS3c), (29.1, 30.2, LS3e),
@@ -828,6 +831,7 @@ def timeline_15(tl):
     grow('mirror', T_IN['mirror'] - 0.14, T_IN['mirror'], 'z', (0, 0, 0), 0.55, 'thud')
     grow('rack', T_IN['rack'] - 0.14, T_IN['rack'], 'z', (0, 0, 1.62), 0.45, 'thud')
     tl.custom('rack_arm', lambda t: (I, False))
+    appear('rack_sh', 1.4)
     for k in range(3):
         appear(f'rack_box{k}', 1.4)
     for nm in ('rec_lap', 'rec_bk', 'rec_pot', 'rec_pl'):
@@ -1060,7 +1064,7 @@ def timeline_long(tl):
             return 0.0
         if t < 22.0:
             return RACK_A * eob(c01((t - 20.20) / 0.55), 0.3)
-        return RACK_A * (1 - smooth(c01((t - 22.0) / 0.45)))
+        return RACK_A * (1 - smooth(c01((t - 21.95) / 0.45)))
 
     def rack(t):
         if t < T_IN['rack'] - 0.14:
@@ -1068,17 +1072,31 @@ def timeline_long(tl):
         if t < T_IN['rack']:
             u = (t - (T_IN['rack'] - 0.14)) / 0.14
             return about((0, 0, 1.62), S(1, 1, 0.02 + 0.98 * eob(u, 1.0))), True
+        if t < 20.0:
+            a = 0.0
+        elif t < 22.45:
+            a = math.radians(95) * eob(c01((t - 20.0) / 0.30), 0.6)
+        else:
+            u = (t - 22.45) / 0.18
+            a = math.radians(95) * (1 - u * u) if u < 1 else 0.0
+        return about((0, SUY, PT), R('x', a)), True
+    tl.custom('rack', rack)
+
+    def rack_sh(t):
+        if t < 1.4:
+            return I, False
         a = th(t)
         return T(0, RACK_R * math.sin(a), -RACK_R * (1 - math.cos(a))), True
-    tl.custom('rack', rack)
-    ev(T_IN['rack'], 'rack_land', 0.45, 'thud'); ev(20.25, 'rack_down', 0.55, 'swish'); ev(22.47, 'rack_up', 0.7, 'thud')
+    tl.custom('rack_sh', rack_sh)
+    ev(T_IN['rack'], 'rack_land', 0.45, 'thud'); ev(20.05, 'flap_up', 0.45, 'swish'); ev(20.30, 'rack_down', 0.55, 'swish')
+    ev(22.47, 'rack_up', 0.6, 'thud'); ev(22.63, 'flap_shut', 0.7, 'thud')
     tl.custom('rack_arm', lambda t: (about(rp, R('x', -th(t))), 20.15 <= t < 22.5))
     for k in range(3):
-        ride(f'rack_box{k}', tl.anims['rack'], drop=(20.70 + 0.22 * k, 20.88 + 0.22 * k, 0.30))
-    ride('rack_bk', tl.anims['rack'], drop=(21.36, 21.52, 0.25))
+        ride(f'rack_box{k}', tl.anims['rack_sh'], drop=(20.70 + 0.22 * k, 20.88 + 0.22 * k, 0.30))
+    ride('rack_bk', tl.anims['rack_sh'], drop=(21.36, 21.52, 0.25))
     # ---- zone 4b (22.9-26.6) + zone 5 (26.9-33.3): door A, the walk-in, the dollhouse
     hA = (CX, AISLE['doorA'][1], 0)
-    dA = hinge('doorA', hA, 'z', math.radians(92), [(0.78, 1.30), (25.60, 30.2), (34.10, 35.00), (TW + 0.05, WT['doorA'])],
+    dA = hinge('doorA', hA, 'z', math.radians(92), [(0.78, 1.30), (25.60, 30.2), (34.10, 35.80), (TW + 0.05, WT['doorA'])],
                land=(T_IN['doorA'] - 0.14, T_IN['doorA'], 'z', (0, 0, 0)))
     tl.custom('doorA', lambda t: (dA(t)[0], dA(t)[1] and dh(t)))
     ev(T_IN['doorA'], 'doorA_land', 0.55, 'thud')
