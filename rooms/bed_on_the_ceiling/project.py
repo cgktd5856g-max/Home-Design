@@ -80,7 +80,7 @@ def materials():
     mat('throw2', tex=5, col=srgb(214, 200, 176), p=(0, 0.012))
     mat('sofa', tex=6, col=srgb(124, 142, 158))
     mat('sofa_pad', tex=6, col=srgb(132, 150, 166))
-    mat('strap', col=srgb(70, 74, 80), rough=0.7)
+    mat('strap', col=srgb(214, 214, 210), rough=0.7)
     mat('buckle', col=srgb(200, 202, 206), rough=0.25, metal=1)
     mat('sensor', col=srgb(40, 42, 46), rough=0.3, f0=0.04, glossy=True)
     mat('button', col=srgb(242, 242, 240), rough=0.3, f0=0.04, glossy=True)
@@ -274,8 +274,8 @@ def build_bay(rng):
         add(f'post{k}', box(x + PR - 0.004, y - 0.006, 0.14, x + PR + 0.0015, y + 0.006, H - 0.14), 'blackm')
     # crank socket on the front-south post, button pad on the front-north post (1.1 m, facing east)
     x, y = POSTS[1]
-    add('crank', box(x + PR - 0.006, y - 0.035, 1.06, x + PR + 0.018, y + 0.035, 1.14), 'steel_d')
-    add('crank', xform(lathe(rprof(0.016, 0, 0.012, 0.004, 3), 20, (0, 0)), T(x + PR + 0.018, y, 1.10) @ R('y', math.pi / 2)), 'blackm')
+    add('crank', rbox((x + PR + 0.006, y, 1.10), (0.024, 0.06, 0.08), 0.008, 3), 'steel')
+    add('crank', xform(lathe(rprof(0.012, 0, 0.008, 0.003, 3), 20, (0, 0)), T(x + PR + 0.018, y, 1.10) @ R('y', math.pi / 2)), 'steel_d')
     x, y = POSTS[3]
     add('btnpad', rbox((x + PR + 0.008, y, 1.10), (0.022, 0.07, 0.12), 0.008, 3), 'button')
     add('btnpad', xform(lathe(rprof(0.016, 0, 0.007, 0.003, 3), 20, (0, 0)), T(x + PR + 0.019, y, 1.10) @ R('y', math.pi / 2)), 'steel')
@@ -299,8 +299,6 @@ def build_bay(rng):
     # motor box in the top of the north-west tower (unlabelled)
     x0, x1, y0, y1 = TWN
     add('motor', box(x0 + 0.02, y0 + t + 0.005, 2.58, x1 - 0.005, y1 - t - 0.005, H - 0.004), 'white_cab')
-    for k in range(5):
-        add('motor', box(x1 - 0.006, y0 + 0.08 + k * 0.05, 2.62, x1 - 0.001, y0 + 0.10 + k * 0.05, 2.80), 'steel_d')
     # books: a gradient mustard -> ochre -> sage -> slate across the shelves (blank spines)
     grad = ['bk_mustard', 'bk_mustard', 'bk_ochre', 'bk_ochre', 'bk_cream', 'bk_sage', 'bk_sage', 'bk_slate', 'bk_slate', 'bk_white']
     shelf_rows = {'twN': [0, 1, 2, 3, 4, 5, 6], 'twS': [1, 2, 3, 4, 5, 6]}
@@ -452,7 +450,7 @@ def build_desk(rng):
     add('ped_items', box(1.67, 2.56, a + 0.016, 1.83, 2.74, a + 0.030), 'bk_mustard')
     add('ped_items', rbox((1.93, 2.62, a + 0.012), (0.07, 0.07, 0.024), 0.008, 3), 'ceramic')
     add('ped_items', tube([(1.93, 2.62, a + 0.02), (1.97, 2.70, a + 0.02), (1.91, 2.80, a + 0.02)], 0.004, 6), 'cl_white')
-    add('ped_items', box(1.70, 2.80, a, 1.96, 2.90, a + 0.012), 'bk_slate')
+    add('ped_items', box(1.70, 2.80, a, 1.96, 2.90, a + 0.012), 'bk_cream')
     # laptop (lid hinges at its north edge), desk lamp, mug, plant
     lx, ly = 2.40, 2.72
     add('laptop', box(lx - 0.15, ly - 0.105, dz, lx + 0.15, ly + 0.105, dz + 0.012), 'alu')
@@ -505,7 +503,7 @@ def build_wardrobe(rng):
     # south section: long hanging over a shoe pull-out
     add('wr_body', tube([(x0 + 0.29, y0 + 0.03, 2.25), (x0 + 0.29, WRM - 0.03, 2.25)], 0.011, 10), 'steel')
     add('wr_body', box(x0 + 0.04, y0 + t, 0.40, x1 - t, WRM - 0.009, 0.418), 'white_in')
-    for k, m in enumerate(('cl_camel', 'cl_rust', 'cl_cream', 'cl_denim', 'cl_sage', 'cl_navy')):
+    for k, m in enumerate(('cl_camel', 'cl_rust', 'cl_cream', 'cl_denim', 'cl_sage', 'cl_grey')):
         garment('wr_cl', x0 + 0.29, y0 + 0.08 + k * 0.105, 2.25, rng.uniform(1.15, 1.45) if k % 2 else rng.uniform(1.0, 1.25), 0.42, m, along='y')
     # shoe pull-out (x out toward the room)
     sp = 'wr_shoe'
@@ -943,7 +941,7 @@ def timeline_15(tl, kit):
         dict(t=7.74, kind='pose', pose=PRESS),
         dict(t=8.15, kind='walk', to=(1.86, 1.95, -45), pose=LOOKUP),
         dict(t=10.40, kind='pose', pose=LOOKUP),
-        dict(t=10.85, kind='sit', at=(1.62, 2.24, 95), seat=BED_SEAT),
+        dict(t=10.85, kind='sit', at=(1.36, 2.08, 92), seat=BED_SEAT),
     ])
     ev(7.65, 'button', 0.35, 'bip')
     tl.custom('bed_dl', lambda t: (bed_fn(t)[0], 7.85 <= t < T_DN1 + 0.05))
@@ -1361,8 +1359,8 @@ def timeline_long(tl, kit):
         dict(t=30.40, kind='pose', pose=LOOKUP),
         dict(t=30.80, kind='pose', pose='stand'),
         dict(t=32.70, kind='pose', pose='stand'),
-        dict(t=33.40, kind='walk', to=(1.80, 2.22, 95)),
-        dict(t=33.50, kind='sit', at=(1.62, 2.22, 95), seat=BED_SEAT),
+        dict(t=33.40, kind='walk', to=(1.80, 2.08, 92)),
+        dict(t=33.50, kind='sit', at=(1.36, 2.08, 92), seat=BED_SEAT),
         dict(t=37.60, kind='hide'),
         dict(t=41.20, kind='show', at=(2.45, 0.30, 0)),
         dict(t=42.00, kind='walk', to=(2.02, 1.40, 40)),
