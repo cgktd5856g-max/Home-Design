@@ -10,6 +10,9 @@ why we make originals instead.
 
 ## Output
 
+- `out/bedroom_build.mp4`: **11 m² smart bedroom** (Blender), 1080x1920, 32.7 s, original music. Lift-up bed storage,
+  wardrobe towers with a bridge cabinet, desk nook, sliding wardrobe with a mirror door, and a day-to-night lights finale
+- `out/bedroom_build_sfx_only.mp4`: the same with landing sounds only (add a trending sound in TikTok/IG)
 - `out/kitchen_build_v2.mp4`: **photo-real Blender version** with the pull-out pantry finale, 1080x1920, 15.5 s, original music
 - `out/kitchen_build_v2_sfx_only.mp4`: the same with landing sounds only (add a trending sound in TikTok/IG)
 - `out/kitchen_build.mp4` / `_sfx_only.mp4`: version 1 (simple code renderer)
