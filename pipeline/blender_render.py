@@ -12,7 +12,7 @@ usage: <python with bpy> blender_render.py <project.py> <outdir> [options]
   --adaptive X      adaptive-sampling noise threshold (default 0.02)   --bounces M,D,G   max, diffuse, glossy (default 6,3,3)
   --nobevel         skip the bevel shader (faster)
 The project's BLENDER dict tunes the look (exposure, look, sun, glass, bevel, separate, fill_lights, wood_scale,
-bake_rect, bake_px). Frames go to <outdir>/frames/f_0001.png ...; finished frames are skipped on a re-run.
+bake_rect, bake_px, shutter = motion-blur shutter in frames, default 0.5). Frames go to <outdir>/frames/f_0001.png ...; finished frames are skipped on a re-run.
 """
 import importlib.util
 import math
@@ -519,7 +519,7 @@ def main():
     cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0
     sc.render.use_persistent_data = True
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
-    sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5
+    sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = BL.get('shutter', 0.5)
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_depth = '8'
     vs = sc.view_settings
     vs.view_transform = 'AgX'
