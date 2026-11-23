@@ -44,37 +44,37 @@ CAPTIONS = []                                       # no on-screen text
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('ground', tex=3, col=srgb(206, 204, 200), rough=0.8, p=(0.06,))
-    mat('floor', tex=1, col=srgb(216, 190, 156), col2=srgb(200, 172, 136), rough=0.38, f0=0.04, glossy=True, p=(0.16, 1.4))
+    mat('ground', tex=3, col=srgb(236, 235, 233), rough=0.8, p=(0.05,))
+    mat('floor', tex=1, col=srgb(212, 194, 168), col2=srgb(196, 178, 150), rough=0.38, f0=0.04, glossy=True, p=(0.16, 1.4))
     mat('wall', tex=3, col=srgb(243, 243, 241), p=(0.015,))
     mat('ceiling', col=srgb(246, 246, 245))
     mat('white_cab', col=srgb(242, 242, 239), rough=0.45)
     mat('white_in', col=srgb(232, 232, 229))
     mat('plinth', col=srgb(214, 212, 208))
-    wood_mats('oak', srgb(218, 190, 152), seed=3.0)
+    wood_mats('oak', srgb(216, 196, 164), seed=3.0)
     mat('metal', col=srgb(200, 200, 204), rough=0.3, metal=1)
     mat('winframe', col=srgb(236, 236, 236), rough=0.4)
     mat('sill', col=srgb(240, 240, 238), rough=0.25, f0=0.04, glossy=True)
-    mat('duvet', tex=3, col=srgb(198, 154, 92), rough=0.9, p=(0.05,))
+    mat('duvet', tex=3, col=srgb(234, 234, 232), rough=0.9, p=(0.05,))
     mat('sheet', tex=3, col=srgb(244, 244, 242), rough=0.9, p=(0.03,))
     mat('mattress', tex=5, col=srgb(246, 246, 244), p=(0, 0.02))
     mat('pil_white', tex=3, col=srgb(244, 244, 242), rough=0.9, p=(0.04,))
-    mat('pil_blue', tex=6, col=srgb(122, 148, 180))
-    mat('throw', tex=5, col=srgb(108, 136, 172), p=(0, 0.012))
+    mat('pil_blue', tex=6, col=srgb(132, 152, 176))
+    mat('throw', tex=5, col=srgb(124, 146, 172), p=(0, 0.012))
     mat('backdrop', tex=9, emis=(1.35, 1.35, 1.35), p=(1.0, 0.0))
     mat('ceramic', col=srgb(242, 242, 238), rough=0.22, f0=0.04, glossy=True)
     mat('terra', col=srgb(196, 124, 90))
     mat('leaf', col=srgb(64, 112, 60)); mat('leaf2', col=srgb(96, 142, 74))
     mat('seat', tex=6, col=srgb(236, 234, 228))
     mat('bulb', col=(0, 0, 0), emis=(9.0, 7.8, 6.0))
-    mat('led', col=(0, 0, 0), emis=(7.5, 6.6, 5.0))
+    mat('led', col=(0, 0, 0), emis=(14.0, 12.0, 8.5))
     mat('led_off', col=srgb(232, 232, 228))
     mat('shade', col=srgb(244, 240, 232), rough=0.9)
-    mat('shade_on', col=srgb(244, 240, 232), emis=(2.6, 2.1, 1.5))
+    mat('shade_on', col=srgb(244, 240, 232), emis=(4.5, 3.6, 2.4))
     mat('box_linen', tex=3, col=srgb(214, 208, 196), p=(0.06,))
     mat('box_white', col=srgb(240, 240, 238), rough=0.5)
     mat('suitcase', col=srgb(124, 150, 176), rough=0.3, f0=0.05, glossy=True)
-    for nm, c in (('cl_rust', (178, 94, 62)), ('cl_mustard', (214, 168, 68)), ('cl_terra', (198, 126, 92)), ('cl_white', (242, 242, 240)),
+    for nm, c in (('cl_rust', (174, 110, 86)), ('cl_mustard', (206, 178, 112)), ('cl_terra', (198, 126, 92)), ('cl_white', (242, 242, 240)),
                   ('cl_sage', (146, 166, 138)), ('cl_navy', (54, 66, 100)), ('cl_denim', (90, 114, 152)), ('cl_grey', (192, 192, 196))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
     for nm, c in (('bk_sage', (150, 168, 144)), ('bk_white', (240, 238, 232)), ('bk_terra', (194, 116, 84)), ('bk_navy', (56, 68, 102)),
@@ -89,11 +89,29 @@ def disc(inst, c, r, z0, z1, m, n=28):
     add(inst, lathe(rprof(r, z0, z1, min(0.004, (z1 - z0) * 0.45), 3), n, c), m)
 
 
-def garment(inst, x, y, z_top, length, width, m, along='y', thick=0.05):
+def garment(inst, x, y, z_top, length, width, m, along='y', thick=0.05, yaw=0.0):
     """Hanging garment on a rail running along `along` (width is across the rail); a hanger hook on top."""
-    if along == 'y':
-        add(inst, tube([(x - width * 0.45, y, z_top - 0.05), (x, y, z_top), (x + width * 0.45, y, z_top - 0.05)], 0.004, 6), 'metal')
-        add(inst, rbox((x, y, z_top - 0.06 - length / 2), (width, thick, length), 0.018, 3), m)
+    if along == 'y':                                 # a shirt: body, rounded shoulders, two sleeves hanging at its sides
+        add(inst, tube([(x - width * 0.42, y, z_top - 0.07), (x, y, z_top - 0.02), (x + width * 0.42, y, z_top - 0.07)], 0.004, 6), 'metal')
+        add(inst, tube([(x, y, z_top - 0.02), (x, y, z_top + 0.03)], 0.003, 6), 'metal')
+        bw = width * 0.74
+        if yaw:                                      # turned on its hook: build it into a temp piece, then rotate
+            tmp = inst + '__tmp'
+            garment(tmp, x, y, z_top, length, width, m, along, thick)
+            for P_, N_, mi in rk.INST.pop(tmp):
+                rk.ORDER.remove(tmp) if tmp in rk.ORDER else None
+                M = about((x, y, 0), R('z', yaw))
+                Pw = (P_.reshape(-1, 3) @ M[:3, :3].T + M[:3, 3]).reshape(P_.shape)
+                Nw = (N_.reshape(-1, 3) @ M[:3, :3].T).reshape(N_.shape)
+                if inst not in rk.INST:
+                    rk.INST[inst] = []; rk.ORDER.append(inst)
+                rk.INST[inst].append((Pw.astype(np.float32), Nw.astype(np.float32), mi))
+            return
+        add(inst, rbox((x, y, z_top - 0.07 - length / 2), (bw, thick, length), 0.018, 3), m)
+        add(inst, xform(ellipsoid((0, 0, 0), (width * 0.47, thick * 0.55, 0.045), 12), T(x, y, z_top - 0.085)), m)
+        for sg in (-1, 1):
+            c = np.array([x + sg * (bw / 2 + 0.03), y, z_top - 0.09 - length * 0.36])
+            add(inst, xform(rbox(c, (0.075, thick * 0.8, length * 0.72), 0.02, 3), about(c, R('y', -sg * 0.10))), m)
     else:
         add(inst, tube([(x, y - width * 0.45, z_top - 0.05), (x, y, z_top), (x, y + width * 0.45, z_top - 0.05)], 0.004, 6), 'metal')
         add(inst, rbox((x, y, z_top - 0.06 - length / 2), (thick, width, length), 0.018, 3), m)
@@ -302,7 +320,7 @@ def build_platform(rng):
         if k == 0:
             shoe(c, 1.68, yc - 0.0, z0 + 0.012, 'shoe_white'); shoe(c, 1.93, yc, z0 + 0.012, 'shoe_tan')
         else:
-            nn = 3 if k == 1 else 5
+            nn = 6 if k == 1 else 9
             stack(c, 1.66, yc, z0 + 0.012, (0.24, 0.16, 0.06), [('cl_rust', 'cl_mustard', 'cl_white', 'cl_terra', 'cl_rust'),
                                                                ('cl_mustard', 'cl_terra', 'cl_white', 'cl_rust', 'cl_mustard')][k - 1], nn, rng)
             stack(c, 1.93, yc, z0 + 0.012, (0.24, 0.16, 0.06), [('cl_sage', 'cl_navy', 'cl_grey', 'cl_denim', 'cl_sage'),
@@ -323,11 +341,11 @@ def build_platform(rng):
     add(rl, box(1.494, 1.10, 0.45, 1.5, 1.14, 0.60), 'metal')                      # end handle (south end)
     add(rl, box(1.52, 1.06, 0.052, 2.10, 2.44, 0.066), 'white_in')
     for y in (1.065, 2.435):
-        add(rl, box(1.79, y - 0.012, 0.066, 1.83, y + 0.012, 0.90), 'white_in')
+        add(rl, box(1.79, y - 0.012, 0.066, 1.83, y + 0.012, 0.90), 'oak_z')
     add(rl, tube([(1.81, 1.07, 0.88), (1.81, 2.43, 0.88)], 0.011, 10), 'metal')
-    cols = ['cl_navy', 'cl_denim', 'cl_sage', 'cl_grey', 'cl_navy', 'cl_sage', 'cl_terra', 'cl_white', 'cl_mustard', 'cl_rust', 'cl_white', 'cl_terra']
+    cols = ['cl_sage', 'cl_denim', 'cl_terra', 'cl_grey', 'cl_navy', 'cl_white', 'cl_rust', 'cl_sage', 'cl_denim', 'cl_white', 'cl_terra', 'cl_navy']
     for k, m in enumerate(cols):
-        garment('rail_cl', 1.81, 1.14 + k * 0.111, 0.872, rng.uniform(0.62, 0.70), 0.42, m, along='y', thick=0.055)
+        garment('rail_cl', 1.81, 1.14 + k * 0.111, 0.872, rng.uniform(0.62, 0.70), 0.40, m, along='y', thick=0.035)
     # headboard ledge over the bed head (part of the platform) + its things
     wood('ledge', 1.5, 2.86, 1.81, W, D, 1.85, 'oak')
     add('ledge', box(1.5, D - 0.02, 1.80, W, D, 1.81), 'oak_x')
@@ -346,9 +364,9 @@ def build_wardrobe(rng):
     w = 'wr'
     t = 0.02
     add(w, box(0.02, 1.02, 0, 0.51, 1.98, 0.06), 'plinth')
-    for b in (box(0, 1.0, 0.0, t, 2.0, 2.0), box(0, 1.0, 0.0, 0.53, 1.0 + t, 2.0), box(0, 2.0 - t, 0.0, 0.53, 2.0, 2.0),
-              box(0, 1.0, 1.98, 0.53, 2.0, 2.0)):
-        add(w, b, 'white_cab')
+    add(w, box(0, 1.0, 0.0, t, 2.0, 2.0), 'white_cab')
+    wood(w, 0, 1.0, 0.0, 0.53, 1.0 + t, 2.0, 'oak'); wood(w, 0, 2.0 - t, 0.0, 0.53, 2.0, 2.0, 'oak')
+    wood(w, 0, 1.0, 1.98, 0.55, 2.0, 2.0, 'oak')
     add(w, box(t, 1.0 + t, 0.06, 0.53, 2.0 - t, 0.08), 'white_in')
     add(w, box(t, 1.0 + t, 1.78, 0.52, 2.0 - t, 1.795), 'white_in')               # top shelf
     add(w, box(t, 1.0 + t, 0.48, 0.52, 2.0 - t, 0.495), 'white_in')               # shelf over the drawers
@@ -364,10 +382,12 @@ def build_wardrobe(rng):
     for k, yy in enumerate((1.20, 1.42, 1.64, 1.84)):
         stack('wr_dr1_c', 0.29, yy, 0.285 + 0.022, (0.30, 0.18, 0.035), [('cl_white', 'cl_terra', 'cl_mustard'), ('cl_rust', 'cl_white', 'cl_terra'),
                                                                         ('cl_grey', 'cl_navy', 'cl_sage'), ('cl_denim', 'cl_grey', 'cl_white')][k], 3, rng)
-    for k, m in enumerate(('cl_rust', 'cl_white', 'cl_mustard', 'cl_terra', 'cl_white')):
-        garment('wr_cl0', 0.27, 1.88 - k * 0.085, 1.69, rng.uniform(0.85, 1.05), 0.44, m, along='y', thick=0.06)
+    for k, m in enumerate(('cl_rust', 'cl_white', 'cl_terra', 'cl_grey', 'cl_white')):
+        garment('wr_cl0', 0.27, 1.88 - k * 0.085, 1.69, rng.uniform(0.85, 1.05), 0.40, m, along='y', thick=0.035, yaw=0.6)
     for k, m in enumerate(('cl_sage', 'cl_navy', 'cl_grey', 'cl_denim', 'cl_navy')):
-        garment('wr_cl1', 0.27, 1.12 + k * 0.085, 1.69, rng.uniform(0.85, 1.05), 0.44, m, along='y', thick=0.06)
+        garment('wr_cl1', 0.27, 1.12 + k * 0.085, 1.69, rng.uniform(0.85, 1.05), 0.40, m, along='y', thick=0.035, yaw=0.6)
+    for k, (yy, mm) in enumerate(((1.15, 'shoe_white'), (1.42, 'shoe_tan'), (1.69, 'shoe_white'))):
+        shoe('wr_box', 0.25, yy - 0.06, 0.495, mm, 0.0); shoe('wr_box', 0.25, yy + 0.06, 0.495, mm, 0.0)
     for k, y in enumerate((1.25, 1.75)):
         add('wr_box', rbox((0.27, y, 1.795 + 0.09), (0.36, 0.36, 0.18), 0.02, 3), 'box_linen')
     # oak doors: south door hinges at (0.55, 1.0), north door at (0.55, 2.0)
@@ -420,6 +440,7 @@ def build_desk(rng):
     add('desk_nb', box(0.52, 2.72, zt, 0.74, 2.90, zt + 0.014), 'bk_terra')
     add('desk_nb', box(0.55, 2.74, zt + 0.014, 0.73, 2.89, zt + 0.024), 'bk_white')
     plant('desk_pl', 0.45, 3.0, zt, 0.045, 0.07, rng, 8, pot='terra')
+    shoe('slippers', 1.20, 0.30, 0.0, 'shoe_white', 1.45); shoe('slippers', 1.33, 0.32, 0.0, 'shoe_white', 1.62)
     # window shelf at 2.35 m with books and boxes
     wood('wshelf', WX0 - 0.03, 2.88, 2.33, WX1 + 0.03, D, 2.36, 'oak')
     books_row('wsh_bk', 0.20, 2.99, 2.36, 9, rng)
@@ -439,19 +460,20 @@ def build():
 
 # ------------------------------------------------------------------------------------------- camera
 VF_OVER, VF_IN = 48.0, 85.0
-ORB_C = np.array([1.5, 1.85, 1.2])
-ORB_DIST, ORB_PITCH = 9.0, -68.0
-PHI0, RATE = -10.0, 5.0                     # frame-1 orbit angle (camera yaw) and circling speed, degrees / s
+ORB_C = np.array([1.5, 2.05, 1.2])
+ORB_DIST, ORB_PITCH, ORB_PUSH = 8.25, -68.0, 0.12   # metres closer per second during the opening
+PHI0, RATE = -12.0, 6.0                     # frame-1 orbit angle (camera yaw) and circling speed, degrees / s
 
 
 def P(x, y, z, yaw, pitch, vfov=VF_IN):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch, vfov=vfov)
 
 
-def orbit(yaw):
+def orbit(yaw, t=0.0):
+    """Overhead orbit pose at camera yaw; t (s from frame 1) pushes in slowly (negative t = before the loop point)."""
     y, p = math.radians(yaw), math.radians(ORB_PITCH)
     d = np.array([math.sin(y) * math.cos(p), math.cos(y) * math.cos(p), math.sin(p)])
-    return dict(pos=tuple(ORB_C - ORB_DIST * d), yaw=yaw, pitch=ORB_PITCH, vfov=VF_OVER)
+    return dict(pos=tuple(ORB_C - (ORB_DIST - ORB_PUSH * t) * d), yaw=yaw, pitch=ORB_PITCH, vfov=VF_OVER)
 
 
 def mix(a, b, s, sa=None, sv=None, lift=0.0):
@@ -472,26 +494,26 @@ def ease_in_out(u, k=2.0):
 
 # 15 s cut stations
 S2A = (P(1.05, -1.55, 3.05, 14.0, -33.0, VF_OVER), P(0.62, -1.30, 2.92, 20.0, -31.0, VF_OVER))   # low, slow sideways glide
-S2C = P(0.62, 0.30, 1.48, 58.0, -20.0)                                                            # just inside the door
-S3A = (P(1.40, 1.22, 1.40, 270.0, -6.0), P(1.40, 1.62, 1.36, 268.0, -7.0))                        # wardrobe, straight on
-S3B = (P(0.86, 2.52, 1.48, 152.0, -18.0), P(0.98, 2.42, 1.40, 160.0, -17.0))                      # aisle from the window end
-S4 = (P(0.14, 0.14, 2.25, 40.0, -26.0), P(0.24, 0.26, 2.15, 36.0, -24.0))                         # wide from the door corner
+S2C = P(0.45, 0.15, 1.70, 72.0, -34.0)                                                            # just inside the door
+S3A = (P(1.42, 1.25, 1.50, 270.0, 14.0), P(1.42, 1.82, 1.36, 262.0, -8.0))                        # wardrobe, straight on
+S3B = (P(1.12, 0.10, 1.05, 4.0, -12.0, 56.0), P(0.98, 0.42, 0.98, 14.0, -10.0, 56.0))                      # aisle from the window end
+S4 = (P(0.30, 0.25, 2.15, 46.0, -22.0), P(0.85, 0.52, 2.08, 44.0, -17.0))                         # wide from the door corner
 
 
 def segs_15():
-    o_end = orbit(PHI0 + RATE * 4.5)
+    o_end = orbit(PHI0 + RATE * 4.5, 4.5)
     return [
-        (0.0, 4.5, lambda u, t: orbit(PHI0 + RATE * t)),
+        (0.0, 4.5, lambda u, t: orbit(PHI0 + RATE * t, t)),
         (4.5, 5.0, lambda u, t: mix(o_end, S2A[0], smooth(u))),
         (5.0, 6.4, lambda u, t: mix(S2A[0], S2A[1], u)),
         (6.4, 7.0, lambda u, t: mix(S2A[1], S2C, ease_in_out(u, 1.6), sa=smooth(u), sv=smooth(c01((u - 0.25) / 0.75)))),
-        (7.0, 7.3, lambda u, t: mix(S2C, S3A[0], smooth(u), lift=2.0)),
-        (7.3, 8.85, lambda u, t: mix(S3A[0], S3A[1], u)),
-        (8.85, 9.1, lambda u, t: mix(S3A[1], S3B[0], smooth(u), lift=2.0)),
-        (9.1, 10.7, lambda u, t: mix(S3B[0], S3B[1], u)),
-        (10.7, 11.0, lambda u, t: mix(S3B[1], S4[0], smooth(u), lift=2.0)),
-        (11.0, 13.2, lambda u, t: mix(S4[0], S4[1], u)),
-        (13.2, 15.0, lambda u, t: rise(S4[1], orbit(PHI0 + RATE * (t - 15.0)), u)),
+        (7.0, 7.22, lambda u, t: mix(S2C, S3A[0], smooth(u), lift=2.0)),
+        (7.22, 8.75, lambda u, t: mix(S3A[0], S3A[1], u)),
+        (8.75, 8.97, lambda u, t: mix(S3A[1], S3B[0], smooth(u), lift=2.0)),
+        (8.97, 10.95, lambda u, t: mix(S3B[0], S3B[1], u)),
+        (10.95, 11.15, lambda u, t: mix(S3B[1], S4[0], smooth(u), lift=2.0)),
+        (11.15, 12.4, lambda u, t: mix(S4[0], S4[1], u)),
+        (12.4, 15.0, lambda u, t: rise(S4[1], orbit(PHI0 + RATE * (t - 15.0), t - 15.0), u)),
     ]
 
 
@@ -523,28 +545,29 @@ def inside(t):
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (1.25, 1.28, 1.34)
-LSUN = (52000.0, 47000.0, 39000.0)
+LSUN = (48000.0, 46500.0, 43000.0)
 LWIN = (5.0, 5.3, 5.8)
-LFILL = (1.6, 1.6, 1.58)
+LFILL = (1.45, 1.45, 1.43)
 LDOOR = (1.6, 1.58, 1.55)
-LHB = (220.0, 170.0, 110.0)
-LLED = (34.0, 28.0, 19.0)
-LDESK = (110.0, 86.0, 54.0)
+LHB = (380.0, 290.0, 185.0)
+LLED = (80.0, 64.0, 42.0)
+LDESK = (200.0, 156.0, 98.0)
 LWR = (26.0, 23.0, 17.0)
 
 
 def lights(mats4, vis):
     off = (0.0, 0.0, 0.0)
     f = float(mats4['fadekey'][0, 3])          # 0 = camera above the room, 1 = inside under the ceiling
+    dim = 0.8 if vis.get('led_lip') else 1.0   # lamps on: daylight eases down a little so the warm glow reads
 
     def k(L, on, s=1.0):
         return tuple(v * s for v in L) if on else off
     Ls = []
-    Ls.append(rect_light((-8.5, -8.5, 9.0), (0, 20.0, 0), (20.0, 0, 0), k(LSKY, True, 0.22)))                                    # 0 sky (down)
-    Ls.append(spot_rect((0.70, D + 2.2, 2.35), (0.12, -1.0, -0.58), 0.06, k(LSUN, True), 0.0))                         # 1 window beam
+    Ls.append(rect_light((-8.5, -8.5, 9.0), (0, 20.0, 0), (20.0, 0, 0), k(LSKY, True, 0.27 * dim), always=1))                                    # 0 sky (down)
+    Ls.append(spot_rect((0.70, D + 2.2, 2.35), (0.12, -1.0, -0.58), 0.06, k(LSUN, True, dim), 0.0))                         # 1 window beam
     Ls.append(rect_light((WX0, D + 0.11, WZ0), (WX1 - WX0, 0, 0), (0, 0, WZ1 - WZ0), k(LWIN, True), always=1))         # 2 window sky
-    Ls.append(rect_light((0.25, 0.25, CEIL_Z - 0.04), (0, D - 0.5, 0), (W - 0.5, 0, 0), k(LFILL, True, 0.35 + 0.65 * f)))  # 3 fill (down)
-    Ls.append(rect_light((DX0, 0.01, 0.3), (0, 0, 1.7), (DX1 - DX0, 0, 0), k(LDOOR, True, 0.2 + 0.8 * f)))               # 4 door fill (+y)
+    Ls.append(rect_light((0.25, 0.25, CEIL_Z - 0.04), (0, D - 0.5, 0), (W - 0.5, 0, 0), k(LFILL, True, (0.35 + 0.65 * f) * dim), always=1))  # 3 fill (down)
+    Ls.append(rect_light((DX0, 0.01, 0.3), (0, 0, 1.7), (DX1 - DX0, 0, 0), k(LDOOR, True, (0.2 + 0.8 * f) * dim), always=1))               # 4 door fill (+y)
     Ls.append(sphere_light((2.45, 2.98, 2.03), 0.025, k(LHB, vis.get('hb_on'))))                                       # 5 ledge lamp
     Ls.append(rect_light((1.48, 1.02, 0.964), (0, 2.06, 0), (0.012, 0, 0), k(LLED, vis.get('led_lip'))))              # 6 lip LED (down)
     Ls.append(rect_light((1.51, 0.20, 0.70), (0, 0.02, 0), (0.72, 0, 0), k(LLED, vis.get('led_step2'), 0.6)))          # 7 stair LEDs
@@ -554,11 +577,11 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
-    exposure=-0.25,
+    exposure=-0.10,
     look='AgX - Medium High Contrast',
     separate=['backdrop'],
     fill_lights=[3, 4],
-    world=0.05,
+    world=0.30,
     wood_scale=(55.0, 1.6),
     bake_rect={'backdrop': (-6.0, 8.0, -3.0, 6.0), 'floor': (0.0, 3.1, 0.0, 3.0)},
     bake_px={'backdrop': 0.006, 'floor': 0.0015},
@@ -569,12 +592,12 @@ BLENDER = dict(
 def bed_path(B):
     """Bed transform relative to its final (raised) place: drop at B.bed, slide east, ride up on the platform."""
     def f(t):
-        if t < B['bed'] - 0.22:
+        if t < B['bed'] - 0.26:
             return np.eye(4), False
         off = BED_OFF.copy()
-        u = (t - (B['bed'] - 0.22)) / 0.22
+        u = (t - (B['bed'] - 0.26)) / 0.26
         if u < 1:
-            off[2] += 0.9 * (1 - u * u)
+            off[2] += 3.2 * (1 - u * u)
         else:
             tau = t - B['bed']
             off[2] += 0.03 * math.exp(-tau / 0.07) * abs(math.sin(math.pi * tau / 0.11))
@@ -628,10 +651,10 @@ def beats_15():
                 desk_keys=[(3.40, (2.75, 0.48), -90, None), (3.70, (0.90, 0.55), -90, 'smooth'), (3.86, (0.90, 0.55), 0, 'smooth'),
                            (4.16, (1.025, 2.35), 0, ('xy', (2.5, 0.0), (1.0, 0.0))), (4.40, (0.75, 2.85), 0, 'smooth')],
                 wshelf=4.75, legs=(4.95, 5.12), plat=(5.10, 5.90), steps=(5.98, 6.18, 6.38),
-                sdr=[(6.48, 6.92), (6.58, 7.00), (6.68, 7.08)], wr_top=(7.35, 7.60), wd_open=8.00, wr_cl=(8.22, 8.42),
-                wd_close=8.72, rail_out=(9.15, 9.80), rail_back=(10.25, 10.60), ledge=(10.98, 11.14), ledge_bk=11.26,
-                ledge_pl=11.40, hb_lamp=11.54, wsh_bk=11.68, wsh_box=11.82, desk_lamp=11.96, desk_nb=12.06, desk_pl=12.14,
-                on=12.25)
+                sdr=[(6.48, 6.92), (6.58, 7.00), (6.68, 7.08)], wr_top=(7.26, 7.50), wd_open=7.62, wr_cl=(7.84, 8.02),
+                wd_close=8.42, rail_out=(8.95, 9.45), rail_back=(10.55, 10.88), ledge=(11.20, 11.34), ledge_bk=11.44,
+                ledge_pl=11.56, hb_lamp=11.68, wsh_bk=11.78, wsh_box=11.88, desk_lamp=11.96, desk_nb=12.04, desk_pl=12.10,
+                on=12.18, slippers=11.32, chair_out=(12.85, 14.30), ddr=(13.35, 14.20))
 
 
 def timeline():
@@ -647,7 +670,7 @@ def timeline():
         tl.custom(name, lambda t: (I, rule(t)))
 
     cam_vis('ceiling', inside)
-    cam_vis('backdrop', inside)
+    cam_vis('backdrop', lambda t: camera(t)['pos'][2] < 4.0)
     cam_vis('south_up', lambda t: inside(t) and camera(t)['pos'][1] > 0.02)
 
     def fade(t):                                 # light fade value carried by a hidden piece
@@ -754,7 +777,16 @@ def timeline():
             tau = t - tk
             return 0.27 - 0.05 * math.sin(math.pi * tau / 0.12)
         return 0.27 * (1 - smooth((t - tk - 0.12) / 0.25))
-    tl.custom('chair', lambda t: (desk(t)[0] @ T(0, -pull(t), 0), desk(t)[1]))
+    co0, co1 = B['chair_out']
+
+    def pull2(t):                                  # late: the chair rolls out from the desk and back (room in use)
+        if t < co0:
+            return pull(t)
+        if t < co1:
+            return 0.34 * eob(c01((t - co0) / 0.25), 0.6)
+        return 0.34 * (1 - smooth((t - co1) / 0.25))
+    tl.custom('chair', lambda t: (desk(t)[0] @ T(0, -pull2(t), 0), desk(t)[1]))
+    ev(co0 + 0.25, 'chair_out', 0.45, 'clack'); ev(co1 + 0.25, 'chair_in', 0.4, 'clack')
     ev(t_d, 'desk_land', 0.8, 'thud'); ev(tk, 'chair_knock', 0.55, 'bonk')
     ev(B['desk_s'][1], 'desk_clack1', 0.7, 'clack')
     for kk, nm in ((1, 'dc2'), (2, 'dc3'), (3, 'dc4'), (4, 'dc5')):
@@ -766,8 +798,17 @@ def timeline():
     # ---------------- platform grows under the bed; stairs stack; stair drawers pop
     g0, g1 = B['plat']
     pg = lambda t: (about((0, 0, 0), S(1, 1, max(0.002, plat_g(t, g0, g1)))), t >= g0)
-    for nm in ('plat', 'ddr', 'ddr_c'):
-        tl.custom(nm, pg)
+    tl.custom('plat', pg)
+    q0, q1 = B['ddr']
+
+    def ddr(t):                                    # the deep drawer slides out with a suitcase and spare bedding
+        M, v = pg(t)
+        if t < q0:
+            return M, v
+        y = -0.78 * (eob(c01((t - q0) / 0.25), 0.5) if t < q1 else 1 - smooth((t - q1) / 0.22))
+        return T(0, y, 0), True
+    tl.custom('ddr', ddr); tl.custom('ddr_c', ddr)
+    ev(q0 + 0.25, 'ddr_open', 0.5, 'swish'); ev(q1 + 0.22, 'ddr_shut', 0.6, 'clack')
     ev(g0 + 0.05, 'plat_whoosh', 0.4, 'swish'); ev(g1, 'plat_land', 1.0, 'thud')
     for k in range(3):
         ts = B['steps'][k]
@@ -808,10 +849,11 @@ def timeline():
     drop('desk_nb', B['desk_nb'] - 0.14, B['desk_nb'], 0.2, 0.05, 0.3)
     drop('desk_pl', B['desk_pl'] - 0.14, B['desk_pl'], 0.2, 0.06, 0.3)
     on = B['on']
-    for k, (nm, dt) in enumerate((('led_lip', 0.0), ('led_step0', 0.10), ('led_step1', 0.16), ('led_step2', 0.22), ('hb_on', 0.30),
-                                  ('desk_on', 0.40))):
+    for k, (nm, dt) in enumerate((('led_lip', 0.0), ('led_step0', 0.14), ('led_step1', 0.24), ('led_step2', 0.34), ('hb_on', 0.52),
+                                  ('desk_on', 0.70))):
         appear(nm, on + dt)
-    ev(on, 'lights_on', 0.8, 'chime')
+    ev(on, 'lights_on', 0.8, 'chime'); ev(on + 0.52, 'lamp_on', 0.4, 'tick'); ev(on + 0.70, 'desk_on', 0.4, 'tick')
+    drop('slippers', B['slippers'] - 0.16, B['slippers'], 0.3, 0.06, 0.4)
     return tl
 
 
