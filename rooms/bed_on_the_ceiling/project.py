@@ -610,10 +610,10 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-S1 = (P(2.55, 0.12, 1.70, -39.0, -11.0), P(2.30, 0.40, 1.55, -56.0, 8.0))
-S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.75, 1.85, 1.32, 24.0, -18.0))
-S3 = (P(2.26, 0.14, 1.22, -22.0, 15.0), P(2.14, 0.22, 1.00, -28.0, 4.0))
-S4 = (P(1.90, 1.05, 0.85, -34.0, -14.0), S1[0])
+S1 = (P(2.34, 0.12, 1.70, -40.0, -11.0), P(2.18, 0.40, 1.55, -54.0, 8.0))
+S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.75, 1.85, 1.32, 10.0, -18.0))
+S3 = (P(2.30, 0.12, 1.50, -38.0, 12.0), P(2.22, 0.20, 1.15, -44.0, 0.0))
+S4 = (P(2.10, 0.85, 1.05, -38.0, -16.0), S1[0])
 HOLDS = [(0.0, 3.08, S1), (3.3, 7.08, S2), (7.3, 10.78, S3), (11.0, DUR, S4)]
 RIDE = 2                                             # index of the ride hold
 EASE_IN = {0: 0.0}                                   # holds whose glide eases in over the first x seconds
@@ -682,7 +682,7 @@ L_ST = [
     (16.9, 20.1, (P(1.30, 1.50, 1.30, 12.0, -10.0), P(1.85, 1.55, 1.30, 2.0, -10.0))),     # L6 slide toward the window
     (20.4, 23.4, (P(1.55, 1.55, 1.45, 28.0, -14.0), P(2.20, 1.60, 1.45, -12.0, -14.0))),   # L7 orbit behind the chair
     (23.7, 26.8, (P(2.85, 2.85, 2.05, -132.0, -24.0), P(2.62, 2.62, 1.95, -128.0, -20.0))),  # L8 NE corner, push south-west
-    (27.1, 31.0, (P(2.26, 0.14, 1.22, -22.0, 15.0), P(2.14, 0.22, 1.00, -28.0, 4.0))),     # L9 the ride
+    (27.1, 31.0, (P(2.30, 0.12, 1.50, -38.0, 12.0), P(2.22, 0.20, 1.15, -44.0, 0.0))),     # L9 the ride
     (31.3, 34.4, (P(2.20, 0.85, 0.80, -58.0, -12.0), P(2.20, 1.65, 0.80, -100.0, -12.0))), # L10 low slide along the front rail
     (34.7, 37.5, (P(2.30, 1.15, 1.30, -32.0, -14.0), P(2.22, 1.55, 1.25, -50.0, -16.0))),  # L11 orbit round the head end
     (37.8, 40.9, (P(1.15, 0.95, 1.30, 100.0, -6.0), P(1.15, 1.90, 1.30, 78.0, -6.0))),     # L12 facing east, slide north
@@ -866,8 +866,8 @@ def timeline_15(tl, kit):
     land_posts(tl, 1.40, True)
     slide('twN', 1.85, 2.08, (0.55, 0, 0), 1.0, 0.8)
     slide('twS', 1.88, 2.10, (0.55, 0, 0), 1.0, 0.0, 'none')
-    tl.custom('twN_led', lambda t: (I4, t >= 12.32))
-    tl.custom('twS_led', lambda t: (I4, t >= 12.36))
+    tl.custom('twN_led', lambda t: (I4, t >= 12.50))
+    tl.custom('twS_led', lambda t: (I4, t >= 12.55))
     drop('motor', 2.00, 2.15, 0.25, 0.02, 0.45, 'tick')
     cam = np.array(S1[0]['pos'])
     rows = [('twN', s) for s in range(7)] + [('twS', s) for s in (1, 2, 4, 5, 6)]
@@ -880,7 +880,7 @@ def timeline_15(tl, kit):
         drop(f'sofa_lid{k}', 2.74 + 0.08 * k, 2.85 + 0.08 * k, 0.30, 0.05, 0.45, 'thud' if k == 0 else 'none')
     for k in range(3):
         slide(f'pad{k}', 2.55 + 0.05 * k, 2.68 + 0.05 * k, (0.35, 0, 0), 1.0, 0.35, 'tick')
-    for nm in ('sofa_games', 'sofa_throws', 'ot_items', 'rug', 'ns_glow'):
+    for nm in ('sofa_games', 'sofa_throws', 'ot_items', 'rug'):
         tl.custom(nm, lambda t: (I4, False))
     drop('spil0', 2.90, 3.02, 0.30, 0.08, 0.3)
     drop('spil1', 2.96, 3.08, 0.30, 0.08, 0.0, 'none')
@@ -941,7 +941,7 @@ def timeline_15(tl, kit):
         dict(t=7.42, kind='pose', pose='stand'),
         dict(t=7.62, kind='pose', pose=PRESS),
         dict(t=7.74, kind='pose', pose=PRESS),
-        dict(t=8.15, kind='walk', to=(2.04, 1.78, -50), pose=LOOKUP),
+        dict(t=8.15, kind='walk', to=(1.86, 1.95, -45), pose=LOOKUP),
         dict(t=10.40, kind='pose', pose=LOOKUP),
         dict(t=10.85, kind='sit', at=(1.62, 2.24, 95), seat=BED_SEAT),
     ])
@@ -985,8 +985,10 @@ def timeline_15(tl, kit):
     tl.custom('bd_day', lambda t: (S(1, 1, cloud(t)), True))
     ev(12.0, 'cloud', 0.0, 'none')
     appear('rail_led', 12.20); ev(12.20, 'rail_on', 0.6, 'chime')
-    appear('ns_bulb', 12.40); appear('lamp_on', 12.45); ev(12.42, 'lamps_on', 0.4, 'tick')
-    ev(12.32, 'shelf_on', 0.0, 'none')
+    ev(12.50, 'shelf_on', 0.35, 'tick')
+    appear('ns_bulb', 12.80); ev(12.80, 'ns_lamp_on', 0.4, 'tick')
+    appear('lamp_on', 13.10); ev(13.10, 'desk_lamp_on', 0.4, 'tick')
+    appear('ns_glow', 13.40); ev(13.40, 'phone_glow', 0.3, 'bip')
 
 
 def land_posts(tl, t0, fitted):
