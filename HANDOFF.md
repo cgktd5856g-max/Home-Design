@@ -49,6 +49,8 @@ research/             deep research by a separate agent: report.md, next_videos.
 pipeline/
   roomkit.py          scene description: materials, primitives (box, rbox, lathe, tube, ellipsoid, grid_tris), lights
   animkit.py          timeline: drop / slide / fly / grow / from_camera / custom + landing events -> frames.json
+  camkit.py           camera: gliding HOLDS joined by fast swings -> camera(t) (hold_camera)
+  figure.py           stand-in people (adult / child mannequins), posable and animatable
   pt.cpp, dn.cpp      code renderer (CPU path tracer + denoiser): fast previews and probe stills
   run.py              driver for the code renderer: probe | preview | final
   post.py, mkvideo.py, rawio.py   grading + encoding for the code renderer
@@ -220,13 +222,35 @@ index on every frame. Blender keyframes lights by index, so they must never be a
 - Every helper registers a landing event. Event kinds are `thud`, `tick`, `swish` and `chime`; they drive the sounds
   and the camera punch.
 
-**Camera:** `HOLDS = [(t0, t1, (start_pose, end_pose)), …]`.
+**Camera:** `HOLDS = [(t0, t1, (start_pose, end_pose)), …]`, then `camera = hold_camera(HOLDS, VFOV, rest=REST)`
+(`pipeline/camkit.py`).
 - Each shot **glides** from its start pose to its end pose. The hits' camera never stands still.
 - Fast eased swings (about 0.3 s) join the shots; the last move is a whip.
 - `vfov` 85, eye height about 1.3-1.5 m.
 
 **Probe modes:** `ROOM_REST=1` shows the finished room, with the camera stepping through the stations at
 t = 0.5, 1.5, …; add `ROOM_NIGHT=1` for the night version.
+
+**Stand-in people** (`pipeline/figure.py`): a friendly, faceless mannequin in adult (1.68 m, light grey) or child
+(1.15 m, soft peach) size, built from roomkit primitives. Each body segment is its own piece (`mom_torso`,
+`mom_thigh_l`, …), so poses animate as rigid per-piece transforms in both renderers.
+- In `build()`: `mom = fg.figure('mom', 'adult', pose='stand', at=(x, y, yaw))`. `at` puts the pelvis over (x, y),
+  facing `yaw` (the camera convention: 0 = facing +y). The feet land on `floor` (default 0; 0.016 on the bedroom rug),
+  or the figure sits on a surface with `seat=z`.
+- In `timeline()`: `mom.animate(tl, pose=…, at=…, seat=…, visible=…, pop=t)`. Each argument is a constant or a
+  function of t. `pop` scales the figure in from its feet, with a tick sound.
+- Poses are dicts of joint angles in degrees: `spine`, `neck`, `hip_l/r`, `knee_l/r`, `ankle_l/r`, `sh_l/r`,
+  `sh_l/r_out`, `elbow_l/r`, and a few more (see the module docstring).
+  - Presets in `fg.POSES`: `stand`, `sit`, `sit_desk`, `reach_up`, `reach_both`, `step_up`, `crouch`, `wave`, plus
+    `fg.walk_pose(phase)`.
+  - Combine them with `fg.lerp_pose(a, b, u)`, `fg.mirror(p)` (swap left and right) and
+    `fg.track([(t, pose), …])` (eased pose keyframes).
+- `fg.walk([(t, (x, y, yaw)), …], fig)` returns `(pose_fn, at_fn)`. The legs cycle with the distance walked, and
+  the figure stops at each key.
+- `fig.sit_pose(seat_z)` solves a sitting pose for any seat height: feet flat on the floor when the legs reach,
+  otherwise dangling, as for a child on a bed.
+- Contacts are approximate: place the figure clear of furniture and check with a probe still.
+- A step-up foot rises about 0.2 m for an adult and 0.13 m for a child.
 
 ---
 

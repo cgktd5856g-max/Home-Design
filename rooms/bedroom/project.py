@@ -21,6 +21,7 @@ import roomkit as rk
 from roomkit import (srgb, mat, add, box, grid_tris, lathe, rprof, tube, ellipsoid, rbox, T, S, R, about, xform, wood,
                      wood_mats, rect_light, sphere_light, spot_rect)
 from animkit import Timeline, c01, eoc, eob, smooth
+from camkit import hold_camera
 
 REST = os.environ.get('ROOM_REST') == '1'
 REST_NIGHT = os.environ.get('ROOM_NIGHT') == '1'
@@ -538,32 +539,7 @@ SE = (P(1.70, 0.64, 1.50, 0.0, -4.0), P(1.70, 0.98, 1.42, 0.0, -5.0))          #
 HOLDS = [(0.0, 3.62, SA), (3.92, 7.30, SA2), (7.60, 12.40, SB), (12.70, 18.20, SC), (18.50, 26.50, SD), (27.10, DUR, SE)]
 
 
-def lerp_cam(a, b, s, lift=2.0):
-    pa, pb = np.array(a['pos']), np.array(b['pos'])
-    dyaw = (b['yaw'] - a['yaw'] + 180) % 360 - 180
-    return dict(pos=tuple(pa + (pb - pa) * s), yaw=a['yaw'] + dyaw * s,
-                pitch=a['pitch'] + (b['pitch'] - a['pitch']) * s + lift * math.sin(math.pi * s), vfov=VFOV)
-
-
-def glide(st, u):
-    a, b = st
-    return lerp_cam(a, b, c01(u), lift=0.0)
-
-
-def camera(t):
-    if REST:
-        return dict([SA, SA2, SB, SC, SD, SE][min(5, int(t))][0], vfov=VFOV)
-    for i, (t0, t1, st) in enumerate(HOLDS):
-        if t < t1 or i == len(HOLDS) - 1:
-            return glide(st, (t - t0) / (t1 - t0))
-        n0, _, nst = HOLDS[i + 1]
-        if t < n0:
-            u = (t - t1) / (n0 - t1)
-            a, b = glide(st, 1.0), glide(nst, 0.0)
-            if i + 1 == len(HOLDS) - 1:
-                return lerp_cam(a, b, 1 - (1 - c01(u)) ** 3, lift=4.0)
-            return lerp_cam(a, b, smooth(u))
-    return glide(HOLDS[-1][2], 1.0)
+camera = hold_camera(HOLDS, VFOV, rest=REST)      # glide inside each hold, swings between (pipeline/camkit.py)
 
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
