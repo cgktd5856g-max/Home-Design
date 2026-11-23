@@ -97,8 +97,8 @@ def materials():
         mat(nm, col=srgb(*c), rough=0.6)
     mat('basket', tex=6, col=srgb(214, 196, 166))
     mat('swaddle', tex=5, col=srgb(244, 240, 232), p=(0, 0.01))
-    fg.materials(['fig_adult'])
-    mat('fig_p2', col=srgb(150, 172, 206), rough=0.48, f0=0.04)
+    mat('fig_p1', col=srgb(124, 136, 156), rough=0.48, f0=0.04)
+    mat('fig_p2', col=srgb(92, 116, 160), rough=0.48, f0=0.04)
 
 
 # ------------------------------------------------------------------------------------------- helpers
@@ -433,8 +433,8 @@ def build_wardrobe(rng):
     add('wn_c1', rbox((1.86, 0.20, 0.66), (0.10, 0.18, 0.05), 0.015, 3), 'pk_teal')
     add('wn_c1', rbox((1.86, 0.34, 0.655), (0.10, 0.07, 0.04), 0.015, 3), 'pk_coral')
     # wow fills: bay A shelves and bay B rail / shelves (tiny outfits, nappy stacks, baskets)
-    stack('wa_f0', 1.72, 0.14, 1.45, (0.30, 0.14, 0.055), ('pk_white', 'pk_white'), 4, rng)
-    stack('wa_f0', 1.72, 0.33, 1.45, (0.30, 0.14, 0.055), ('pk_white', 'pk_white'), 4, rng)
+    stack('wa_f0', 1.72, 0.14, 1.45, (0.30, 0.14, 0.055), ('pk_coral', 'pk_white'), 4, rng)
+    stack('wa_f0', 1.72, 0.33, 1.45, (0.30, 0.14, 0.055), ('pk_teal', 'pk_sky'), 4, rng)
     add('wa_f1', rbox((1.76, 0.25, 1.75 + 0.09), (0.32, 0.40, 0.18), 0.03, 3), 'basket')
     for k, (m, y) in enumerate((('cl_coral', 0.12), ('cl_sky', 0.20), ('cl_mustard', 0.28), ('cl_teal', 0.36))):
         add('wa_f1', ellipsoid((1.68, y, 1.95), (0.035, 0.03, 0.022), 8), m)
@@ -483,7 +483,7 @@ def build():
     add('cshelf_led', box(0.54, DECK_Y + 0.031, UNDER - 0.011, 1.12, DECK_Y + 0.049, UNDER - 0.001), 'led')
     # the people (faceless mannequins): parent 1 on step 2 beside the crib, parent 2 sitting up on the bed
     global P1, P2
-    P1 = fg.figure('p1', 'adult', pose=P1_POSE(), at=P1_AT, seat=STEP_Z[1], mat='fig_adult')
+    P1 = fg.figure('p1', 'adult', pose=P1_POSE(), at=P1_AT, seat=STEP_Z[1], mat='fig_p1')
     P2 = fg.figure('p2', 'adult', pose=P2_SIT, at=P2_AT, seat=MAT_Z + 0.03, mat='fig_p2')
 
 
@@ -512,12 +512,12 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-P0 = P(1.0, -2.80, 1.40, 0.0, -1.0)
-S1 = (P0, P(0.62, -2.20, 2.05, 5.0, -9.0))                       # hall: crane up + push in, tilting down
-S2 = (P(0.55, -0.85, 2.15, 1.0, -37.0), P(0.95, -0.95, 2.10, 11.0, -35.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
-S3 = (P(-0.85, 0.95, 1.62, 90.0, -8.0), P(-0.78, 0.62, 1.60, 92.0, -8.0))   # wardrobe, full height: slide south
-S4 = (P(1.05, -2.10, 1.18, 3.0, -5.0), P(0.60, -1.98, 1.22, -7.0, -6.0))   # low on the crib + stair: truck left
-S5 = (P(1.0, -3.30, 1.02, 0.0, 3.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
+P0 = P(1.0, -2.05, 1.36, 0.0, -2.0)
+S1 = (P0, P(0.74, -1.35, 1.95, 4.0, -13.0))                       # hall: crane up + push in, tilting down
+S2 = (P(0.62, -0.95, 2.15, -3.0, -37.0), P(0.98, -1.02, 2.10, 9.0, -35.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
+S3 = (P(-1.08, 0.80, 1.62, 89.0, -8.0), P(-0.96, 0.70, 1.60, 91.0, -8.0))   # wardrobe, full height: slide south
+S4 = (P(1.05, -1.75, 1.15, 3.0, -5.0), P(0.62, -1.62, 1.18, -7.0, -6.0))   # low on the crib + stair: truck left
+S5 = (P(1.0, -2.55, 0.98, 0.0, 3.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
 HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (13.25, 15.0, S5)]
 HALL15 = [0, 1, 3, 4]                                                 # hall holds (south wall hidden), others: west wall hidden
 
