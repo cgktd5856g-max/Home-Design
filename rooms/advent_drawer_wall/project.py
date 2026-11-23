@@ -115,7 +115,7 @@ def materials():
                   ('bk_mustard', (222, 176, 70)), ('bk_white', (242, 240, 236)), ('bk_sky', (160, 196, 226)),
                   ('bk_grey', (176, 178, 182))):
         mat(nm, col=srgb(*c), rough=0.6)
-    mat('kid_top', col=srgb(104, 148, 204), rough=0.5, f0=0.04)
+    mat('kid_top', col=srgb(156, 180, 210), rough=0.5, f0=0.04)
     fg.materials()
 
 
@@ -672,11 +672,11 @@ def P(x, y, z, yaw, pitch):
 
 SA = (P(0.20, 0.15, 2.10, 38.0, -18.0), P(0.50, 0.60, 1.60, 28.0, -9.0))       # high doorway corner, craning down
 SB = (P(0.55, 1.05, 1.00, -12.0, 2.0), P(1.55, 1.35, 0.90, 10.0, 4.0))         # the den under the loft
-SC = (P(1.22, 1.12, 0.52, 74.0, -12.0), P(1.12, 1.78, 1.30, 84.0, -17.0))      # tight push up the stair with the ripple
-SC2 = (P(0.55, 1.28, 1.05, 82.0, -10.0), P(0.82, 1.46, 1.00, 87.0, -9.0))       # all 24 open: slow push
-SD = (P(1.24, 0.86, 1.50, 46.0, 9.0), P(1.38, 1.02, 1.62, 40.0, 14.0))        # the child, the top drawer, the star, lights on
-SE = (P(0.80, 1.00, 1.82, 24.0, -15.0), SA[0])                                  # final: drift back into the frame-1 pose
-HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.55, SD), (12.85, DUR_SHORT, SE)]
+SC = (P(1.10, 1.08, 0.62, 74.0, -7.0), P(1.02, 1.70, 1.05, 84.0, -9.0))        # tight push up the stair with the ripple
+SC2 = (P(0.42, 1.30, 0.82, 84.0, -4.0), P(0.70, 1.46, 0.84, 88.0, -4.0))       # all 24 open: slow push, level
+SD = (P(1.02, 0.66, 1.48, 44.0, 8.0), P(1.16, 0.82, 1.58, 39.0, 11.0))        # the child, the top drawer, the star, lights on
+SE = (P(0.42, 0.46, 1.90, 33.0, -15.0), SA[0])                                  # final: drift back into the frame-1 pose
+HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.75, SD), (13.02, DUR_SHORT, SE)]
 HOLDS = HOLDS_SHORT
 
 camera = hold_camera(HOLDS, VFOV, rest=REST)
@@ -684,7 +684,7 @@ camera = hold_camera(HOLDS, VFOV, rest=REST)
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (12.0, 12.4, 13.2)
-LSUN = (26000.0, 24000.0, 20500.0)
+LSUN = (42000.0, 38500.0, 33000.0)
 LFILL = (2.4, 2.4, 2.35)
 LCEIL = (0.6, 0.6, 0.6)
 LTREE = (40.0, 30.0, 17.0)
@@ -745,9 +745,12 @@ def advent_fns(k, cycles, base):
 
     def st(t):
         s = a = h = 0.0
-        for (to, tc, hp) in cycles:
+        g = 0.12
+        for cyc_ in cycles:
+            to, tc, hp = cyc_[:3]
             if t < to:
                 break
+            g = cyc_[3] if len(cyc_) > 3 else 0.12
             if t < tc:
                 s = eoc((t - to) / 0.08)
                 a = eob(c01((t - to - 0.05) / 0.10), 0.6)
@@ -757,27 +760,27 @@ def advent_fns(k, cycles, base):
                 h = (1 - smooth(u / 0.10)) if hp else 0.0
                 a = 1 - smooth((u - (0.07 if hp else 0.0)) / 0.08)
                 s = 1 - smooth((u - (0.14 if hp else 0.07)) / 0.07)
-        return s, a, h
+        return s, a, h, g
 
     def B(t):
         return base(t)
 
     def front(t):
         M0, v = B(t)
-        s, a, h = st(t)
+        s, a, h, g = st(t)
         Rm = R('y', -a * math.pi / 2) if side else R('x', a * math.pi / 2)
         return M0 @ T(*(off * s)) @ about(hinge, Rm), v
 
     def tray(t):
         M0, v = B(t)
-        s, a, h = st(t)
+        s, a, h, g = st(t)
         return M0 @ T(*(off * s)), v
 
     def toyf(t):
         M0, v = B(t)
-        s, a, h = st(t)
+        s, a, h, g = st(t)
         lift = 0.06 * math.sin(math.pi * h)
-        sc = 1 + 0.12 * h
+        sc = 1 + g * h
         return M0 @ T(*(off * s)) @ T(*(hop * h + np.array([0, 0, lift]))) @ about(piv, S(sc, sc, sc)), v
     return front, tray, toyf
 
@@ -819,7 +822,7 @@ def timeline_short(tl):
         t1 = 0.14 + 0.05 * (5 - k)
         drop(f'floor{k}', t1 - 0.14, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
     for i in range(NST):
-        drop(f'stc{i}', 0.34 + 0.07 * i, 0.50 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
+        drop(f'stc{i}', 0.16 + 0.07 * i, 0.32 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
     T_TEASE = 1.02
     T_C = 5.70                                    # cascade start
     STEP = 0.12
@@ -827,13 +830,13 @@ def timeline_short(tl):
     T_CL = T_HOLD_END
     T_KID_OPEN = 11.55
     T_STAR0, T_STAR1 = 11.86, 12.12
-    T_LIGHTS = 12.20
+    T_LIGHTS = 12.15
     for k, d in enumerate(DRAWERS):
         col = d['col']
         base = (lambda t, col=col: tl.anims[f'stc{col}'](t))
         cyc = []
         if k == TEASE:
-            cyc.append((T_TEASE, T_TEASE + 0.52, True))
+            cyc.append((T_TEASE, T_TEASE + 0.52, True, 0.9))
         to = T_C + STEP * k
         tc = T_CL + 0.035 * (23 - k)
         cyc.append((to, tc, True))
