@@ -65,7 +65,7 @@ def materials():
     wood_mats('oak', srgb(214, 188, 154), seed=3.0)
     wood_mats('birch', srgb(228, 208, 174), seed=8.0)
     mat('groove', col=srgb(170, 150, 120))
-    mat('tile', tex=12, col=srgb(172, 194, 168), col2=srgb(226, 230, 222), rough=0.18, f0=0.04, glossy=True,
+    mat('tile', tex=12, col=srgb(172, 190, 170), col2=srgb(226, 230, 222), rough=0.18, f0=0.04, glossy=True,
         p=(0.075, 0.30, 0.0035, 1, 0.0))
     mat('worktop', tex=15, col=srgb(222, 222, 220), col2=srgb(176, 176, 178), rough=0.18, f0=0.045, glossy=True, p=(700.0, 0.86))
     mat('steel', tex=14, col=srgb(206, 207, 211), rough=0.26, metal=1, p=(2,))
@@ -97,7 +97,7 @@ def materials():
     mat('flour', tex=3, col=srgb(244, 242, 236), p=(0.08,))
     mat('oats', tex=3, col=srgb(222, 204, 168), p=(0.2,))
     for nm, c in (('tin_blue', (62, 110, 178)), ('tin_green', (64, 140, 96)), ('tin_yel', (236, 192, 64)),
-                  ('tin_red', (196, 66, 52)), ('teal', (58, 140, 140)), ('pot_blue', (70, 112, 176)),
+                  ('tin_red', (196, 66, 52)), ('teal', (84, 140, 136)), ('pot_blue', (92, 124, 168)),
                   ('bot_b', (64, 128, 196)), ('bot_g', (96, 168, 104)), ('bot_y', (236, 196, 70))):
         mat(nm, col=srgb(*c), rough=0.3, f0=0.04, glossy=True)
     mat('enamel', col=srgb(246, 244, 240), rough=0.22, f0=0.04, glossy=True)
@@ -121,7 +121,7 @@ def materials():
     for nm, c in (('bk_sage', (150, 172, 142)), ('bk_blue', (96, 130, 178)), ('bk_yel', (232, 196, 92)),
                   ('bk_white', (240, 238, 234)), ('bk_grey', (150, 152, 156)), ('bk_teal', (70, 140, 140))):
         mat(nm, col=srgb(*c), rough=0.6)
-    mat('fig_denim', col=srgb(104, 132, 170), rough=0.48, f0=0.04)
+    mat('fig_denim', col=srgb(132, 148, 168), rough=0.48, f0=0.04)
 
 
 # ------------------------------------------------------------------------------------------- helpers
@@ -130,8 +130,9 @@ def disc(inst, c, r, z0, z1, m, n=28):
 
 
 def jar(inst, x, y, z, r, h, fill, lid='cork', frac=0.75):
-    add(inst, lathe([(0, z), (r, z), (r + 0.003, z + 0.01), (r + 0.003, z + h), (r - 0.004, z + h + 0.004), (0, z + h + 0.004)], 22, (x, y)), 'jar')
-    add(inst, lathe([(0, z + 0.008), (r - 0.002, z + 0.008), (r - 0.002, z + h * frac), (0, z + h * frac)], 18, (x, y)), fill)
+    zf = z + h * frac                               # coloured contents up to zf, a pale band of glass above
+    add(inst, lathe([(0, z), (r, z), (r + 0.003, z + 0.01), (r + 0.003, zf), (0, zf)], 22, (x, y)), fill)
+    add(inst, lathe([(0, zf), (r + 0.003, zf), (r + 0.003, z + h), (r - 0.004, z + h + 0.004), (0, z + h + 0.004)], 22, (x, y)), 'jar')
     add(inst, lathe(rprof(r + 0.004, z + h, z + h + 0.025, 0.006, 3), 22, (x, y)), lid)
 
 
@@ -250,12 +251,13 @@ def pillow(inst, c, size, tilt, m):
 def carcass(inst, x0, x1, y0, y1, z0, z1, t=0.018, m='white_in', back=True, top=True, bottom=True):
     """Open-front box (front at y0)."""
     add(inst, box(x0, y0, z0, x0 + t, y1, z1), m); add(inst, box(x1 - t, y0, z0, x1, y1, z1), m)
+    e = 0.0005                                      # panels butt between the sides: no coplanar overlapping faces
     if back:
-        add(inst, box(x0, y1 - t, z0, x1, y1, z1), m)
+        add(inst, box(x0 + t + e, y1 - t, z0 + (t + e if bottom else 0), x1 - t - e, y1, z1 - (t + e if top else 0)), m)
     if bottom:
-        add(inst, box(x0, y0, z0, x1, y1, z0 + t), m)
+        add(inst, box(x0 + t + e, y0 + e, z0, x1 - t - e, y1 - (t + e if back else 0), z0 + t), m)
     if top:
-        add(inst, box(x0, y0, z1 - t, x1, y1, z1), m)
+        add(inst, box(x0 + t + e, y0 + e, z1 - t, x1 - t - e, y1 - (t + e if back else 0), z1), m)
 
 
 # ------------------------------------------------------------------------------------------- shell
@@ -536,9 +538,7 @@ def build_uppers(rng):
     add('hood', box(hx0 + 0.004, 3.08, 1.55, hx1 - 0.004, D - 0.012, 1.72), 'white_cab')
     add('hood', box(hx0 + 0.03, 3.10, 1.548, hx1 - 0.03, D - 0.04, 1.552), 'grille')
     add('hood', box(hx0 + 0.20, 3.07, 1.60, hx1 - 0.20, 3.08, 1.66), 'groove')
-    add('duct', box(1.68, 3.18, 1.72, 1.90, 3.42, UZ1), 'steel_x')
-    for z in (1.98, 2.24):
-        add('duct', box(1.676, 3.176, z, 1.904, 3.424, z + 0.012), 'steel')
+    add('duct', box(1.64, 3.16, 1.72, 1.94, D - 0.012, UZ1), 'white_cab')
     # LED pieces that switch on
     add('led_up', box(XDW[0] + 0.03, UY + 0.03, UZ0 - 0.004, XDW[1] - 0.03, UY + 0.05, UZ0 - 0.001), 'led')
     add('led_up', box(XCOR[0] + 0.03, UY + 0.03, UZ0 - 0.004, XCOR[1] - 0.03, UY + 0.05, UZ0 - 0.001), 'led')
@@ -648,10 +648,15 @@ def build_larder():
         z = 1.70 - k * 0.36
         nm = f'lar_dr{k}'
         x0, x1 = TX + 0.03, W - 0.04
-        add(nm, box(x0, y0, z, x1, y1, z + 0.012), 'white_in')
-        for b in (box(x0, y0, z, x1, y0 + 0.012, z + 0.11), box(x0, y1 - 0.012, z, x1, y1, z + 0.11), box(x1 - 0.012, y0, z, x1, y1, z + 0.11)):
+        add(nm, box(x0 + 0.0165, y0 + 0.0125, z, x1 - 0.0125, y1 - 0.0125, z + 0.012), 'white_in')
+        for b in (box(x0 + 0.0165, y0, z, x1, y0 + 0.012, z + 0.11), box(x0 + 0.0165, y1 - 0.012, z, x1, y1, z + 0.11),
+                  box(x1 - 0.012, y0 + 0.0125, z, x1, y1 - 0.0125, z + 0.11)):
             add(nm, b, 'white_in')
         wood(nm, x0, y0, z, x0 + 0.016, y1, z + 0.13, 'oak')
+        for yy in (y0 - 0.008, y1):
+            add(nm, box(x0 + 0.02, yy, z + 0.03, x1, yy + 0.008, z + 0.05), 'alu')
+        add('room', box(x0 + 0.02, y0 - 0.016, z + 0.03, W - 0.03, y0 - 0.008, z + 0.05), 'alu')
+        add('room', box(x0 + 0.02, y1 + 0.008, z + 0.03, W - 0.03, y1 + 0.016, z + 0.05), 'alu')
         cn = f'lar_c{k}'
         zz = z + 0.012
         if fills[k][0] == 'tins':
@@ -661,7 +666,9 @@ def build_larder():
         else:
             for i, yy in enumerate(np.linspace(y0 + 0.08, y1 - 0.08, 3)):
                 for j, xx in enumerate((x0 + 0.11, x0 + 0.26, x0 + 0.41)):
-                    jar(cn, xx, yy, zz, 0.05, 0.16 + (0.04 if k == 0 else 0.0), fills[k][(i + j) % 2])
+                    hh = (0.13, 0.17, 0.15, 0.19)[(i * 3 + j + k) % 4] + (0.04 if k == 0 else 0.0)
+                    jar(cn, xx, yy, zz, 0.05 if (i + j) % 3 else 0.045, hh, fills[k][(i + j) % 2],
+                        lid=('cork', 'ceramic', 'oak_z')[(i + 2 * j + k) % 3], frac=0.6 + 0.1 * ((i + j + k) % 3))
 
 
 def build_bed(rng):
@@ -762,11 +769,11 @@ def P(x, y, z, yaw, pitch):
 P1 = P(1.95, 0.20, 1.45, -4.0, -4.0)                                                  # frame 1 (and the loop end)
 S1 = (P1, P(1.95, 0.85, 1.40, 4.0, -6.0))                                             # doorway push-in on the birch wall
 S2 = (P(1.80, 1.05, 1.45, -6.0, -6.0), P(2.70, 0.95, 1.45, 16.0, -8.0))                # cooking run, slide east
-S3 = (P(1.05, 0.50, 1.55, 46.0, -15.0), P(1.40, 0.30, 1.48, 40.0, -13.0))             # larder, drawers at ~45 deg
+S3 = (P(1.55, 0.85, 1.55, 53.0, -16.0), P(1.80, 0.72, 1.48, 47.0, -14.0))             # larder, drawers at ~45 deg
 S3B = (P(3.35, 1.35, 1.42, -40.0, -13.0), P(3.22, 1.58, 1.36, -31.0, -11.0))          # the desk, three-quarter
-S4 = (P(1.85, 1.05, 1.45, -14.0, -6.0), P(2.65, 1.25, 1.40, 4.0, -8.0))               # lit run, slide east
+S4 = (P(1.85, 1.05, 1.55, -14.0, -8.0), P(2.55, 1.45, 1.22, 6.0, -3.0))               # lit run, slide east
 S5 = (P(1.95, -0.038, 1.468, -6.93, -3.27), P1)                                       # closing wide, drifts into frame 1
-HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 8.50, S3), (8.72, 10.75, S3B), (11.0, 13.6, S4), (13.9, DUR_CUT, S5)]
+HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 8.36, S3), (8.56, 10.75, S3B), (11.0, 13.6, S4), (13.9, DUR_CUT, S5)]
 if LONG:
     A1 = (P1, P(1.95, 0.88, 1.275, 2.5, -8.0))                                         # the wall opens, the run builds
     A2 = (P(2.45, 1.55, 0.95, 6.0, -14.0), P(1.45, 1.50, 0.95, -6.0, -14.0))          # low slide west: U drawer, dishwasher
@@ -793,7 +800,7 @@ LSKY = (9.0, 9.6, 10.6)
 LSUN = (62000.0, 58500.0, 52000.0)
 LDOOR = (2.2, 2.2, 2.15)
 LBOUNCE = (1.1, 1.1, 1.08)
-LNICHE = (5.0, 5.0, 4.9)
+LNICHE = (3.0, 3.0, 2.95)
 LUP = (95.0, 85.0, 66.0)
 LJAR = (80.0, 71.0, 55.0)
 LHOOD = (800.0, 720.0, 560.0)
@@ -815,7 +822,7 @@ def lights(mats4, vis):
     Ls.append(rect_light((0.2, 0.005, 0.3), (0, 0, 1.9), (1.2, 0, 0), LDOOR, always=1))                       # 2 fill +y
     Ls.append(rect_light((2.6, 0.005, 0.3), (0, 0, 1.9), (1.2, 0, 0), LDOOR))                                 # 3 fill +y
     Ls.append(rect_light((0.005, 0.2, 1.0), (0, 1.8, 0), (0, 0, 1.4), LBOUNCE))                               # 4 fill +x
-    Ls.append(rect_light((KX0 + 0.05, NY + 0.02, UZ1 - 0.004), (W - KX0 - 0.1, 0, 0), (0, 0.24, 0), LNICHE))  # 5 niche (down)
+    Ls.append(rect_light((KX0 + 0.05, NY + 0.02, UZ1 - 0.004), (0, 0.24, 0), (W - KX0 - 0.1, 0, 0), LNICHE))  # 5 niche (down)
     up = vis.get('led_up')
     Ls.append(rect_light((XDW[0] + 0.03, UY + 0.03, UZ0 - 0.005), (0, 0.02, 0), (XDW[1] - XDW[0] - 0.06, 0, 0), k(LUP, up)))   # 6
     Ls.append(rect_light((XCOR[0] + 0.03, UY + 0.03, UZ0 - 0.005), (0, 0.02, 0), (XCOR[1] - XCOR[0] - 0.06, 0, 0), k(LUP, up)))  # 7
@@ -934,11 +941,11 @@ def timeline_15(tl):
     cam_s1 = np.array(S1[0]['pos']); cam_s2 = np.array(S2[0]['pos'])
 
     # ---- the wall folds open (0.10-0.44), the stack slides into the pocket (0.44-0.62); closes 13.75-14.40
-    panels_anim(tl, [(0.10, 0.0, 0.0), (0.42, 90.0, 0.0), (0.46, 90.0, 0.0), (0.64, 90.0, SLIDE_IN),
+    panels_anim(tl, [(0.04, 0.0, 0.0), (0.30, 90.0, 0.0), (0.36, 90.0, 0.0), (0.54, 90.0, SLIDE_IN),
                      (13.95, 90.0, SLIDE_IN), (14.10, 90.0, 0.0), (14.55, 0.0, 0.0)],
-                clacks=[(0.16, 0.55, 140), (0.24, 0.6, 160), (0.32, 0.65, 180), (0.40, 0.7, 200),
+                clacks=[(0.10, 0.55, 140), (0.17, 0.6, 160), (0.24, 0.65, 180), (0.30, 0.7, 200),
                         (14.16, 0.7, 200), (14.29, 0.65, 180), (14.42, 0.6, 160), (14.55, 0.75, 120)])
-    ev(0.64, 'pocket', 0.35, 'swish')
+    ev(0.54, 'pocket', 0.35, 'swish')
     # ---- sage tiles slap onto the back wall right to left (0.30-1.00)
     for i, k in enumerate(range(9, -1, -1)):
         t1 = 0.30 + 0.078 * i
