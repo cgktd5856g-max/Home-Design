@@ -660,14 +660,15 @@ LDEN = (70.0, 60.0, 44.0)
 def lights(mats4, vis):
     off = (0.0, 0.0, 0.0)
     night = bool(vis.get('bd_night'))
+    dim = 0.85 if (not night and vis.get('rlOnA')) else 1.0    # lamps on in daylight (long cut): daylight eases to 85 %
 
     def k(L, on, f=1.0):
         return tuple(v * f for v in L) if on else off
     Ls = []
-    Ls.append(rect_light((-0.16, WY0, WZ0), (0, WY1 - WY0, 0), (0, 0, WZ1 - WZ0), k(LSKY, not night), always=1))          # 0 sky W (+x)
-    Ls.append(rect_light((W + 0.16, WY0, WZ0), (0, 0, WZ1 - WZ0), (0, WY1 - WY0, 0), k(LSKY, not night), always=1))       # 1 sky E (-x)
+    Ls.append(rect_light((-0.16, WY0, WZ0), (0, WY1 - WY0, 0), (0, 0, WZ1 - WZ0), k(LSKY, not night, dim), always=1))          # 0 sky W (+x)
+    Ls.append(rect_light((W + 0.16, WY0, WZ0), (0, 0, WZ1 - WZ0), (0, WY1 - WY0, 0), k(LSKY, not night, dim), always=1))       # 1 sky E (-x)
     sc = np.array([0.0, (WY0 + WY1) / 2, (WZ0 + WZ1) / 2]) - SUN_DIR * 3.0
-    Ls.append(spot_rect(tuple(sc), tuple(SUN_DIR), 0.06, k(LSUN, not night), 0.0))                                       # 2 sun (W)
+    Ls.append(spot_rect(tuple(sc), tuple(SUN_DIR), 0.06, k(LSUN, not night, dim), 0.0))                                  # 2 sun (W)
     Ls.append(rect_light((DX0, -0.4, 0.2), (0, 0, 1.9), (DX1 - DX0, 0, 0), k(LDOOR, True, 0.7 if night else 1.0), always=1))  # 3 +y
     Ls.append(rect_light((0.4, 0.3, H - 0.012), (0, D - 0.6, 0), (W - 0.8, 0, 0), k(LFILL, True, 1.6 if night else 1.0)))     # 4 down
     Ls.append(spot_rect((0.08, 2.95, LZ1 + 0.56), (0.35, 0.0, -1.0), 0.03, k(LRL, vis.get('rlOnA')), 5.0))                # 5
@@ -878,12 +879,12 @@ class Story:
             t1 = t0 + 0.32 + 0.08 * k
             drop(f'floorW{k}', t1 - 0.18, t1, 0.45, 0.05, 0.3 + 0.03 * k, 'tick')
             drop(f'floorE{k}', t1 - 0.18, t1, 0.45, 0.05, 0.0, 'none')
-        grow('loftPosts', t0 + 0.98, t0 + 1.12, 'z', (0, 0, 0), 0.0, 'none')
+        drop('loftPosts', t0 + 0.96, t0 + 1.12, 0.6, 0.02, 0.0, 'none')
         drop('loftDeck', t0 + 1.06, t0 + 1.22, 0.5, 0.03, 1.0, 'thud')
         drop('bedB', t0 + 1.06, t0 + 1.22, 0.5, 0.03, 0.0, 'none')
         self.static_after('denDoor', t0 + 1.06, base=tl.anims['bedB'])
         drop('pivot', t0 + 1.20, t0 + 1.34, 0.6, 0.02, 0.7, 'thud')
-        grow('track', t0 + 1.28, t0 + 1.42, 'x', (CX, 0, 0), 0.35, 'tick')
+        drop('track', t0 + 1.28, t0 + 1.42, 0.25, 0.02, 0.35, 'tick')
         self.wr_land = t0 + 1.55
         slide('ladder', t0 + 1.66, t0 + 1.80, (0.4, 0, 0), 1.0, 0.0, 'none')
         for k in range(4):
@@ -910,8 +911,8 @@ class Story:
                 tl.from_camera(f'bw{r}{g}', tt - 0.16, tt, np.array(F1['pos']), 0.25, 0.35 if r == 0 else 0.0, 'tick' if r == 0 else 'none')
         slide('rlA', t0 + 3.20, t0 + 3.34, (0.25, 0, 0), 1.0, 0.0, 'none')
         slide('rlB', t0 + 3.20, t0 + 3.34, (-0.25, 0, 0), 1.0, 0.35, 'tick')
-        grow('rugA', t0 + 3.40, t0 + 3.60, 'x', (CX - 0.05, 0, 0), 0.4, 'swish')
-        grow('rugB', t0 + 3.40, t0 + 3.60, 'x', (CX + 0.05, 0, 0), 0.0, 'none')
+        drop('rugA', t0 + 3.42, t0 + 3.58, 0.3, 0.02, 0.4, 'thud')
+        drop('rugB', t0 + 3.42, t0 + 3.58, 0.3, 0.02, 0.0, 'none')
         for s in ('A', 'B'):
             self.static_after(f'desk{s}', 0.0)
 
@@ -1084,8 +1085,11 @@ class Story:
         tl.fly('wrBooksB', t0 + gap * 12, t0 + gap * 12 + 0.16, (0, 0.4, 0.03), 0.03, 0.35, 'tick')
 
     def night_beat(self, tn, long=False):
-        self.appear('bd_day', -1.0, tn); self.appear('bd_night', tn)
-        self.tl.ev(tn, 'night', 0.5, 'swish')
+        if long:                                  # long cut: daylight stays at about 85 % while the lamps come on
+            self.appear('bd_night', 99.0)
+        else:
+            self.appear('bd_day', -1.0, tn); self.appear('bd_night', tn)
+            self.tl.ev(tn, 'night', 0.5, 'swish')
         cas = (('rlOnA', 0.35, 0.7), ('ledLoft', 0.60, 0.5), ('lampOnA', 0.80, 0.45), ('rlOnB', 1.25, 0.7), ('lampOnB', 1.25, 0.0),
                ('denLed', 0.95, 0.0), ('dlOn', 1.45, 0.5))
         for nm, dt, s in cas:
@@ -1143,7 +1147,7 @@ class Story:
                                         else bb(t)[0], bb(t)[1] and t < 40.2))
         tl.drop('floorLamp', 33.62, 33.80, 0.4, 0.04, 0.5)
         tl.drop('plushB', 34.10, 34.28, 0.5, 0.12, 0.4)
-        self.night_beat(35.45)
+        self.night_beat(35.45, long=True)
         sitA = dict(pose=LONG_SIT, at=(0.33, 2.55, 90), seat=LZ1 + 0.15)
         sitB = dict(pose=LONG_SIT, at=(3.02, 1.72, 180), seat=BZ1 + 0.15)
         self.kid_track(KID_A, kids['A'] + hk['A'] + [(35.75, 99, dict(sitA, pop=35.75))])

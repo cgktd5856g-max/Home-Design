@@ -462,7 +462,9 @@ def main():
     cobj.rotation_mode = 'QUATERNION'
     key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
     vfs = [P.camera(f / fps).get('vfov', 85.0) for f in range(nfr)]
-    if max(vfs) - min(vfs) > 1e-6:                 # the lens changes during the clip (e.g. widening for an overhead)
+    # Optional per-frame field of view: a project's camera(t) may return a different 'vfov' per frame (e.g. a wider lens
+    # for an overhead). Only then are lens keyframes added; a constant vfov renders exactly as before.
+    if max(vfs) - min(vfs) > 1e-6:
         for f, v in enumerate(vfs):
             cam.angle_y = math.radians(v)
             cam.keyframe_insert('lens', frame=f + 1)
