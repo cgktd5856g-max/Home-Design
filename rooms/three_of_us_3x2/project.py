@@ -81,7 +81,7 @@ def materials():
     mat('led_off', col=srgb(232, 230, 224))
     mat('bulb', col=(0, 0, 0), emis=(9.0, 7.4, 5.2))
     mat('nl_shell', col=srgb(246, 242, 234), rough=0.3, f0=0.04, glossy=True)
-    mat('nl_glow', col=(0, 0, 0), emis=(3.2, 2.4, 1.5))
+    mat('nl_glow', col=(0, 0, 0), emis=(8.0, 6.0, 3.6))
     mat('phone', col=srgb(20, 20, 22), rough=0.08, f0=0.05, glossy=True)
     mat('mon_glow', col=(0, 0, 0), emis=(0.55, 0.62, 0.70))
     for nm, c in (('cl_coral', (232, 128, 104)), ('cl_teal', (56, 150, 148)), ('cl_mustard', (224, 172, 58)),
@@ -97,7 +97,7 @@ def materials():
         mat(nm, col=srgb(*c), rough=0.6)
     mat('basket', tex=6, col=srgb(214, 196, 166))
     mat('swaddle', tex=5, col=srgb(244, 240, 232), p=(0, 0.01))
-    fg.materials(['fig_sage'])
+    fg.materials(['fig_adult'])
     mat('fig_p2', col=srgb(150, 172, 206), rough=0.48, f0=0.04)
 
 
@@ -447,11 +447,15 @@ def build_wardrobe(rng):
         mats_ = [('cl_sky', 'cl_white', 'cl_coral'), ('cl_teal', 'cl_mustard', 'cl_white'), ('cl_lilac', 'cl_sky', 'cl_coral')][k]
         stack(f'wb_f{k}', 1.70, 0.63, z, (0.26, 0.20, 0.04), mats_, 4, rng)
         stack(f'wb_f{k}', 1.70, 0.87, z, (0.26, 0.20, 0.04), mats_[::-1], 4, rng)
+    add('wb_f3', rbox((1.76, 0.63, 0.218 + 0.13), (0.30, 0.21, 0.26), 0.03, 3), 'basket')
+    add('wb_f3', rbox((1.76, 0.87, 0.218 + 0.13), (0.30, 0.21, 0.26), 0.03, 3), 'basket')
+    for k, (m, y) in enumerate((('cl_coral', 0.58), ('cl_sky', 0.68), ('cl_teal', 0.82), ('cl_mustard', 0.92))):
+        add('wb_f3', ellipsoid((1.66, y, 0.49), (0.04, 0.035, 0.025), 8), m)
     # bay C: one skinny end-on rail (runner + five adult garments) that slides out toward -x
     c = 'wr_rail'
     add(c, tube([(1.79, 1.0 + t, 1.95), (1.79, DECK_Y - t, 1.95)], 0.009, 10), 'pgrey')
-    for k, m in enumerate(('cl_navy', 'cl_denim', 'cl_grey', 'cl_navy')):
-        garment(c, 1.79, 1.12 + k * 0.07, 1.95, 0.78 + 0.05 * (k % 2), 0.38, m, along='y')
+    for k, m in enumerate(('cl_navy', 'cl_denim', 'cl_grey')):
+        garment(c, 1.79, 1.16 + k * 0.08, 1.95, 0.58 + 0.04 * (k % 2), 0.38, m, along='y')
 
 
 # ------------------------------------------------------------------------------------------- bridge cabinet over the door
@@ -479,7 +483,7 @@ def build():
     add('cshelf_led', box(0.54, DECK_Y + 0.031, UNDER - 0.011, 1.12, DECK_Y + 0.049, UNDER - 0.001), 'led')
     # the people (faceless mannequins): parent 1 on step 2 beside the crib, parent 2 sitting up on the bed
     global P1, P2
-    P1 = fg.figure('p1', 'adult', pose=P1_POSE(), at=P1_AT, seat=STEP_Z[1], mat='fig_sage')
+    P1 = fg.figure('p1', 'adult', pose=P1_POSE(), at=P1_AT, seat=STEP_Z[1], mat='fig_adult')
     P2 = fg.figure('p2', 'adult', pose=P2_SIT, at=P2_AT, seat=MAT_Z + 0.03, mat='fig_p2')
 
 
@@ -510,10 +514,10 @@ def P(x, y, z, yaw, pitch):
 
 P0 = P(1.0, -2.80, 1.40, 0.0, -1.0)
 S1 = (P0, P(0.62, -2.20, 2.05, 5.0, -9.0))                       # hall: crane up + push in, tilting down
-S2 = (P(0.58, -1.05, 2.35, 2.0, -36.0), P(0.98, -1.15, 2.30, 11.0, -34.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
+S2 = (P(0.55, -0.85, 2.15, 1.0, -37.0), P(0.95, -0.95, 2.10, 11.0, -35.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
 S3 = (P(-0.85, 0.95, 1.62, 90.0, -8.0), P(-0.78, 0.62, 1.60, 92.0, -8.0))   # wardrobe, full height: slide south
-S4 = (P(1.05, -1.85, 1.12, 3.0, -5.0), P(0.55, -1.72, 1.16, -8.0, -6.0))   # low on the crib + stair: truck left
-S5 = (P(1.42, -3.15, 1.05, -7.0, 2.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
+S4 = (P(1.05, -2.10, 1.18, 3.0, -5.0), P(0.60, -1.98, 1.22, -7.0, -6.0))   # low on the crib + stair: truck left
+S5 = (P(1.0, -3.30, 1.02, 0.0, 3.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
 HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (13.25, 15.0, S5)]
 HALL15 = [0, 1, 3, 4]                                                 # hall holds (south wall hidden), others: west wall hidden
 
@@ -534,7 +538,7 @@ def wall_mode(t):
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (9.0, 9.6, 10.6)
 LDUSK = (9.6, 8.0, 8.6)
-LSUN = (52000.0, 47000.0, 39000.0)
+LSUN = (38000.0, 34000.0, 28500.0)
 LHALL = (1.15, 1.12, 1.06)
 LWEST = (1.10, 1.07, 1.02)
 LCEIL = (0.55, 0.54, 0.52)
@@ -542,8 +546,8 @@ LUNDER = (0.45, 0.43, 0.40)
 LHALLTOP = (0.8, 0.78, 0.75)
 LREAD = (900.0, 760.0, 540.0)
 LTREAD = (80.0, 68.0, 48.0)
-LSHELF = (70.0, 60.0, 44.0)
-LNIGHT = (14.0, 10.0, 6.0)
+LSHELF = (150.0, 128.0, 94.0)
+LNIGHT = (45.0, 32.0, 18.0)
 T_DUSK = 11.10
 
 
@@ -680,7 +684,15 @@ def timeline_15(tl):
     tl.custom('wall_W', lambda t: (I, wall_mode(t) == 'hall'))
 
     # ================= S1 hall (0.0-3.2): crib, planks, posts, DECK SLAM, crib-bay shelf, crib parks, bed
-    crib_land = drop('crib', -0.06, 0.26, 1.1, 0.08, 0.6, 'thud')
+    OFF0 = np.array([0.10, -1.9, 0.75])                              # starts big, near the lens, and lands at 0.26 s
+
+    def crib_land(t, t0=-0.16, t1=0.26):
+        u = (t - t0) / (t1 - t0)
+        if u < 1:
+            return T(*((1 - eoc(u)) * OFF0 + np.array([0, 0, 0.18 * math.sin(math.pi * u)]))), True
+        tau = t - t1
+        return T(0, 0, 0.04 * math.exp(-tau / 0.09) * abs(math.sin(math.pi * tau / 0.13))), True
+    ev(0.26, 'crib', 0.6, 'thud')
 
     def crib_y(t):
         if t < 1.40:
@@ -705,8 +717,7 @@ def timeline_15(tl):
         M, v = crib_land(t)
         return T(0, crib_y(t), 0) @ crib_extra(t) @ M, v
     tl.custom('crib', crib)
-    mat_drop = drop('crib_mat', 0.28, 0.40, 0.30, 0.05, 0.4, 'pip')
-    tl.custom('crib_mat', lambda t: (T(0, crib_y(t), 0) @ crib_extra(t) @ mat_drop(t)[0], mat_drop(t)[1]))
+    tl.custom('crib_mat', crib)                                      # the sky sheet rides in with the crib
     ev(1.75, 'crib_park', 0.5, 'roll'); ev(11.90, 'crib_night', 0.5, 'roll')
     for k in range(6):                                               # far to near (band 5 is the north end)
         t1 = 0.16 + 0.06 * (5 - k)
@@ -786,16 +797,16 @@ def timeline_15(tl):
     body = slide('wr_body', 7.36, 7.70, (0.47, 0, 0), 0.8, 0.85, 'thud')
     for nm in ('wr_topA', 'wr_step'):
         tl.custom(nm, body)
-    hinge('wr_dA', (WR_X, 0.0, 0), 'z', math.radians(98), 8.22, 10.45, base=body, t_appear=7.36)
-    hinge('wr_dB', (WR_X, 0.5, 0), 'z', math.radians(96), 8.28, 10.50, base=body, t_appear=7.36)
-    hinge('wr_dC', (WR_X, 1.0, 0), 'z', math.radians(94), 7.82, 10.55, base=body, t_appear=7.36)
-    ev(8.32, 'doors_open', 0.5, 'swish'); ev(10.73, 'doors_shut', 0.85, 'thud')
+    hinge('wr_dA', (WR_X, 0.0, 0), 'z', math.radians(98), 8.22, 10.60, base=body, t_appear=7.36)
+    hinge('wr_dB', (WR_X, 0.5, 0), 'z', math.radians(96), 8.28, 10.64, base=body, t_appear=7.36)
+    hinge('wr_dC', (WR_X, 1.0, 0), 'z', math.radians(94), 7.82, 10.68, base=body, t_appear=7.36)
+    ev(8.32, 'doors_open', 0.5, 'swish'); ev(10.86, 'doors_shut', 0.85, 'thud')
 
     tl.custom('wr_rail', body)                   # the parents' skinny rail stays in: their bay is the sparse one
     ev(7.92, 'bayC_bwomp', 0.6, 'bwomp')
-    fills = ['wb_cl0', 'wa_f0', 'wb_cl1', 'wb_f0', 'wb_cl2', 'wa_f1', 'wb_cl3', 'wb_f1', 'wb_cl4', 'wa_f2', 'wb_cl5', 'wb_f2']
+    fills = ['wb_cl0', 'wa_f0', 'wb_cl1', 'wb_f0', 'wb_cl2', 'wa_f1', 'wb_cl3', 'wb_f1', 'wb_cl4', 'wa_f2', 'wb_cl5', 'wb_f2', 'wb_f3']
     for i, nm in enumerate(fills):
-        t1 = 8.46 + 0.06 * i
+        t1 = 8.42 + 0.058 * i
         if nm.startswith('wb_cl'):
             fly(nm, t1 - 0.12, t1, (-0.35, 0, 0.05), 0.04, 0.3, 'pip')
         else:
@@ -803,23 +814,23 @@ def timeline_15(tl):
     fpiv = (WR_X + 0.04, 0, 0.902)
 
     def flap_ang(t):
-        if t < 9.05:
+        if t < 9.30:
             return 0.0
-        if t < 10.25:
-            return -math.radians(90) * min(1.0, eob(c01((t - 9.05) / 0.26), 0.4))
-        return -math.radians(90) * (1 - smooth(c01((t - 10.25) / 0.20)))
+        if t < 10.40:
+            return -math.radians(90) * min(1.0, eob(c01((t - 9.30) / 0.24), 0.4))
+        return -math.radians(90) * (1 - smooth(c01((t - 10.40) / 0.18)))
 
     def flap(t):
         return body(t)[0] @ about(fpiv, R('y', flap_ang(t))), t >= 7.36
     tl.custom('wr_flap', flap)
-    ev(9.25, 'flap_down', 0.6, 'thud')
-    md = drop('wr_mat', 9.36, 9.50, 0.25, 0.05, 0.4, 'pip')
-    tl.custom('wr_mat', lambda t: (flap(t)[0] @ about(fpiv, R('y', math.radians(90))) @ md(t)[0], md(t)[1] and t < 10.27))
-    fn = drawer_fn(7.36, 9.60, 10.05, (-0.40, 0, 0), base=body)
+    ev(9.48, 'flap_down', 0.6, 'thud')
+    md = drop('wr_mat', 9.56, 9.68, 0.25, 0.05, 0.4, 'pip')
+    tl.custom('wr_mat', lambda t: (flap(t)[0] @ about(fpiv, R('y', math.radians(90))) @ md(t)[0], md(t)[1] and t < 10.42))
+    fn = drawer_fn(7.36, 9.78, 10.22, (-0.40, 0, 0), base=body)
     tl.custom('wr_nap', fn)
-    ev(9.68, 'nap_open', 0.4, 'swish'); ev(10.22, 'nap_shut', 0.7, 'thud')
-    drop('wn_c0', 9.70, 9.82, 0.18, 0.05, 0.3, 'pip', parent=fn)
-    drop('wn_c1', 9.84, 9.96, 0.16, 0.05, 0.3, 'pip', parent=fn)
+    ev(9.86, 'nap_open', 0.4, 'swish'); ev(10.39, 'nap_shut', 0.7, 'thud')
+    drop('wn_c0', 9.88, 9.98, 0.18, 0.05, 0.3, 'pip', parent=fn)
+    drop('wn_c1', 10.00, 10.10, 0.16, 0.05, 0.3, 'pip', parent=fn)
 
     # ================= S4 hall wide (11.0-15.0): dusk, crib rolls out, parents pop in, staggered lights, late beats
     appear('bd_day', -1.0, T_DUSK)
