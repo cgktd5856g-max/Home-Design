@@ -85,6 +85,8 @@ def materials():
     mat('dl_emis', col=(0, 0, 0), emis=(8.5, 7.6, 6.2))
     mat('lamp_bulb', col=(0, 0, 0), emis=(9.0, 7.6, 5.6))
     mat('lampshade', col=srgb(244, 242, 236), rough=0.6, emis=(0.0, 0.0, 0.0))
+    mat('glint_glow', col=(0, 0, 0), emis=(16.0, 14.5, 11.0))
+    mat('duvet_gold', tex=3, col=srgb(208, 188, 146), rough=0.9, p=(0.04,))
     mat('star_glow', col=(0, 0, 0), emis=(9.0, 7.4, 4.0))
     mat('blackm', col=srgb(34, 34, 36), rough=0.4, f0=0.04, glossy=True)
     # outside (camera-only emitters: they never light the room)
@@ -468,9 +470,9 @@ def build_outside():
             A(o, lathe([(0, z0 + h * 0.10), (rr * 0.7, z0 + h * 0.10 + 0.02), (rr * 0.22, z0 + h * 0.30), (0, z0 + h * 0.312)], 10,
                        (px - 0.03, py)), 'snow_day')
     rng = np.random.default_rng(3)
-    for k, (x0, x1, rmin, rmax) in enumerate(((0.6, 1.3, 0.010, 0.016), (1.3, 2.7, 0.008, 0.012))):
+    for k, (x0, x1, rmin, rmax) in enumerate(((0.6, 1.3, 0.013, 0.019), (1.3, 2.7, 0.017, 0.022))):
         ztop = 4.2 + SNOW_V[k] * DUR_LONG + 0.5
-        n = int(60 * (ztop + 0.2) * (x1 - x0) * 4.0 / (1.0 + k))
+        n = int(48 * (ztop + 0.2) * (x1 - x0) * 4.0 / (1.0 + 1.5 * k))
         for i in range(n):
             c = (rng.uniform(x0, x1), rng.uniform(-2.0, 2.0), rng.uniform(0.0, ztop))
             rr = rng.uniform(rmin, rmax)
@@ -490,7 +492,7 @@ def build_loft(rng):
         add(rl, box(x, LY0 + 0.006, LZ1, x + 0.035, LY0 + 0.03, 1.76), 'oakl_z')
     add('loft_mat', rbox((1.16, (LY0 + 0.05 + D) / 2, LZ1 + 0.075), (1.70, D - LY0 - 0.10, 0.15), 0.04, 5), 'mattress')
     zt = LZ1 + 0.15
-    cloth('loft_duvet', 0.62, 2.02, LY0 + 0.07, D - 0.06, zt + 0.04, zt - 0.08, 0.04, 'linen', 5, sides=('s', 'e'))
+    cloth('loft_duvet', 0.62, 2.02, LY0 + 0.07, D - 0.06, zt + 0.04, zt - 0.08, 0.04, 'duvet_gold', 5, sides=('s', 'e'))
     pillow('loft_pil', (0.50, 2.62, zt + 0.12), (0.62, 0.13, 0.32), -0.22, 'linen_grey', yaw=math.pi / 2)
     cloth('loft_throw', 1.45, 1.85, LY0 + 0.05, D - 0.06, zt + 0.065, zt - 0.10, 0.035, 'green_knit', 8, sides=('s',), puff=0.004)
     # headboard cubby at the west end of the deck: books and a torch
@@ -625,9 +627,9 @@ def build_stair():
         sc = 0.80
         if d['kind'] == 'side':
             yc = (d['y0'] + d['y1']) / 2
-            add(f'af{k}', box(SX0, d['y0'] + GAP, d['z0'] + GAP, SX0 + 0.012, d['y1'] - GAP, d['z1'] - GAP), 'white_cab')
-            add(f'af{k}', box(SX0 + 0.012, d['y0'] + GAP + 0.003, d['z0'] + GAP, SX0 + 0.018, d['y1'] - GAP - 0.003, d['z1'] - GAP - 0.003), 'oakl_y')
-            add(f'af{k}', xform(lathe(rprof(0.012, 0, 0.016, 0.006, 3), 14), T(SX0, yc, d['z0'] + RZ * 0.6) @ R('y', -math.pi / 2)), 'oak_x')
+            add(f'af{k}', box(SX0, d['y0'] + GAP, d['z0'] + GAP, SX0 + 0.012, d['y1'] - GAP, d['z1'] - GAP), 'oakl_y')
+            add(f'af{k}', box(SX0 + 0.012, d['y0'] + GAP + 0.003, d['z0'] + GAP, SX0 + 0.018, d['y1'] - GAP - 0.003, d['z1'] - GAP - 0.003), 'white_cab')
+            add(f'af{k}', xform(lathe(rprof(0.012, 0, 0.016, 0.006, 3), 14), T(SX0, yc, d['z0'] + RZ * 0.6) @ R('y', -math.pi / 2)), 'knob')
             add(f'at{k}', box(SX0 + 0.018, d['y0'] + 0.012, d['z0'] + 0.02, SX0 + SDEP, d['y1'] - 0.012, d['z0'] + 0.03), 'white_in')
             for bb in (box(SX0 + 0.018, d['y0'] + 0.012, d['z0'] + 0.03, SX0 + SDEP, d['y0'] + 0.02, d['z0'] + 0.08),
                        box(SX0 + 0.018, d['y1'] - 0.02, d['z0'] + 0.03, SX0 + SDEP, d['y1'] - 0.012, d['z0'] + 0.08)):
@@ -635,14 +637,23 @@ def build_stair():
             put(f'ay{k}', toy(kind), (SX0 + 0.13, yc, d['z0'] + 0.03), sc, -math.pi / 2)
         else:
             xc = (SX0 + SDEP + SX1) / 2
-            add(f'af{k}', box(SX0 + SDEP + GAP, d['y0'], d['z0'] + GAP, SX1 - GAP, d['y0'] + 0.012, d['z1'] - GAP), 'white_cab')
-            add(f'af{k}', box(SX0 + SDEP + GAP + 0.003, d['y0'] + 0.012, d['z0'] + GAP, SX1 - GAP - 0.003, d['y0'] + 0.018, d['z1'] - GAP - 0.003), 'oakl_x')
-            add(f'af{k}', xform(lathe(rprof(0.012, 0, 0.016, 0.006, 3), 14), T(xc, d['y0'], d['z0'] + RZ * 0.6) @ R('x', math.pi / 2)), 'oak_x')
+            add(f'af{k}', box(SX0 + SDEP + GAP, d['y0'], d['z0'] + GAP, SX1 - GAP, d['y0'] + 0.012, d['z1'] - GAP), 'oakl_x')
+            add(f'af{k}', box(SX0 + SDEP + GAP + 0.003, d['y0'] + 0.012, d['z0'] + GAP, SX1 - GAP - 0.003, d['y0'] + 0.018, d['z1'] - GAP - 0.003), 'white_cab')
+            add(f'af{k}', xform(lathe(rprof(0.012, 0, 0.016, 0.006, 3), 14), T(xc, d['y0'], d['z0'] + RZ * 0.6) @ R('x', math.pi / 2)), 'knob')
             add(f'at{k}', box(SX0 + SDEP + 0.012, d['y0'] + 0.018, d['z0'] + 0.02, SX1 - 0.012, d['y1'] - 0.01, d['z0'] + 0.03), 'white_in')
             put(f'ay{k}', toy(kind), (xc, d['y0'] + 0.12, d['z0'] + 0.03), sc * (1.15 if kind == 'star' else 1.0), 0.0)
+    # oak guard on the open side of treads 4-6: two balusters and a rail that runs into the loft rail
+    gx = SX0 + 0.014
+    ya, za, yb, zb = SY0 + TD * 3.5, 1.70, LY0 + 0.01, 1.79          # handrail along the stair pitch into the loft rail
+    for i in (3, 4):
+        y = SY0 + TD * (i + 0.5)
+        zt = RZ * (i + 1)
+        ztop = za + (zb - za) * (y - ya) / (yb - ya)
+        add('stair_guard', box(gx - 0.012, y - 0.012, zt, gx + 0.012, y + 0.012, ztop), 'oak_z')
+    add('stair_guard', tube([(gx, ya - 0.06, za - 0.011), (gx, yb, zb)], 0.018, 10), 'oak_x')
     # tease glint (a small sparkle)
     d = DRAWERS[TEASE]
-    add('glint', star_prism((SX0 - 0.20, (d['y0'] + d['y1']) / 2, d['z1'] + 0.02), 0.07, 0.014, 0.004, n=4), 'star_glow')
+    add('glint', star_prism((SX0 - 0.20, (d['y0'] + d['y1']) / 2, d['z1'] + 0.04), 0.08, 0.016, 0.004, n=4), 'glint_glow')
 
 
 def build():
@@ -683,7 +694,7 @@ camera = hold_camera(HOLDS, VFOV, rest=REST)
 
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
-LSKY = (12.0, 12.4, 13.2)
+LSKY = (12.4, 12.4, 12.4)
 LSUN = (42000.0, 38500.0, 33000.0)
 LFILL = (2.4, 2.4, 2.35)
 LCEIL = (0.6, 0.6, 0.6)
@@ -715,7 +726,7 @@ def lights(mats4, vis):
     return Ls
 
 
-SEPARATE = ['sky_day', 'snow_day', 'pineo_day', 'house_day', 'roof_day', 'flake']
+SEPARATE = ['sky_day', 'snow_day', 'pineo_day', 'house_day', 'roof_day', 'flake', 'bulb_on', 'star_glow', 'led', 'dl_emis', 'lamp_bulb', 'glint_glow']
 BLENDER = dict(
     exposure=-0.30,
     look='AgX - Medium High Contrast',
@@ -826,11 +837,10 @@ def timeline_short(tl):
     T_TEASE = 1.02
     T_C = 5.70                                    # cascade start
     STEP = 0.12
-    T_HOLD_END = T_C + STEP * 23 + 0.40 + 1.30    # all 24 open, held about 1.5 s
-    T_CL = T_HOLD_END
-    T_KID_OPEN = 11.55
-    T_STAR0, T_STAR1 = 11.86, 12.12
-    T_LIGHTS = 12.15
+    T_CL = T_C + STEP * 23 + 1.50                # all 24 open, held 1.5 s: the close starts at 9.96 s
+    T_KID_OPEN = 11.70
+    T_STAR0, T_STAR1 = 11.92, 12.16
+    T_LIGHTS = 12.20
     for k, d in enumerate(DRAWERS):
         col = d['col']
         base = (lambda t, col=col: tl.anims[f'stc{col}'](t))
@@ -838,7 +848,7 @@ def timeline_short(tl):
         if k == TEASE:
             cyc.append((T_TEASE, T_TEASE + 0.52, True, 0.9))
         to = T_C + STEP * k
-        tc = T_CL + 0.035 * (23 - k)
+        tc = T_CL + 0.02 * (23 - k)
         cyc.append((to, tc, True))
         if k == 23:
             cyc.append((T_KID_OPEN, 12.45, False))
@@ -871,12 +881,13 @@ def timeline_short(tl):
         s = math.sin(math.pi * u)
         return about(cen['glint'], R('x', 0) @ S(s, s, s) @ np.eye(4)), True
     tl.custom('glint', glint)
-    ev(T_CL + 0.035 * 23 + 0.22, 'all_shut', 0.9, 'thud')
+    ev(T_CL + 0.02 * 23 + 0.22, 'all_shut', 0.9, 'thud')
     ev(9.15, 'sparkle', 0.45, 'chime')
     grow('loft_posts', 1.30, 1.48, 'z', (0, 0, 0), 0.8)
     drop('loft_deck', 1.50, 1.68, 0.45, 0.02, 0.9, 'thud')
     tl.custom('cupboard', lambda t: (tl.anims['loft_deck'](t)[0], t >= 1.50))
     slide('loft_rail', 1.74, 1.90, (0, -0.5, 0), 1.0, 0.5)
+    drop('stair_guard', 1.88, 2.02, 0.35, 0.03, 0.45)
     drop('loft_mat', 1.94, 2.10, 0.35, 0.03, 0.6, 'thud')
     drop('loft_duvet', 2.16, 2.32, 0.30, 0.03, 0.45)
     drop('loft_pil', 2.30, 2.44, 0.25, 0.06, 0.3)
@@ -918,11 +929,12 @@ def timeline_short(tl):
 
     # ================= S4 (11.0-12.6): the child climbs, opens the top drawer, the star flies to the tree, lights
     ys = lambda i: SY0 + TD * (i + 0.5)
-    reach_fwd = dict(sh_r=70, sh_r_out=4, elbow_r=10, sh_l=30, sh_l_out=8, elbow_l=20, spine=18, neck=10)
-    at_fn = lambda t: (2.38, ys(2) + (ys(3) - ys(2)) * smooth(c01((t - 11.12) / 0.28)), 0)
-    floor_fn = lambda t: RZ * 3 + RZ * smooth(c01((t - 11.12) / 0.28))
-    kid.animate(tl, pose=fg.track([(11.10, 'stand'), (11.20, 'step_up'), (11.42, 'stand'), (11.55, reach_fwd), (11.80, reach_fwd),
-                                   (12.00, 'reach_up'), (12.70, 'reach_up'), (13.0, 'wave')]),
+    bend_reach = dict(sh_r=48, sh_r_out=4, elbow_r=6, sh_l=24, sh_l_out=10, elbow_l=24, spine=36, neck=14,
+                      hip_l=20, hip_r=20, knee_l=14, knee_r=14)
+    at_fn = lambda t: (2.38, ys(2) + (ys(3) - ys(2)) * smooth(c01((t - 11.10) / 0.50)), 0)
+    floor_fn = lambda t: RZ * 3 + RZ * smooth(c01((t - 11.10) / 0.50))
+    kid.animate(tl, pose=fg.track([(11.10, 'stand'), (11.30, 'step_up'), (11.58, 'stand'), (11.66, bend_reach), (11.90, bend_reach),
+                                   (12.10, 'reach_up'), (12.70, 'reach_up'), (13.0, 'wave')]),
                 at=at_fn, floor=floor_fn, pop=10.98, sound=0.4)
     ev(T_KID_OPEN + 0.08, 'top_open', 0.45, 'swish'); ev(T_STAR1, 'star_on_tree', 0.6, 'tick')
     ev(12.45 + 0.22, 'top_shut', 0.5, 'thud')
