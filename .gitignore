@@ -3,3 +3,4 @@ out/*_preview*.mp4
 out/*.tmp.mp4
 __pycache__/
 .render/
+.claude/settings.local.json
