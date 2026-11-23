@@ -74,8 +74,8 @@ def materials():
     wood_mats('oak', srgb(216, 184, 142), seed=4.0)
     mat('celery', tex=3, col=srgb(184, 197, 158), rough=0.6, p=(0.02,))
     mat('sky_blue', tex=3, col=srgb(160, 181, 204), rough=0.6, p=(0.02,))
-    mat('tapeA', col=srgb(170, 188, 140), rough=0.5)
-    mat('tapeB', col=srgb(140, 168, 204), rough=0.5)
+    mat('tapeA', col=srgb(150, 176, 118), rough=0.5)
+    mat('tapeB', col=srgb(118, 152, 198), rough=0.5)
     mat('steel', col=srgb(178, 180, 184), rough=0.28, metal=1)
     mat('caster', col=srgb(60, 62, 66), rough=0.5)
     mat('alu', col=srgb(200, 202, 206), rough=0.3, metal=1)
@@ -106,7 +106,7 @@ def materials():
                   ('cl_denim', (104, 128, 164)), ('cl_terra', (196, 128, 100)), ('cl_sage', (150, 170, 146))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
     for nm, c in (('bk_sage', (156, 176, 148)), ('bk_cream', (234, 224, 204)), ('bk_terra', (198, 124, 96)), ('bk_navy', (64, 78, 112)),
-                  ('bk_mustard', (220, 176, 84)), ('bk_white', (242, 240, 236)), ('bk_blue', (130, 160, 196)), ('bk_grey', (176, 178, 180))):
+                  ('bk_mustard', (220, 176, 84)), ('bk_rust', (176, 96, 70)), ('bk_white', (242, 240, 236)), ('bk_blue', (130, 160, 196)), ('bk_grey', (176, 178, 180))):
         mat(nm, col=srgb(*c), rough=0.6)
     for nm, c in (('toy_red', (204, 112, 96)), ('toy_yellow', (230, 194, 100)), ('toy_blue', (110, 150, 200)), ('toy_green', (128, 176, 120)),
                   ('toy_white', (242, 240, 236))):
@@ -287,8 +287,8 @@ def build_shell():
         add(f'floorW{k}', box(0, edges[k + 1], -0.012, CX, edges[k], 0.0), 'floor')
         add(f'floorE{k}', box(CX, edges[k + 1], -0.012, W, edges[k], 0.0), 'floor')
     # the tape line: half celery, half blue
-    add('tape', box(CX - 0.028, 0.0, 0.0, CX, D, 0.0016), 'tapeA')
-    add('tape', box(CX, 0.0, 0.0, CX + 0.028, D, 0.0016), 'tapeB')
+    add('tape', box(CX - 0.04, 0.0, 0.0, CX, D, 0.0016), 'tapeA')
+    add('tape', box(CX, 0.0, 0.0, CX + 0.04, D, 0.0016), 'tapeB')
     mat('rugA', tex=6, col=srgb(222, 228, 210)); mat('rugB', tex=6, col=srgb(214, 222, 232))
     add('rugA', rbox((CX - 0.40, 1.40, 0.007), (0.66, 0.92, 0.014), 0.006, 3), 'rugA')
     add('rugB', rbox((CX + 0.40, 1.40, 0.007), (0.66, 0.92, 0.014), 0.006, 3), 'rugB')
@@ -330,7 +330,7 @@ def build_west(rng):
     add(f, box(xb1 - 0.018, BW_Y0, 0.0, xb1, LY0, LZ0), 'white_cab')
     for z in (0.0, 0.39, 0.77, 1.15):
         add(f, box(0.0, BW_Y0, z, xb1, LY0, z + 0.022), 'white_cab')
-    pal = ['bk_sage', 'bk_cream', 'bk_terra', 'bk_navy', 'bk_mustard', 'bk_white', 'bk_blue', 'bk_grey', 'bk_sage', 'bk_cream']
+    pal = ['bk_terra', 'bk_mustard', 'bk_cream', 'bk_sage', 'bk_terra', 'bk_rust', 'bk_white', 'bk_mustard', 'bk_blue', 'bk_cream']
     for r_, z in enumerate((0.022, 0.412, 0.792, 1.172)):
         x = 0.02
         for g_ in range(3):
@@ -405,7 +405,7 @@ def build_east(rng):
         add(c, box(SX0 + 0.02, y1 - 0.012, SRZ * k, BX0, y1, top - 0.028), 'white_in')
         wood(c, SX0 - 0.02, y0, top - 0.028, BX0, y1, top, 'oak')
         drawer(f'sdB{k}', '-x', SX0, y0 + 0.012, y1 - 0.012, SRZ * k + (0.012 if k == 0 else 0.0), top - 0.03, BX0 - SX0 - 0.03,
-               front='sky_blue')
+               front='oak_y')
     # contents (shoes, tees, blocks, art supplies)
     for dy in (-0.045, 0.045):
         add('sdBc0', ellipsoid((2.42, SY0 + 0.125 + dy, 0.065), (0.085, 0.032, 0.03), 10), 'shoe_white')
@@ -477,7 +477,7 @@ def build_wardrobe(rng):
         wadd(B, box(x0 + t, y0 + 0.02, z, xv, yc, z + 0.016), 'white_in')
     for z in (hz0 - 0.016, hz1, 1.75):
         wadd(B, box(xv + t, y0, z, x1 - t, yc, z + 0.016), 'white_in')
-    wadd(B, box(xv + t, y0, 0.663, x1 - t, y0 + t, hz0 - 0.016), 'celery')           # closed panel under the hatch
+    wadd(B, box(xv + t, y0, 0.663, x1 - t, y0 + t, hz0 - 0.016), 'oak_x')           # closed panel under the hatch
     for b in (box(hx0 - 0.02, y0, hz0, hx0, y1, hz1), box(hx1, y0, hz0, hx1 + 0.02, y1, hz1), box(hx0, y0, hz0 - 0.016, hx1, y1, hz0),
               box(hx0, y0, hz1, hx1, y1, hz1 + 0.016)):
         wadd(B, b, 'oak_y')
@@ -493,12 +493,12 @@ def build_wardrobe(rng):
         wadd('wrBody', xform(lathe(rprof(0.024, -0.012, 0.012, 0.006, 3), 16, (0, 0)), T(cx, cy, 0.025) @ R('x', math.pi / 2)), 'caster')
         wadd('wrBody', box(cx - 0.02, cy - 0.02, 0.045, cx + 0.02, cy + 0.02, z0), 'steel')
     # face A fronts: two drawers, two doors, hatch door
-    drawer('wrDrA0', '-y', y0, x0 + t, x1 - t, z0 + 0.02, 0.36, yc - y0 - 0.02, front='celery', knobs=2)
-    drawer('wrDrA1', '-y', y0, x0 + t, x1 - t, 0.36, 0.643, yc - y0 - 0.02, front='celery', knobs=2)
+    drawer('wrDrA0', '-y', y0, x0 + t, x1 - t, z0 + 0.02, 0.36, yc - y0 - 0.02, front='oak_x', knobs=2)
+    drawer('wrDrA1', '-y', y0, x0 + t, x1 - t, 0.36, 0.643, yc - y0 - 0.02, front='oak_x', knobs=2)
     for nm in ('wrDrA0', 'wrDrA1'):
         WR_PIECES.append(nm)
-    wadd('wrDoorA1', box(x0 + t + 0.002, y0 - 0.018, 0.666, (x0 + xv) / 2 - 0.002, y0, z1 - t - 0.002), 'celery')
-    wadd('wrDoorA2', box((x0 + xv) / 2 + 0.002, y0 - 0.018, 0.666, xv + t - 0.002, y0, z1 - t - 0.002), 'celery')
+    wadd('wrDoorA1', box(x0 + t + 0.002, y0 - 0.018, 0.666, (x0 + xv) / 2 - 0.002, y0, z1 - t - 0.002), 'oak_z')
+    wadd('wrDoorA2', box((x0 + xv) / 2 + 0.002, y0 - 0.018, 0.666, xv + t - 0.002, y0, z1 - t - 0.002), 'oak_z')
     knob('wrDoorA1', ((x0 + xv) / 2 - 0.04, y0 - 0.018, 1.25), '-y')
     knob('wrDoorA2', ((x0 + xv) / 2 + 0.04, y0 - 0.018, 1.25), '-y')
     wadd('wrHatchA', box(hx0 + 0.003, y0 - 0.018, hz0 + 0.003, hx1 - 0.003, y0, hz1 - 0.003), 'celery')
@@ -514,12 +514,12 @@ def build_wardrobe(rng):
                   3 if z < 1.9 else 2, rng)
     WR_PIECES.append('wrFold')
     for z in (1.316, 1.766):
-        wadd('wrBoxA', rbox(((xv + x1) / 2, y0 + 0.13, z + 0.17), (0.38, 0.22, 0.30), 0.015, 3), 'box_linen' if z < 1.5 else 'bin_grey')
+        wadd('wrBoxA', rbox(((xv + x1) / 2, y0 + 0.13, z + 0.17), (0.38, 0.22, 0.30), 0.015, 3), 'fb_terra' if z < 1.5 else 'fb_sage')
     stack('wrDrAc', 1.85, y0 + 0.13, 0.39, (0.30, 0.18, 0.04), ['cl_white', 'cl_celery', 'cl_grey'], 3, rng)
     stack('wrDrAc', 2.25, y0 + 0.13, 0.39, (0.30, 0.18, 0.04), ['cl_mustard', 'cl_cream', 'cl_sage'], 3, rng)
     stack('wrDrAc', 2.68, y0 + 0.13, 0.39, (0.30, 0.18, 0.04), ['cl_denim', 'cl_white', 'cl_terra'], 3, rng)
     WR_PIECES.append('wrDrAc')
-    binm = ['fb_blue', 'fb_mustard', 'fb_cream', 'fb_sage', 'fb_terra', 'fb_grey', 'fb_cream', 'fb_blue', 'fb_mustard', 'fb_terra', 'fb_sage', 'fb_blue']
+    binm = ['fb_terra', 'fb_mustard', 'fb_cream', 'fb_sage', 'fb_terra', 'fb_mustard', 'fb_cream', 'fb_sage', 'fb_mustard', 'fb_terra', 'fb_sage', 'fb_cream']
     k = 0
     for ri in (0, 1, 3, 4):
         za, zb = rows[ri] + 0.012, rows[ri + 1] - 0.012
@@ -536,7 +536,9 @@ def build_wardrobe(rng):
             if xx > cols[ci + 1] - 0.08:
                 break
     # telescoping end panel (stored inside the far end; slides out along the wardrobe)
-    wadd('wrPanel', box(x1 - PNL, yc - 0.025, z0 + 0.03, x1 - 0.004, yc + 0.025, z1 - 0.03), 'white_cab')
+    wadd('wrPanel', box(x1 - PNL, yc - 0.006, z0 + 0.03, x1 - 0.004, yc + 0.006, z1 - 0.03), 'white_in')
+    for xs in np.arange(x1 - PNL + 0.01, x1 - 0.03, 0.06):
+        wadd('wrPanel', box(xs, yc - 0.024, z0 + 0.03, xs + 0.038, yc + 0.024, z1 - 0.03), 'oak_z')
     wadd('wrPanel', box(x1 - 0.004, yc - 0.025, z0 + 0.03, x1 + 0.016, yc + 0.025, z1 - 0.03), 'oak_z')
     # pivot post and floor track (fixed)
     add('pivot', tube([(PIV[0], PIV[1], 0.0), (PIV[0], PIV[1], H)], 0.022, 14), 'steel')
@@ -566,6 +568,8 @@ def build_long_extras(rng):
         add('tableC', rbox((c[0] + dx, c[1] + dy, 0.39), (0.08, 0.08, 0.07), 0.01, 3), m)
     for nm, x, m in (('stool1', CX - 0.48, 'celery'), ('stool2', CX + 0.48, 'sky_blue')):
         disc(nm, (x, 1.42), 0.14, 0.0, 0.22, m)
+    add('plushB', ellipsoid((2.18, 1.22, 0.104), (0.09, 0.08, 0.09), 16), 'toy_white')
+    add('plushB', ellipsoid((2.18, 1.22, 0.224), (0.065, 0.06, 0.06), 14), 'toy_white')
     add('beanbag', ellipsoid((2.55, 2.55, 0.20), (0.36, 0.34, 0.22), 18), 'fb_blue')
     add('floorLamp', lathe(rprof(0.11, 0.0, 0.015, 0.005, 3), 24, (3.38, 3.18)), 'ceramic')
     add('floorLamp', tube([(3.38, 3.18, 0.01), (3.38, 3.18, 1.35)], 0.008, 8), 'ceramic')
@@ -603,15 +607,17 @@ def P(x, y, z, yaw, pitch, vf=VFOV):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch, vf=vf)
 
 
-F1 = P(CX, 0.08, 1.62, 0.0, -22.0)
-S1 = (F1, P(CX, 0.85, 1.50, 0.0, -16.0))                                             # doorway, down the tape
-S1B = (P(1.86, 0.62, 1.50, -26.0, -14.0), P(1.56, 0.80, 1.42, -46.0, -11.0))          # A: book wall + loft                                               # doorway, down the tape
-S2 = (P(0.42, 0.08, 1.42, 46.0, -12.0), P(1.08, 0.82, 1.12, 80.0, -21.0))              # B: stair drawers + den
-S3 = (P(1.92, 0.40, 2.58, 6.0, -56.0, 100.0), P(2.28, 0.58, 2.56, -16.0, -63.0, 100.0))
-S3B = (P(3.05, 1.05, 1.52, -42.0, -12.0), P(2.88, 1.30, 1.42, -56.0, -10.0))          # face B: the cubbies fill   # near-overhead: the swing (wow)
+F1 = P(CX, -0.45, 1.40, 0.0, -13.0, 95.0)
+S1 = (F1, P(CX, 0.55, 1.50, 0.0, -15.0, 88.0))                                             # doorway, down the tape
+S1B = (P(1.80, 0.64, 1.50, -32.0, -13.0), P(1.62, 0.78, 1.44, -42.0, -12.0))          # A: book wall + loft                                               # doorway, down the tape
+S2 = (P(1.12, 0.18, 0.98, 60.0, -11.0), P(1.42, 0.72, 0.86, 74.0, -6.0))              # B: stair drawers + den
+S3 = (P(1.30, 0.30, 1.95, 16.0, -17.0), P(0.92, 0.16, 1.86, 18.0, -16.0))
+S3B = (P(2.98, 1.62, 1.72, -44.0, -17.0), P(2.84, 1.86, 1.64, -58.0, -15.0))
+S3W = (P(CX, -0.40, 1.88, 0.0, -17.0, 95.0), P(CX, -0.28, 1.84, 0.0, -17.0, 95.0))      # daylight payoff wide on the tape          # face B: the cubbies fill   # near-overhead: the swing (wow)
 S4 = (P(CX, 0.14, 2.22, -24.0, -22.0, 98.0), P(CX, 0.16, 2.18, -10.0, -23.0, 98.0))      # night: A's side
 S5 = (P(CX, 0.16, 2.18, 20.0, -24.0, 98.0), F1)                                        # B's side -> frame 1                                                # the two bedrooms -> frame 1
-HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.95, 7.00, S2), (7.30, 9.90, S3), (10.15, 11.30, S3B), (11.55, 12.35, S4), (12.55, DUR, S5)]
+HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.74, 7.00, S2), (7.04, 9.00, S3), (9.04, 9.95, S3W), (10.15, 11.30, S3B),
+         (11.55, 12.35, S4), (12.55, DUR, S5)]
 
 
 def make_camera(holds):
@@ -639,14 +645,14 @@ def make_camera(holds):
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (9.0, 9.5, 10.4)
-LSUN = (60000.0, 55000.0, 46000.0)
+LSUN = (95000.0, 86000.0, 72000.0)
 LDOOR = (2.2, 2.2, 2.15)
 LFILL = (0.6, 0.6, 0.59)
 LLED = (40.0, 36.0, 29.0)
 LRL = (900.0, 800.0, 640.0)
 LLAMP = (80.0, 66.0, 46.0)
 LDOWN = (760.0, 720.0, 650.0)
-LDEN = (26.0, 22.0, 16.0)
+LDEN = (70.0, 60.0, 44.0)
 
 
 def lights(mats4, vis):
@@ -865,7 +871,7 @@ class Story:
     # ---------------------------------------------------------------- beats
     def build_beat(self, t0):
         tl, drop, slide, grow = self.tl, self.tl.drop, self.tl.slide, self.tl.grow
-        grow('tape', t0 + 0.04, t0 + 0.24, 'y', (0, D, 0), 0.6, 'swish')
+        grow('tape', t0 - 0.10, t0 + 0.24, 'y', (0, D, 0), 0.6, 'swish')
         for k in range(6):
             t1 = t0 + 0.32 + 0.08 * k
             drop(f'floorW{k}', t1 - 0.18, t1, 0.45, 0.05, 0.3 + 0.03 * k, 'tick')
@@ -884,10 +890,10 @@ class Story:
             self.static_after(f'sdB{k}', tt - 0.13, base=tl.anims[f'stB{k}'])
         slide('loftRail', t0 + 2.02, t0 + 2.16, (0.4, 0, 0), 1.0, 0.0, 'none')
         slide('railB', t0 + 2.02, t0 + 2.16, (-0.4, 0, 0), 1.0, 0.5, 'thud')
-        self.swing(t0 + 2.10, t0 + 2.62, 0.0, -18.0, 'nudge')
+        self.swing(t0 + 2.05, t0 + 2.70, 0.0, -28.0, 'nudge')
         drop('matA', t0 + 2.26, t0 + 2.42, 0.4, 0.05, 0.7, 'thud')
         drop('matB', t0 + 2.26, t0 + 2.42, 0.4, 0.05, 0.0, 'none')
-        tl.ev(t0 + 2.64, 'nudge_clunk', 0.6, 'thud')
+        tl.ev(t0 + 2.72, 'nudge_clunk', 0.7, 'thud')
         drop('duvetA', t0 + 2.50, t0 + 2.66, 0.35, 0.03, 0.0, 'none')
         drop('duvetB', t0 + 2.50, t0 + 2.66, 0.35, 0.03, 0.0, 'none')
         for i, (a, b) in enumerate((('pilA1', 'pilB1'), ('pilA2', 'pilB2'))):
@@ -932,7 +938,15 @@ class Story:
     def den_beat(self, t0, t_close):
         tl = self.tl
         base = tl.anims['denDoor']
-        f = self.hinge_fn((BX0, 1.15, 0), math.radians(105), t0, t_close, base=base)
+
+        def f(t):
+            M, v = base(t)
+            if not v or t < t0:
+                return M, v
+            if t < t_close:
+                return T(-0.02 * min(1, (t - t0) / 0.05), 0.56 * eob(c01((t - t0) / 0.25), 0.6), 0) @ M, v
+            u = c01((t - t_close) / 0.2)
+            return T(-0.02 * (1 - u), 0.56 * (1 - smooth(u)), 0) @ M, v
         tl.custom('denDoor', f)
         tl.ev(t0 + 0.1, 'den_open', 0.5, 'swish'); tl.ev(t_close + 0.2, 'den_shut', 0.85, 'thud')
         self.appear('denLed', t0 + 0.12, t_close + 0.2)
@@ -946,6 +960,18 @@ class Story:
         tl.ev(t0 + 0.08, 'wrDrA1_open', 0.45, 'swish'); tl.ev(t0 + 0.72, 'wrDrA1_shut', 0.8, 'thud')
         tl.drop('wrDrAc', t0 + 0.16, t0 + 0.32, 0.22, 0.05, 0.4, 'tick', parent=f)
 
+    def doorsA_beat(self, t0, t_close):
+        """Face A's doors swing open on the loaded shelves (plus the drawer), then close: it is full before it moves."""
+        tl, t = self.tl, 0.018
+        xv, y0 = 2.565, WRY0
+        tl.custom('wrDoorA1', self.hinge_fn((WRX0 + t, y0, 0), math.radians(-105), t0, t_close))
+        tl.custom('wrDoorA2', self.hinge_fn((xv + t, y0, 0), math.radians(105), t0 + 0.04, t_close + 0.04))
+        tl.ev(t0 + 0.1, 'doorsA_open', 0.5, 'swish'); tl.ev(t_close + 0.24, 'doorsA_shut', 0.9, 'thud')
+        tl.drop('wrFold', t0 + 0.16, t0 + 0.34, 0.25, 0.04, 0.45)
+        f = self.drawer_fn(0.0, t0 + 0.08, t_close - 0.05, (0, -0.26, 0))
+        tl.custom('wrDrA1', f)
+        tl.drop('wrDrAc', t0 + 0.30, t0 + 0.46, 0.22, 0.05, 0.4, 'tick', parent=f)
+
     def bins_beat(self, t0, gap=0.055):
         tl = self.tl
         for k in range(12):
@@ -956,7 +982,7 @@ class Story:
     def night_beat(self, tn, long=False):
         self.appear('bd_day', -1.0, tn); self.appear('bd_night', tn)
         self.tl.ev(tn, 'night', 0.5, 'swish')
-        cas = (('rlOnA', 0.35, 0.7), ('rlOnB', 1.25, 0.7), ('ledLoft', 0.85, 0.5), ('lampOnA', 0.85, 0.0), ('lampOnB', 0.85, 0.0),
+        cas = (('rlOnA', 0.35, 0.7), ('ledLoft', 0.60, 0.5), ('lampOnA', 0.80, 0.45), ('rlOnB', 1.25, 0.7), ('lampOnB', 1.25, 0.0),
                ('denLed', 0.95, 0.0), ('dlOn', 1.45, 0.5))
         for nm, dt, s in cas:
             if nm == 'denLed':
@@ -970,16 +996,17 @@ class Story:
         tl = self.tl
         self.build_beat(0.0)
         self.desks_quick(4.0)
-        self.stairs_beat(4.05)
-        self.den_beat(5.80, 6.62)
-        self.drawerA_beat(7.40)
-        self.swing(8.05, 9.05, 0.0, -90.0)
-        self.panel(9.25, 12.62)
+        self.stairs_beat(4.00, step=0.25, hold=0.45)
+        self.den_beat(6.00, 6.78)
+        self.doorsA_beat(7.10, 7.72)
+        self.swing(7.95, 8.92, 0.0, -90.0)
+        self.panel(9.22, 12.62)
         self.bins_beat(10.25)
         self.night_beat(11.40)
         KID_A.animate(tl, pop=11.62)
         KID_B.animate(tl, pop=12.50)
         self.swing(12.95, 13.95, -90.0, 0.0)
+        tl.drop('plushB', 14.30, 14.48, 0.5, 0.12, 0.4)
         self.hide(*LONG_ONLY)
         self.finish_wardrobe()
         return tl
