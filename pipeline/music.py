@@ -279,6 +279,8 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='none')
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
+        if 'f0' in e:                                    # per-event pitch override (e.g. wooden clacks)
+            sfx['f0'] = e['f0']
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
     return cfg
 
