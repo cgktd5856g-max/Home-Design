@@ -5,7 +5,8 @@ Usage: python3 music.py <workdir> [bpm]     reads <workdir>/frames.json (written
 Optional <workdir>/music.json overrides: {"bpm": 126, "MUSIC": {"drop_at": 0, "chords": [[..],..], "roots": [..],
 "pluck_bars": [0, 1], "riser": false}}
 Event kinds from the timeline: 'thud' (big pieces; strength sets gain and pitch), 'tick' (small items), 'swish'
-(drawer / door opening), 'chime' (lights on), 'none'.
+(drawer / door opening), 'chime' (lights on), 'pip' (baby-sized items: higher, softer tick), 'bwomp' (two falling
+notes), 'boop' (soft roll + boop when something parks), 'none'.
 """
 import os
 import sys
@@ -231,6 +232,14 @@ def build(cfg, sfx_only=False):
             add(sfx, whoosh(1.2, up=False), t, 0.10)
         elif k == 'swish':
             add(sfx, whoosh(0.3, up=True), t - 0.3, g)
+        elif k == 'pip':                       # baby-sized items: a higher, softer tick
+            add(sfx, tick(s.get('freq', 2400)), t, g)
+        elif k == 'bwomp':                     # two-note falling "bwomp"
+            add(sfx, lp(bass(50, 0.16), 1400), t, g)
+            add(sfx, lp(bass(43, 0.30), 1100), t + 0.15, g)
+        elif k == 'boop':                      # soft roll, then a "boop" when something parks
+            add(sfx, lp(rng.standard_normal(int(0.45 * SR)) * 0.5, 260) * np.linspace(0.2, 1, int(0.45 * SR)), t - 0.45, g * 0.8)
+            add(sfx, np.sin(2 * np.pi * hz(76) * t_arr(int(0.25 * SR))) * np.exp(-t_arr(int(0.25 * SR)) / 0.07), t, g * 0.7)
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -277,6 +286,12 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='chime', gain=0.5)
         elif k == 'none':
             sfx = dict(kind='none')
+        elif k == 'pip':
+            sfx = dict(kind='pip', gain=0.16 + 0.16 * a, freq=2200 + 160 * (i % 5))
+        elif k == 'bwomp':
+            sfx = dict(kind='bwomp', gain=0.55)
+        elif k == 'boop':
+            sfx = dict(kind='boop', gain=0.45)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
