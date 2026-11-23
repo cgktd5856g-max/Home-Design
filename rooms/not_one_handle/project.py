@@ -61,19 +61,19 @@ RAIL_TOP, RAIL_BOT, RAIL_Y = 2.30, 1.26, 2.90
 # ------------------------------------------------------------------------------------------- materials
 def materials():
     mat('subfloor', tex=3, col=srgb(150, 147, 142), p=(0.12,))
-    mat('floor', tex=1, col=srgb(208, 182, 148), col2=srgb(190, 162, 128), rough=0.38, f0=0.04, glossy=True, p=(0.18, 1.6))
-    mat('wall', tex=3, col=srgb(236, 236, 234), p=(0.02,))
+    mat('floor', tex=1, col=srgb(212, 186, 152), col2=srgb(194, 168, 132), rough=0.38, f0=0.04, glossy=True, p=(0.18, 1.6))
+    mat('wall', tex=3, col=srgb(238, 236, 232), p=(0.02,))
     mat('ceiling', col=srgb(246, 246, 245))
     mat('panel', col=srgb(243, 243, 241), rough=0.42, f0=0.04, glossy=True)
     mat('white_in', col=srgb(234, 234, 231))
     mat('gapc', col=srgb(128, 128, 126))
-    wood_mats('oak', srgb(214, 184, 146), seed=3.0)
+    wood_mats('oak', srgb(216, 190, 154), seed=3.0)
     wood_mats('birch', srgb(228, 210, 180), seed=8.0)
     mat('winframe', col=srgb(232, 232, 230), rough=0.4)
     mat('sill', col=srgb(240, 240, 238), rough=0.25, f0=0.04, glossy=True)
     mat('mirror', col=srgb(236, 237, 239), rough=0.02, metal=1)
-    mat('olive', tex=3, col=srgb(128, 134, 98), rough=0.9, p=(0.05,))
-    mat('olive_knit', tex=5, col=srgb(146, 150, 114), p=(0, 0.012))
+    mat('olive', tex=3, col=srgb(118, 126, 88), rough=0.9, p=(0.05,))
+    mat('olive_knit', tex=5, col=srgb(136, 144, 104), p=(0, 0.012))
     mat('linen_w', tex=3, col=srgb(240, 240, 236), rough=0.9, p=(0.04,))
     mat('throw_w', tex=5, col=srgb(238, 236, 230), p=(0, 0.012))
     mat('mattress', tex=5, col=srgb(246, 246, 243), p=(0, 0.02))
@@ -90,15 +90,15 @@ def materials():
     mat('shade', col=srgb(242, 240, 234), emis=(0.0, 0.0, 0.0), rough=0.9)
     mat('phone', col=srgb(20, 20, 22), rough=0.08, f0=0.05, glossy=True)
     mat('backdrop', tex=9, emis=(1.35, 1.35, 1.35), p=(1.0, 1.0))
-    mat('suitcase', col=srgb(124, 172, 214), rough=0.3, f0=0.05, glossy=True)
+    mat('suitcase', col=srgb(120, 166, 206), rough=0.3, f0=0.05, glossy=True)
     mat('blackm', col=srgb(30, 30, 32), rough=0.4)
-    for nm, c in (('vac_teal', (64, 150, 150)), ('vac_plum', (124, 76, 112)), ('vac_grey', (176, 178, 184))):
+    for nm, c in (('vac_teal', (66, 144, 142)), ('vac_plum', (140, 90, 116)), ('vac_grey', (176, 178, 184))):
         mat(nm, tex=3, col=srgb(*c), rough=0.3, f0=0.05, glossy=True, p=(0.08,))
-    for nm, c in (('cl_teal', (46, 128, 130)), ('cl_plum', (118, 64, 100)), ('cl_mustard', (204, 164, 82)),
-                  ('cl_sky', (132, 174, 218)), ('cl_charcoal', (62, 64, 70)), ('cl_white', (242, 242, 240)),
-                  ('cl_denim', (88, 112, 150)), ('cl_olive', (140, 146, 98)), ('cl_rose', (210, 150, 150))):
+    for nm, c in (('cl_teal', (58, 128, 126)), ('cl_plum', (146, 92, 112)), ('cl_mustard', (206, 172, 112)),
+                  ('cl_sky', (128, 166, 204)), ('cl_charcoal', (62, 64, 70)), ('cl_white', (242, 242, 240)),
+                  ('cl_denim', (88, 112, 150)), ('cl_olive', (128, 138, 94)), ('cl_rose', (214, 156, 150))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
-    for nm, c in (('bk_teal', (54, 130, 132)), ('bk_mustard', (216, 170, 66)), ('bk_plum', (120, 70, 104)),
+    for nm, c in (('bk_teal', (60, 132, 130)), ('bk_mustard', (208, 172, 104)), ('bk_plum', (140, 88, 110)),
                   ('bk_sky', (138, 178, 216)), ('bk_white', (240, 238, 232)), ('bk_olive', (140, 148, 100)),
                   ('bk_charcoal', (60, 62, 68))):
         mat(nm, col=srgb(*c), rough=0.6)
@@ -117,14 +117,37 @@ def disc(inst, c, r, z0, z1, m, n=28):
     add(inst, lathe(rprof(r, z0, z1, min(0.004, (z1 - z0) * 0.45), 3), n, c), m)
 
 
-def garment(inst, x, y, z_top, length, width, m, along='x'):
-    """Hanging garment on a rail running along `along` (width is across the rail)."""
-    if along == 'x':
-        add(inst, tube([(x, y - width * 0.45, z_top - 0.05), (x, y, z_top), (x, y + width * 0.45, z_top - 0.05)], 0.004, 6), 'steel')
-        add(inst, rbox((x, y, z_top - 0.06 - length / 2), (0.04, width, length), 0.018, 3), m)
-    else:
-        add(inst, tube([(x - width * 0.45, y, z_top - 0.05), (x, y, z_top), (x + width * 0.45, y, z_top - 0.05)], 0.004, 6), 'steel')
-        add(inst, rbox((x, y, z_top - 0.06 - length / 2), (width, 0.04, length), 0.018, 3), m)
+def garment(inst, x, y, z_top, length, width, m, along='x', seed=None):
+    """Hanging garment on a rail running along `along` (width is across the rail): a wooden hanger and a soft body with
+    sloping shoulders, a slight flare and vertical folds (a mesh, not a slab)."""
+    rng = np.random.default_rng(int((x * 1000 + y * 100 + z_top * 10 + length * 1000)) % 100000 if seed is None else seed)
+    ph = rng.uniform(0, 6.28, 3)
+    hw = width / 2
+    # hanger: a curved oak bar + a steel hook
+    nb = 9
+    pts = []
+    for i in range(nb):
+        u = -1 + 2 * i / (nb - 1)
+        pts.append((u * hw * 0.92, z_top - 0.045 - 0.05 * abs(u) ** 1.6))
+    def place(a, zz, off=0.0):
+        return (x + off, y + a, zz) if along == 'x' else (x + a, y + off, zz)
+    add(inst, tube([place(a_, z_) for a_, z_ in pts], 0.008, 6), 'oak_x')
+    add(inst, tube([place(0, z_top - 0.045), place(0, z_top + 0.005), place(0.02, z_top + 0.02)], 0.003, 5), 'steel')
+    # body
+    nu, nv = 18, 14
+    for sg in (1, -1):
+        V = np.zeros((nu, nv, 3))
+        for i, uu in enumerate(np.linspace(-1, 1, nu)):
+            for j, vv in enumerate(np.linspace(0, 1, nv)):
+                z = z_top - 0.05 - vv * length
+                sh = min(1.0, 0.55 + vv * 4.0)                       # shoulders slope out over the top 11 %
+                a_ = uu * hw * sh * (1 + 0.06 * vv)
+                z += -0.05 * abs(uu) ** 1.6 * (1 - min(1.0, vv * 6)) if vv < 0.17 else 0.0
+                fold = 0.010 * math.sin(uu * 7.5 + ph[0]) * vv + 0.005 * math.sin(uu * 15 + ph[1]) * vv
+                th = 0.016 * (1 - abs(uu) ** 4) * (0.6 + 0.4 * math.sin(math.pi * min(1.0, vv * 1.4))) + 0.002
+                off = sg * th + fold
+                V[i, j] = place(a_, z, off)
+        add(inst, grid_tris(V), m)
 
 
 def stack(inst, cx, cy, z0, size, mats_, n, rng):
@@ -358,8 +381,9 @@ def build_closet(rng):
     t = 0.018
     for zr in (RAIL_TOP, RAIL_BOT):
         add('cl_rails', tube([(0.03, RAIL_Y, zr), (0.84, RAIL_Y, zr)], 0.011, 10), 'steel')
-        for xb in (0.03, 0.84):
-            add('cl_rails', box(xb - 0.01, RAIL_Y - 0.02, zr - 0.01, xb + 0.01, RAIL_Y + 0.02, zr + 0.06), 'steel')
+    for xb in (0.035, 0.835):
+        add('cl_rails', tube([(xb, RAIL_Y, RAIL_BOT - 0.02), (xb, RAIL_Y, 2.40)], 0.008, 8), 'steel')
+        add('cl_rails', box(xb - 0.03, RAIL_Y - 0.03, 2.39, xb + 0.03, RAIL_Y + 0.03, 2.40), 'steel')
     add('cl_rails', box(0.0, 2.62, 2.40, 0.86, D, 2.418), 'birch_x')        # hat shelf over the rails
     SH = (0.02, 0.32, CY + 0.02, 2.60)                                       # shelves x0, x1, y0, y1
     add('cl_shelves', box(SH[0], SH[3], PZ, SH[1], SH[3] + t, 2.40), 'birch_y')      # end panel
@@ -573,7 +597,7 @@ def camera(t):
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (10.0, 10.6, 11.6)
-LSUN = (64000.0, 58000.0, 47000.0)
+LSUN = (66000.0, 56000.0, 41000.0)
 LFILL = (2.0, 1.97, 1.92)
 LCEIL = (0.55, 0.55, 0.54)
 LCLOSET = (60.0, 55.0, 44.0)
@@ -619,7 +643,7 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
-    exposure=-0.30,
+    exposure=-0.82,
     look='AgX - Medium High Contrast',
     translucent={'shade': 0.6},
     separate=['backdrop'],

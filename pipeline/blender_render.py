@@ -464,8 +464,8 @@ def main():
     key_transform(cobj, np.array([camera_matrix(c) for c in cams]), np.ones(nfr, bool), nfr, insert_vis=False)
     # hard cuts (a jump between two frames): hold the pose up to the cut so motion blur never smears across it
     # (with the shutter opening at the frame, see motion_blur_position below)
-    cuts = [f for f in range(1, nfr) if np.linalg.norm(np.subtract(cams[f]['pos'], cams[f - 1]['pos'])) > 0.25
-            or abs((cams[f]['yaw'] - cams[f - 1]['yaw'] + 180) % 360 - 180) > 20 or abs(cams[f]['pitch'] - cams[f - 1]['pitch']) > 20]
+    cuts = [f for f in range(1, nfr) if np.linalg.norm(np.subtract(cams[f]['pos'], cams[f - 1]['pos'])) > 0.6
+            or abs((cams[f]['yaw'] - cams[f - 1]['yaw'] + 180) % 360 - 180) > 40 or abs(cams[f]['pitch'] - cams[f - 1]['pitch']) > 40]
     if cuts and cobj.animation_data and cobj.animation_data.action:
         act = cobj.animation_data.action
         fcs = list(getattr(act, 'fcurves', []) or [])
