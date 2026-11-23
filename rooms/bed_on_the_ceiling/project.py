@@ -54,7 +54,7 @@ CAPTIONS = []                                        # no on-screen text
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('subfloor', tex=3, col=srgb(176, 174, 170), p=(0.10,))
+    mat('subfloor', tex=3, col=srgb(142, 142, 144), p=(0.08,))
     mat('floor', tex=1, col=srgb(210, 180, 142), col2=srgb(190, 158, 120), rough=0.38, f0=0.04, glossy=True, p=(0.18, 1.6))
     mat('wall', tex=3, col=srgb(242, 241, 238), p=(0.02,))
     mat('ceiling', col=srgb(247, 246, 243))
@@ -598,7 +598,7 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-S1 = (P(2.34, 0.22, 1.50, -42.0, -2.0), P(2.18, 0.42, 1.46, -46.0, 13.0))
+S1 = (P(2.34, 0.22, 1.50, -42.0, -7.0), P(2.18, 0.42, 1.46, -46.0, 13.0))
 S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.30, 1.30, 1.28, 34.0, -7.0))
 S3 = (P(2.12, 0.16, 1.75, -24.0, 7.0), P(2.02, 0.22, 1.30, -31.0, -8.0))
 S4 = (P(2.36, 0.45, 1.28, -30.0, -12.0), S1[0])
@@ -629,7 +629,10 @@ def make_camera(holds, ride, ease_in, ease_out, ride_fn=None):
         if i == ride and ride_fn is not None:
             return ride_fn(a, b, t)
         s = warp(u, t1 - t0, ease_in.get(i, 0.0), ease_out.get(i, 0.0))
-        return lerp_cam(a, b, s, lift=0.0, vfov=VFOV)
+        c = lerp_cam(a, b, s, lift=0.0, vfov=VFOV)
+        if i == 0 and t0 == 0.0:                      # frame-1 station: the tilt follows the rising bed
+            c['pitch'] = a['pitch'] + (b['pitch'] - a['pitch']) * (0.15 * s + 0.85 * smooth((t - 0.62) / 0.75))
+        return c
 
     def camera(t):
         if REST:
