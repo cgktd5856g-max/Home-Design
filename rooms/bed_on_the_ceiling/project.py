@@ -673,19 +673,19 @@ def ride_cam(a, b, t, hold=None):
 
 L_ST = [
     (0.0, 3.0, S1),
-    (3.3, 6.6, (P(1.80, 0.80, 1.12, -112.0, 8.0), P(1.80, 2.20, 1.12, -68.0, 8.0))),        # L2 low slide along the bay
+    (3.3, 6.6, (P(2.30, 0.92, 1.15, -116.0, 8.0), P(2.30, 2.08, 1.15, -64.0, 8.0))),        # L2 low slide along the bay
     (6.9, 10.2, (P(1.70, 0.80, 1.05, -62.0, -14.0), P(1.70, 2.20, 1.05, -118.0, -14.0))),   # L3 orbit the sofa
     (10.5, 13.4, (P(2.35, 1.45, 0.82, -84.0, -6.0), P(1.95, 1.55, 0.78, -88.0, -6.0))),    # L4 push in at seat height
     (13.7, 16.6, (P(2.05, 0.60, 0.95, -32.0, 12.0), P(1.95, 0.95, 2.10, -52.0, 20.0))),    # L5 crane up beside the bed
     (16.9, 20.1, (P(1.30, 1.50, 1.30, 12.0, -10.0), P(1.85, 1.55, 1.30, 2.0, -10.0))),     # L6 slide toward the window
     (20.4, 23.4, (P(1.55, 1.55, 1.45, 28.0, -14.0), P(2.20, 1.60, 1.45, -12.0, -14.0))),   # L7 orbit behind the chair
-    (23.7, 26.8, (P(2.85, 2.85, 2.05, -132.0, -24.0), P(2.62, 2.62, 1.95, -128.0, -20.0))),  # L8 NE corner, push south-west
+    (23.7, 26.8, (P(2.92, 2.92, 2.40, -136.0, -30.0), P(2.76, 2.76, 2.30, -132.0, -25.0))),  # L8 NE corner, push south-west
     (27.1, 31.0, (P(2.30, 0.12, 1.50, -38.0, 12.0), P(2.22, 0.20, 1.15, -44.0, 0.0))),     # L9 the ride
     (31.3, 34.4, (P(2.20, 0.85, 0.80, -58.0, -12.0), P(2.20, 1.65, 0.80, -100.0, -12.0))), # L10 low slide along the front rail
     (34.7, 37.5, (P(2.30, 1.15, 1.30, -32.0, -14.0), P(2.22, 1.55, 1.25, -50.0, -16.0))),  # L11 orbit round the head end
     (37.8, 40.9, (P(1.15, 0.95, 1.30, 100.0, -6.0), P(1.15, 1.90, 1.30, 78.0, -6.0))),     # L12 facing east, slide north
-    (41.2, 44.0, (P(1.25, 1.10, 1.25, 62.0, -10.0), P(1.45, 1.30, 1.20, 52.0, -10.0))),    # L13 push in on the north section
-    (44.3, 47.2, (P(2.85, 2.80, 2.30, -132.0, -10.0), P(2.70, 2.65, 2.25, -130.0, 6.0))),  # L14 NE corner, tilt up with the bed
+    (41.2, 44.0, (P(1.28, 0.50, 1.40, 46.0, -12.0), P(1.40, 0.72, 1.35, 38.0, -12.0))),    # L13 push in on the north section
+    (44.3, 47.2, (P(2.58, 2.88, 2.35, -130.0, -16.0), P(2.48, 2.80, 2.28, -126.0, 2.0))),  # L14 NE corner, tilt up with the bed
     (47.5, 49.5, (P(2.20, 0.90, 1.55, -55.0, 4.0), S1[0])),                                # L15 drifting wide back to frame 1
 ]
 if LONG:
@@ -1324,8 +1324,13 @@ def timeline_long(tl, kit):
         return T(0, 0.70 * smooth((t - 42.95) / 0.30), 0), True     # slides back over the north section
     tl.custom('wr_mir', mir)
     ev(43.25, 'mir_back', 0.5, 'swish')
-    tl.custom('wr_oak', lambda t: (T(0, -0.70 * (1 - smooth((t - 42.95) / 0.30)), 0) if t < 43.25 else I4, t >= 37.90) if t < 43.25
-              else (I4, True))
+    def oak(t):                                          # lands over the hanging section once the mirror has slid back
+        if t < 43.70:
+            return I4, False
+        u = c01((t - 43.70) / 0.18)
+        return T(0, -0.70, 0.30 * (1 - u * u)), True
+    tl.custom('wr_oak', oak)
+    ev(43.88, 'oak_front', 0.7, 'thud')
     # ---- L13 (41.2-44.0): ironing board down and up, shoe pull-out out and back
     ev(42.35, 'board_down', 0.6, 'thud'); ev(42.95, 'board_up', 0.6, 'thud')
     shoe_in = tl.anims['wr_shoe']
@@ -1363,7 +1368,7 @@ def timeline_long(tl, kit):
         dict(t=33.50, kind='sit', at=(1.36, 2.08, 92), seat=BED_SEAT),
         dict(t=37.60, kind='hide'),
         dict(t=41.20, kind='show', at=(2.45, 0.30, 0)),
-        dict(t=42.00, kind='walk', to=(2.02, 1.40, 40)),
+        dict(t=42.00, kind='walk', to=(2.18, 1.42, -10)),
         dict(t=42.20, kind='pose', pose=dict(sh_r=70, elbow_r=30, sh_l=50, elbow_l=40, spine=10, neck=10)),
         dict(t=42.55, kind='pose', pose=dict(sh_r=40, elbow_r=40, sh_l=30, elbow_l=40, spine=8, neck=16)),
         dict(t=42.85, kind='pose', pose=dict(sh_r=70, elbow_r=30, sh_l=50, elbow_l=40, spine=10, neck=10)),
