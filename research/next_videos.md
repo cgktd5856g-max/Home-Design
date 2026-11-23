@@ -1,293 +1,268 @@
 # Next videos: 20 ranked ideas
 
-Research date: 22 Nov 2026. Evidence for every "why" is in `report.md`.
+Research date: 22 Nov 2026. Updated with Haven Haus's YouTube data. Evidence is in `report.md`
+(sections 4-6).
 
-## Rules every idea follows
+## What the data changed
 
-- 15 s, 1080x1920, 25 fps, original music at about 126 BPM from frame 1, a sound on every landing, **no on-screen text**.
-- Frame 1 is the empty room, and the first landing comes by 0.3 s. Plan 35-50 landings, never more than about
-  0.8 s without one before the final hold.
-- Camera: 4 still stations, with 0.25-0.3 s swings at about 3.0, 7.0 and 10.7 s. The final wide uses the frame-1
-  viewpoint (for the loop), lights come on at about 12.2 s, and the hold runs 12.5-15.0 s.
-- One "wow" per video, staged in a held shot at 8-11 s.
-- Every room is packed with storage and has its own layout, so no two videos share a setup. Renders stay bright
-  and clean, even with dark finishes.
-- The caption carries the call to action (for example "Which room should I build next?"). Pin a comment answering
-  "which app?": rendered from code, no design app.
+- **Room priority**: bedrooms (1.51 times normal) and kids' rooms (1.35) first, then wardrobes (1.05) and
+  kitchens (1.00, but the single biggest hit at 19.3M). Balcony, bathroom, entry and living rooms trail
+  (0.70-0.92).
+- **Length**: every Haven Haus hit is a 34-53 s multi-zone tour. Make each top idea in **two cuts**: the 15 s
+  cut (your current pipeline) and a **long cut of 40-50 s** that chains 3-4 zones. Compare them after 7 days.
+- **People**: four of the top five show a person using a feature. Where the renderer allows, add a simple
+  stand-in figure for one moment; otherwise make the feature visibly work (the step drawer pulls out, the table
+  slides out).
+
+## Rules for every idea
+
+- Frame 1 is the empty room (or a wall breaking open), and the first landing comes by 0.3 s. No on-screen text.
+- A sound on every landing over original music at about 126 BPM; one or two playful effects.
+- Clean, bright palette: warm white, light wood, one accent colour. No busy patterns.
+- 15 s cut: 4 still stations with 0.25-0.3 s swings at about 3.0, 7.0 and 10.7 s; wow at 8-11 s; lights at
+  about 12.2 s; hold the frame-1 viewpoint 12.5-15.0 s for the loop.
+- Long cut: the same opening, then a new zone every 6-10 s, each with a build and a reveal; the wow at about
+  60-70% of the runtime; a 2 s held wide at the end. No end card.
+- Packed with storage, a different layout every time, renders bright and clean.
+- Caption: the size and the problem ("9 m², three kids"), plus a question that starts a debate ("Would you sleep
+  on the top bunk?"). Pin a comment answering "which app?": rendered from code.
 
 ## Ranking
 
-Scores are judgement against the evidence. **Storage** payoff 0-3, **Hook** visible in frame 1 0-3, **Fit** with
-our renderer 0-3, **Send** trigger 0-2. Ties go to Fit, then to stronger evidence.
-
-| # | Idea | Palette | Storage | Hook | Fit | Send | Total |
-|---|---|---|---|---|---|---|---|
-| 1 | Galley kitchen with a full-height pull-out pantry | white + oak + black counter | 3 | 2 | 3 | 2 | 10 |
-| 2 | 18 m² studio where everything folds away | cream + light oak + sage | 3 | 3 | 2 | 2 | 10 |
-| 3 | Three kids, one 9 m² room | sage + birch + white | 3 | 3 | 2 | 2 | 10 |
-| 4 | Balcony laundry wall | white + light grey | 3 | 2 | 3 | 1 | 9 |
-| 5 | Walk-in wardrobe in a 1.5 m corridor | walnut + champagne LED | 3 | 2 | 3 | 1 | 9 |
-| 6 | Space-capsule kids' room (requested theme) | white + navy + warm LED | 3 | 3 | 2 | 1 | 9 |
-| 7 | Holiday baking kitchen with a mixer lift | white + sage + walnut | 3 | 1 | 3 | 1 | 8 |
-| 8 | Under-stairs storage | oak + white | 3 | 2 | 2 | 1 | 8 |
-| 9 | L-kitchen corner fixes | navy base + white uppers + walnut | 3 | 1 | 3 | 1 | 8 |
-| 10 | Walk-in pantry jar wall | white + oak + colourful jars | 3 | 1 | 3 | 1 | 8 |
-| 11 | Laundry room with three sorting hampers | white + sage + oak | 3 | 1 | 3 | 1 | 8 |
-| 12 | Teen loft bed in 7 m² | white + oak + one colour pop | 3 | 2 | 2 | 1 | 8 |
-| 13 | 1 m-wide entry hall | sage + oak + brass | 2 | 2 | 3 | 1 | 8 |
-| 14 | Closet office (cloffice) | deep green + oak | 2 | 2 | 3 | 1 | 8 |
-| 15 | 2.4 m² bathroom | terrazzo + white + oak | 2 | 2 | 2 | 1 | 7 |
-| 16 | Dark-finish kitchen with a lights-on payoff | black + walnut + brass | 2 | 1 | 3 | 1 | 7 |
-| 17 | Couple's bedroom with a lift-up bed | cream + walnut + grey tufted headboard | 2 | 1 | 2 | 1 | 6 |
-| 18 | Nursery | beige + sage + white | 2 | 1 | 2 | 1 | 6 |
-| 19 | Reading-nook wall | white + oak + rainbow books | 2 | 1 | 2 | 1 | 6 |
-| 20 | Gaming corner with hidden storage (control test) | white + oak + RGB | 1 | 1 | 2 | 0 | 4 |
+| # | Idea | Palette | Haven Haus evidence | Long cut? |
+|---|---|---|---|---|
+| 1 | Three kids, one 9 m² room | sage + birch + white | kids' rooms 1.35; "two kids, one room" 1.36; 8 m² kids' room 5.7M; two-kids room 4.3M | yes |
+| 2 | 7 m² bedroom with a loft bed and walk-in closet | white + light oak | bedrooms 1.51; loft 12.8M; "smallest bedroom fits a walk-in closet" 2.05M | yes |
+| 3 | Galley kitchen with a step drawer and pull-out pantry | warm white + walnut + green tile | 19.3M kitchen; step-drawer moment praised in the comments | yes |
+| 4 | 18 m² studio where everything folds away | cream + light oak + olive | 24 m² flat 5.5M with 1,102 comments; size titles 1.34 | yes |
+| 5 | Couple's bedroom with a lift-up bed and full wardrobe | white + light wood + blue door | 9.9M bedroom: lift-up base, wardrobe fill | yes |
+| 6 | Two-desk study in 9 m² | white + oak + deep green | "Small 9 m² study, double desk" 1.0M | optional |
+| 7 | Walk-in wardrobe in a 1.5 m corridor | walnut + champagne LED | wardrobes 1.05; wardrobe layout 2.09M | optional |
+| 8 | Space-capsule kids' room (requested theme) | white + navy + warm LED | kids' rooms 1.35; themed kids' rooms 56K-236K (treehouse, castle, pink) | optional |
+| 9 | Under-stairs storage | oak + white | stairs 1.46 (one video) | no |
+| 10 | Holiday baking kitchen with a mixer lift (before mid-Dec) | white + sage + walnut | kitchen 1.00; timely | no |
+| 11 | L-kitchen corner fixes | navy base + white uppers + walnut | kitchen corners: many videos, mostly 35K-50K | no |
+| 12 | Nursery | beige + sage + white | kids' adjacent | no |
+| 13 | Walk-in pantry jar wall | white + oak + colourful jars | pantry and fridge walls 82K-118K | no |
+| 14 | Window reading nook (colourful books) | white + oak + rainbow books | bay windows 0.90 | no |
+| 15 | Balcony laundry wall | white + light grey | balcony and laundry 0.92; best 726K | no |
+| 16 | Laundry room with three sorting hampers | white + sage + oak | laundry 0.92 | no |
+| 17 | Entryway shoe-and-sideboard wall | sage + oak + brass | entry 0.75, though "No entryway?" got 1.1M | no |
+| 18 | 2.4 m² bathroom | terrazzo + white + oak | bathrooms 0.85 | no |
+| 19 | Dark-finish kitchen with a lights-on payoff | black + walnut + brass | palette test; the busy-palette kitchen flopped | no |
+| 20 | Gaming corner with hidden storage (control test) | white + oak + RGB | gaming setup was a Haven Haus low (6.4K on Instagram) | no |
 
 ---
 
-## 1. Galley kitchen with a full-height pull-out pantry
+## 1. Three kids, one 9 m² room
 
-- **Palette**: white uppers, oak base, black counter, patterned cement floor, daylight through a window with a blind.
-- **Why it should hit**: Haven Haus's best-known Reel (587K) is this room and palette, storage is the star in all
-  four baseline videos, and a pantry that slides out, fills and slides back is a payoff the templates don't make.
-  `rooms/kitchen/project.py` already has the pantry. Move it from the final wide to the wow slot.
-- **Landings**: about 45.
-- **0.0-3.0 s · S1 doorway, eye height**: empty 1.8 m galley. Floor rows slap down far to near (7), base runs slide
-  out of both walls (6), counters drop (2), and the tall pantry carcass rises fully in frame and thuds (2.4 s).
-- **3.3-7.0 s · S2 cooktop wall**: uppers fly in (4), then hood, hob and splashback. A drawer opens, pans and a
-  cutlery tray drop in, and it closes (5.0-5.8 s). Upper doors swing shut over filled shelves (6.3-6.9 s).
-- **7.3-10.7 s · S3 close on the pantry**: **wow at 8.0-9.8 s**. The pantry slides out, six shelves fill top to
-  bottom with jars and boxes, and it slides back with a thud.
-- **11.0-15.0 s · S4 wide from the doorway**: blind lowers, plant, runner rug; under-cabinet LEDs and downlights at
-  12.2 s; hold.
+- **Why**: the strongest category plus the strongest phrase. Haven Haus's 8 m² kids' room (5.7M) and two-kids
+  room (4.3M) are both top 7.
+- **15 s cut** (about 45 landings)
+  - **0.0-3.0 s · S1 doorway**: empty square room. Floor, a triple bunk builds bottom-up, three mattresses drop.
+  - **3.3-7.0 s · S2 bunk side**: staircase blocks drop (5). Each step opens as a drawer, fills with toys and
+    clothes, and closes (5.0-6.6 s).
+  - **7.3-10.7 s · S3 floor**: **wow at 8.0-9.8 s**. A lift-up floor platform opens, toy bins fill, the lid
+    closes, and a desk folds down from the wall.
+  - **11.0-15.0 s · S4 wide**: three reading lights, rug; bunk LEDs at 12.2 s; hold.
+- **Long cut (about 45 s)**
+  - Add a wardrobe zone (rails fill, drawers pull out).
+  - Add a study wall (two desks drop, a chalkboard door like Haven Haus's 5.7M video).
+  - Add a moment where a child figure climbs the stair drawers.
 
-## 2. 18 m² studio where everything folds away
+## 2. 7 m² bedroom with a loft bed and walk-in closet
 
-- **Palette**: cream walls, light oak, sage accents, daylight.
-- **Why**: tiny-space premises top the genre (0 m², 2 m², 3.88 m² videos at 139.9K-862.6K likes). "This could
-  be your flat" is very sendable, and every wall is cabinetry.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1 high corner**: empty narrow studio with one window. Floor planks, a full-height wardrobe wall
-  slides out (5 modules), the kitchenette run drops (3).
-- **3.3-7.0 s · S2 wardrobe wall**: doors open, rails and folded clothes fill, doors slam (4.0-5.2 s). The centre
-  panel folds down into a bed and the bedding drops on (5.6-6.6 s).
-- **7.3-10.7 s · S3 kitchen run**: **wow at 8.0-9.6 s**. The bed folds back into the wall, then a dining table
-  slides out from under the counter and two stools drop in.
-- **11.0-15.0 s · S4 wide (S1 viewpoint)**: desk flap folds down, lamp, plant; cove LED at 12.2 s; hold.
+- **Why**: bedrooms are the top category. Haven Haus's loft (12.8M) and "smallest bedroom fits a walk-in
+  closet" (2.05M) combine here.
+- **15 s cut** (about 40 landings)
+  - **0.0-3.0 s · S1**: empty narrow room. Floor, the loft frame builds, the mattress drops.
+  - **3.3-7.0 s · S2 under the loft**: the desk and shelves drop and fill, and drawers open, fill and close.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. A wall panel swings open on a walk-in closet; rails fill with
+    clothes, and the panel closes.
+  - **11.0-15.0 s · S4 wide**: LED strip under the loft at 12.2 s; hold.
+- **Long cut**: add stair drawers filling in sequence, a hidden door (as in the 12.8M loft) and a figure sitting
+  at the desk.
 
-## 3. Three kids, one 9 m² room
+## 3. Galley kitchen with a step drawer and pull-out pantry
 
-- **Palette**: sage green, birch, white, soft daylight.
-- **Why**: kids plus an impossible room is the genre's biggest premise (3.88 m² for eight kids: 862.6K likes;
-  billion-kids bedroom: 395.6K). Parents send these to each other.
-- **Landings**: about 45.
-- **0.0-3.0 s · S1 doorway**: empty small square room. Floor, a triple bunk builds bottom-up (3 tiers), three
-  mattresses drop.
-- **3.3-7.0 s · S2 bunk side**: staircase blocks drop one by one (5), then each step opens as a drawer, fills with
-  toys and clothes, and closes in sequence (5.0-6.6 s).
-- **7.3-10.7 s · S3 floor level**: **wow at 8.0-9.8 s**. A lift-up floor platform opens, toy bins fill, the lid
-  closes, and a desk folds down from the wall.
-- **11.0-15.0 s · S4 wide**: three reading lights, rug, generic plush toys; bunk LEDs at 12.2 s; hold.
+- **Why**: kitchens can explode. The 19.3M hit's most-praised moment is a pull-out step drawer used to reach the
+  top cabinet. `rooms/kitchen/project.py` already has the pantry.
+- **15 s cut** (about 45 landings)
+  - **0.0-3.0 s · S1 doorway**: empty 1.8 m galley. Floor rows slap down far to near, base runs slide out, the
+    counters drop, and the tall pantry carcass thuds in fully in frame.
+  - **3.3-7.0 s · S2 cooktop wall**: uppers, hood and hob land; a drawer opens, fills and closes; the upper doors
+    shut over full shelves.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. The pantry slides out, its shelves fill top to bottom, and it
+    slides back. A toe-kick step drawer pulls out under the uppers.
+  - **11.0-15.0 s · S4 wide**: blind, plant, runner rug; lights at 12.2 s; hold.
+- **Long cut**: open with the wall-break hook (a wall cracks away to reveal the empty kitchen). Add an appliance
+  cabinet (microwave lands, flap opens), a pull-out table and a figure stepping on the drawer.
 
-## 4. Balcony laundry wall
+## 4. 18 m² studio where everything folds away
 
-- **Palette**: white, light grey, pale wood worktop, bright daylight.
-- **Why**: a Haven Haus balcony cabinet "with fully functional areas" travelled through a large X account.
-  Laundry is pure storage, and daylight renders clean.
-- **Landings**: about 35.
-- **0.0-3.0 s · S1 from inside, looking out through the balcony door**: empty 1.2 m-deep balcony. Floor tiles, the
-  washer drops, the dryer stacks on top with a thud, tall cabinet sides slide in.
-- **3.3-7.0 s · S2 side**: the sink unit and tap drop. A pull-out drying rack slides out, towels drop on, and it
-  slides back (5.0-6.2 s). Detergent shelves fill.
-- **7.3-10.7 s · S3 close**: **wow at 8.0-9.6 s**. A fold-down ironing board swings out of a drawer, the iron lands,
-  and it folds back. Three sorting baskets slide out and in.
-- **11.0-15.0 s · S4 wide**: doors close across the whole wall into one clean white face, plant; light at 12.2 s; hold.
+- **Why**: whole-flat-in-one-room premises carry Haven Haus's comment record (24 m², 1,102 comments). Show a
+  kitchenette and a bathroom door so the debate is about cleverness, not missing rooms.
+- **15 s cut** (about 40 landings)
+  - **0.0-3.0 s · S1 high corner**: empty narrow studio. Floor planks, a full-height wardrobe wall slides out, a
+    kitchenette run drops, and a bathroom door frame lands.
+  - **3.3-7.0 s · S2 wardrobe wall**: doors open, rails and folded clothes fill, and the doors slam. The centre
+    panel folds down into a bed.
+  - **7.3-10.7 s · S3 kitchen run**: **wow at 8.0-9.6 s**. The bed folds back up, a dining table slides out from
+    under the counter, and two stools drop.
+  - **11.0-15.0 s · S4 wide**: desk flap, lamp, plant; cove LED at 12.2 s; hold.
+- **Long cut**: add a loft platform with storage stairs and under-sofa drawers (the 24 m² video's best moments),
+  plus a projector screen dropping down.
 
-## 5. Walk-in wardrobe in a 1.5 m corridor
+## 5. Couple's bedroom with a lift-up bed and full wardrobe
 
-- **Palette**: walnut, champagne metal, warm LEDs. Evening, but brightly exposed.
-- **Why**: wardrobe design is one of Haven Haus's own page keywords. Rails and shelves fill in rhythm, and
-  lights-on lands hardest in a wardrobe.
-- **Landings**: about 45.
-- **0.0-3.0 s · S1 end of the corridor**: empty narrow corridor. Floor, carcasses slide out of both walls (6), the
-  island drops.
-- **3.3-7.0 s · S2 left wall**: hanging rails fill with shirts row by row. Shoe pull-outs slide out, shoes drop in
-  pairs, and they slide back (5.4-6.6 s).
-- **7.3-10.7 s · S3 right wall**: **wow at 8.0-9.8 s**. A full-height mirror panel swings open on a jewellery and
-  watch cabinet, the trays fill, and the mirror swings shut.
-- **11.0-15.0 s · S4 wide**: island drawers close, bench, rug; every shelf LED comes on at 12.0 s (the payoff); hold.
+- **Why**: the 9.9M bedroom builds exactly this: a slatted lift-up base, a wardrobe that fills, a window desk.
+- **15 s cut** (about 35 landings)
+  - **0.0-3.0 s · S1**: empty bedroom. The slatted bed base drops, then the mattress and bedding.
+  - **3.3-7.0 s · S2**: the wardrobe wall slides out; rails fill, and drawers open and close.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. The bed base lifts on its struts, suitcases fill it, and it lowers.
+  - **11.0-15.0 s · S4 wide**: bedside lights at 12.2 s; hold.
+- **Long cut**: add an arched partition, a window desk with bench drawers, and two figures at the desk.
 
-## 6. Space-capsule kids' room (requested theme)
+## 6. Two-desk study in 9 m²
 
-- **Palette**: white, navy, warm LED accents. No logos or characters.
-- **Why**: a themed room is a premise viewers see without text. Research the theme from viewer requests. The
-  capsule bunk is storage-heavy.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1**: empty room. Dark-blue floor, two round capsule bunk shells land with thuds.
-- **3.3-7.0 s · S2**: a control-panel desk drops, its drawers open, fill and close, and porthole shelves fill with books.
-- **7.3-10.7 s · S3**: **wow at 8.2-9.6 s**. A capsule hatch opens, the bed and storage inside fill, and the hatch closes.
-- **11.0-15.0 s · S4 wide**: star-ceiling lights at 12.2 s; hold.
+- **Why**: Haven Haus's "small 9 m² study room, double desk" passed 1M. Two people, one small room, no fighting.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty room. Two desks drop facing apart, then the chairs.
+  - **3.3-7.0 s · S2**: a full-height bookcase wall fills with books and boxes; the drawers fill.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A sliding divider closes between the desks, then reopens.
+  - **11.0-15.0 s · S4 wide**: desk lamps at 12.2 s; hold.
 
-## 7. Holiday baking kitchen with a mixer lift (post before mid-December)
+## 7. Walk-in wardrobe in a 1.5 m corridor
 
-- **Palette**: white, sage, walnut, red accents.
-- **Why**: a kitchen with a hidden-storage payoff and seasonal timing. A mixer lift (a cabinet shelf that rises to
-  counter height) is a trick most viewers haven't seen.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1**: empty kitchen corner. Floor, base run, counter.
-- **3.3-7.0 s · S2**: vertical baking-sheet dividers slide in and trays drop into the slots; a spice pull-out fills (5.0-6.2 s).
-- **7.3-10.7 s · S3**: **wow at 8.0-9.5 s**. A cabinet door opens, the mixer lift rises with the mixer, bowls drop
-  in, the lift sinks back, and the door shuts.
-- **11.0-15.0 s · S4 wide**: a tray of cookies and jars on the counter (generic, no text); lights at 12.2 s; hold.
+- **Why**: wardrobes run slightly above normal, and Haven Haus's wardrobe layout got 2.09M.
+- **Outline**
+  - **0.0-3.0 s · S1 end of the corridor**: empty corridor. Carcasses slide out of both walls, the island drops.
+  - **3.3-7.0 s · S2**: rails fill row by row; shoe pull-outs slide out, shoes drop, and they slide back.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. A mirror panel swings open on a jewellery cabinet, the trays
+    fill, and it closes.
+  - **11.0-15.0 s · S4 wide**: all shelf LEDs at 12.0 s; hold.
 
-## 8. Under-stairs storage
+## 8. Space-capsule kids' room (requested theme)
 
-- **Palette**: oak, white, black handles.
-- **Why**: an awkward space is a visible premise, and stair drawers are the genre's favourite trick.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1 side view**: an empty staircase with a bare void below. Treads drop top to bottom (12); the run
-  of sounds is a hook in itself.
-- **3.3-7.0 s · S2**: the risers become drawers that open, fill with shoes and boots, and close in sequence (4.0-6.4 s).
-- **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. A tall pull-out pantry slides out of the deepest part, fills, and slides back.
-- **11.0-15.0 s · S4 wide**: coat niche with light, bench; lights at 12.2 s; hold.
+- **Why**: themed kids' rooms do well for Haven Haus (pink bedroom 130K, treehouse 236K, castle 136K). Use no
+  logos or characters.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty room. Navy floor; two capsule bunk shells land with thuds.
+  - **3.3-7.0 s · S2**: a control-panel desk drops, its drawers fill, and porthole shelves fill with books.
+  - **7.3-10.7 s · S3**: **wow at 8.2-9.6 s**. The capsule hatch opens, the bed and storage inside fill, and it closes.
+  - **11.0-15.0 s · S4 wide**: star-ceiling lights at 12.2 s; hold.
 
-## 9. L-kitchen corner fixes
+## 9. Under-stairs storage
 
-- **Palette**: navy base, white uppers, walnut counter, daylight.
-- **Why**: a relatable problem ("send to anyone with a dead corner cabinet") with three reveals in one video.
-- **Landings**: about 45.
-- **0.0-3.0 s · S1**: empty L-shaped kitchen with an obvious dead corner. Floor, base units, counter.
-- **3.3-7.0 s · S2 corner**: a magic-corner unit swings out, pots drop in, and it swings back (4.4-5.8 s).
-  Toe-kick drawers slide out under the bases, trays drop in, and they slide back (6.0-6.8 s).
-- **7.3-10.7 s · S3 counter**: **wow at 8.0-9.6 s**. An appliance-garage door lifts, the coffee machine, toaster
-  and kettle land, and the door slides down.
-- **11.0-15.0 s · S4 wide**: uppers and hood; lights at 12.2 s; hold.
+- **Why**: Haven Haus's "don't waste the 2 m² under the stairs" ran at 1.46 times normal (one video).
+- **Outline**
+  - **0.0-3.0 s · S1 side view**: empty staircase with a bare void; the treads drop top to bottom.
+  - **3.3-7.0 s · S2**: the risers become drawers that open, fill and close in sequence.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. A tall pull-out pantry slides out, fills, and slides back.
+  - **11.0-15.0 s · S4 wide**: coat niche light at 12.2 s; hold.
 
-## 10. Walk-in pantry jar wall
+## 10. Holiday baking kitchen with a mixer lift (post before mid-December)
 
-- **Palette**: white shelving, oak, clear jars with colourful contents, daylight.
-- **Why**: filling shelf by shelf is the most satisfying fill pattern there is, and it is pure storage.
-- **Landings**: about 50 (jars land in bursts).
-- **0.0-3.0 s · S1**: empty small pantry. Floor, four shelving bays slide in.
-- **3.3-7.0 s · S2**: jars fill shelf by shelf, left to right, in bursts of six with tick sounds (no labels).
-- **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. A pull-out spice tower and a rolling drawer bank slide out, fill, and slide back.
-- **11.0-15.0 s · S4 wide**: baskets and a step stool; shelf LEDs at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty kitchen corner. Floor, base run, counter.
+  - **3.3-7.0 s · S2**: baking-sheet dividers slide in and trays drop into the slots; a spice pull-out fills.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.5 s**. A mixer lift rises with the mixer, bowls drop in, and it sinks back.
+  - **11.0-15.0 s · S4 wide**: tray of cookies; lights at 12.2 s; hold.
 
-## 11. Laundry room with three sorting hampers
+## 11. L-kitchen corner fixes
 
-- **Palette**: white, sage, light oak.
-- **Why**: a relatable chore, and the joke needs no text: white, black and coloured clothes find their own hampers.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1**: empty laundry room. Floor, washer and dryer side by side, worktop drops.
-- **3.3-7.0 s · S2**: three tilt-out hampers swing open, white, black and coloured clothes drop into each, and
-  they close (4.2-6.0 s). Upper cabinets fill.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A fold-down drying rack and an ironing board flip out, the iron
-  lands, and both flip back.
-- **11.0-15.0 s · S4 wide**: lights at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty L-shaped kitchen with an obvious dead corner. Floor, bases, counter.
+  - **3.3-7.0 s · S2 corner**: a magic-corner unit swings out, fills, and swings back; toe-kick drawers slide
+    out, fill, and slide in.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. An appliance-garage door lifts, the appliances land, and it closes.
+  - **11.0-15.0 s · S4 wide**: uppers, hood; lights at 12.2 s; hold.
 
-## 12. Teen loft bed in 7 m²
+## 12. Nursery
 
-- **Palette**: white, oak, black accents with one colour pop (lilac or teal).
-- **Why**: a tiny-room premise with a lot of storage. Teens and parents both share these.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1**: empty narrow room. Floor, the loft frame builds, the mattress drops.
-- **3.3-7.0 s · S2 under the loft**: the desk and monitor drop, drawers open, fill and close, and a wardrobe column slides out.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. The stair treads open as drawers in sequence, fill, and close.
-- **11.0-15.0 s · S4 wide**: LED strip at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty small room. Floor, crib, wardrobe carcass.
+  - **3.3-7.0 s · S2**: the changing dresser drops and its drawers fill in sequence.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. The wardrobe opens on tiny clothes, and baskets slide out and in.
+  - **11.0-15.0 s · S4 wide**: night light at 12.2 s; hold.
 
-## 13. 1 m-wide entry hall
+## 13. Walk-in pantry jar wall
 
-- **Palette**: sage green, oak, brass hooks.
-- **Why**: a narrow-hall premise that almost everyone has, with tilt-out shoe storage as the payoff.
-- **Landings**: about 35.
-- **0.0-3.0 s · S1 from the front door**: empty narrow hall. Floor, tall cabinet sides.
-- **3.3-7.0 s · S2**: tilt-out shoe cabinets flip open, shoes drop in pairs, and they flip shut (4.0-5.6 s). A
-  bench drops, its seat lifts, bags fill it, and the seat closes.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A mirror door swings open on a lit key-and-mail niche and closes.
-- **11.0-15.0 s · S4 wide**: coats drop onto hooks; lights at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty small pantry; four shelving bays slide in.
+  - **3.3-7.0 s · S2**: jars fill shelf by shelf, left to right, in bursts with tick sounds.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. A pull-out spice tower and a rolling drawer bank slide out,
+    fill, and slide back.
+  - **11.0-15.0 s · S4 wide**: shelf LEDs at 12.2 s; hold.
 
-## 14. Closet office (cloffice)
+## 14. Window reading nook (colourful books)
 
-- **Palette**: deep green, oak, warm desk light.
-- **Why**: hidden-workspace magic. A whole office appears and disappears, and hidden-storage tricks draw the most
-  comments in the sample.
-- **Landings**: about 35.
-- **0.0-3.0 s · S1**: empty bedroom wall with a bare alcove. Floor, carcass, shelves slide in.
-- **3.3-7.0 s · S2**: desk, monitor arm and lamp drop, shelves fill with books and boxes, and a drawer fills.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. Pocket doors slide out and close over the whole office, then reopen.
-- **11.0-15.0 s · S4 wide**: the chair rolls in; desk lamp at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty window wall. The window-seat carcass and cushions land.
+  - **3.3-7.0 s · S2**: seat drawers open, toys fill them, and they close; bookshelf frames slide in.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. The shelves fill with books in one sweeping colour gradient.
+  - **11.0-15.0 s · S4 wide**: reading lamp at 12.2 s; hold.
 
-## 15. 2.4 m² bathroom
+## 15. Balcony laundry wall
 
-- **Palette**: terrazzo floor, white, light oak.
-- **Why**: a tiny-room premise. The tiles slapping on make a strong sound run.
-- **Landings**: about 45.
-- **0.0-3.0 s · S1**: empty tiny bathroom. Floor and wall tiles slap on, then the toilet and vanity drop.
-- **3.3-7.0 s · S2**: vanity drawers open (the U-cut around the pipe is visible), fill, and close. Mirror-cabinet
-  doors open, shelves fill, and the doors close.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A pull-out laundry hamper and a towel ladder slide out of a niche,
-  and the recessed niche shelves fill.
-- **11.0-15.0 s · S4 wide**: the glass shower screen slides in; mirror light at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1 through the balcony door**: empty balcony. The washer drops and the dryer stacks on top.
+  - **3.3-7.0 s · S2**: sink and tap drop; a drying rack slides out with towels and slides back.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A fold-down ironing board swings out of a drawer and folds back;
+    three sorting baskets slide out and in.
+  - **11.0-15.0 s · S4 wide**: doors close into one clean white face; light at 12.2 s; hold.
 
-## 16. Dark-finish kitchen with a lights-on payoff
+## 16. Laundry room with three sorting hampers
 
-- **Palette**: black cabinets, walnut, brass handles. Keep the exposure bright: dark finishes, not a dark image.
-- **Why**: tests the dark palette (Haven Haus's dark hallway Reel: 121K) against white + wood, with the lights-on
-  moment doing the work.
-- **Landings**: about 40.
-- **0.0-3.0 s · S1**: empty kitchen at dusk, with strong fill light. Floor, base units, counter.
-- **3.3-7.0 s · S2**: uppers and hood land; a drawer opens, fills, and closes.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. Glass-front upper doors open, glassware fills, and the doors close.
-- **11.0-15.0 s · S4 wide**: under-cabinet and plinth LEDs switch on, staggered, 11.8-12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty laundry room. Washer and dryer side by side, worktop.
+  - **3.3-7.0 s · S2**: three tilt-out hampers swing open; white, black and coloured clothes drop in, and they close.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A drying rack and ironing board flip out and back.
+  - **11.0-15.0 s · S4 wide**: lights at 12.2 s; hold.
 
-## 17. Couple's bedroom with a lift-up bed
+## 17. Entryway shoe-and-sideboard wall
 
-- **Palette**: cream, walnut, a grey channel-tufted headboard (modelled as one solid piece).
-- **Why**: bedroom storage nobody sees coming. It's lower on the list because soft furnishings render simpler.
-- **Landings**: about 35.
-- **0.0-3.0 s · S1**: empty bedroom. Floor, the wardrobe wall slides out.
-- **3.3-7.0 s · S2**: the wardrobe fills and the doors close; the headboard wall panels drop.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. The bed base lifts on its struts, suitcases and spare bedding fill
-  it, the base lowers, and the bedding drops on.
-- **11.0-15.0 s · S4 wide**: bedside lights at 12.2 s; hold.
+- **Why**: entryways trail overall, but "No entryway? Shoe + side cabinet combo" passed 1.1M. Lead with the
+  missing-entryway problem.
+- **Outline**
+  - **0.0-3.0 s · S1 from the front door**: the door opens straight into an empty living room.
+  - **3.3-7.0 s · S2**: tilt-out shoe cabinets flip open, shoes drop in pairs, and they flip shut; a bench lifts
+    and fills.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. The sideboard top folds out into a console with a lit key niche.
+  - **11.0-15.0 s · S4 wide**: coats on hooks; lights at 12.2 s; hold.
 
-## 18. Nursery
+## 18. 2.4 m² bathroom
 
-- **Palette**: soft beige, sage, white.
-- **Why**: very sendable to new and expecting parents, with a dresser full of drawers.
-- **Landings**: about 35.
-- **0.0-3.0 s · S1**: empty small room. Floor, crib, wardrobe carcass.
-- **3.3-7.0 s · S2**: the changing dresser drops and its drawers fill with clothes and nappies in sequence.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. The wardrobe opens on a rail of tiny clothes, and baskets slide out and in.
-- **11.0-15.0 s · S4 wide**: night light at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty tiny bathroom. Tiles slap on; toilet and vanity drop.
+  - **3.3-7.0 s · S2**: vanity drawers (U-cut around the pipe) and mirror-cabinet shelves fill.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. A pull-out hamper and a towel ladder slide from a niche.
+  - **11.0-15.0 s · S4 wide**: the shower screen slides in; mirror light at 12.2 s; hold.
 
-## 19. Reading-nook wall
+## 19. Dark-finish kitchen with a lights-on payoff (palette test)
 
-- **Palette**: white, oak, rainbow book spines (the colourful-palette test).
-- **Why**: a satisfying colour-gradient fill that tests the colourful palette.
-- **Landings**: about 45 (books land in bursts).
-- **0.0-3.0 s · S1**: empty window wall. Window-seat carcass and cushions.
-- **3.3-7.0 s · S2**: window-seat drawers open, toys fill them, and they close; bookshelf frames slide in.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.8 s**. The shelves fill with books in one sweeping colour gradient.
-- **11.0-15.0 s · S4 wide**: reading lamp at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty kitchen at dusk with strong fill light. Floor, base units, counter.
+  - **3.3-7.0 s · S2**: uppers, hood, a drawer reveal.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. Glass-front doors open, glassware fills, and they close.
+  - **11.0-15.0 s · S4 wide**: under-cabinet and plinth LEDs switch on, staggered, 11.8-12.2 s; hold.
+    Keep the exposure bright.
 
 ## 20. Gaming corner with hidden storage (control test)
 
-- **Palette**: white, oak, RGB accents.
-- **Why it's last**: Haven Haus's gaming-PC Reel was its worst known number (6.4K). Run it once to learn whether
-  storage reveals rescue the theme.
-- **Landings**: about 35.
-- **0.0-3.0 s · S1**: empty corner. Desk and PC tower.
-- **3.3-7.0 s · S2**: a headset drawer opens, a cable tray flips down, and the controller drawers fill.
-- **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. The desktop slides back to reveal a second monitor and a hidden shelf.
-- **11.0-15.0 s · S4 wide**: RGB lighting at 12.2 s; hold.
+- **Outline**
+  - **0.0-3.0 s · S1**: empty corner. Desk and PC tower land.
+  - **3.3-7.0 s · S2**: a headset drawer opens, a cable tray flips down, and the controller drawers fill.
+  - **7.3-10.7 s · S3**: **wow at 8.0-9.6 s**. The desktop slides back to reveal a second monitor and a hidden shelf.
+  - **11.0-15.0 s · S4 wide**: RGB lighting at 12.2 s; hold.
 
 ---
 
 ## How to learn from these
 
-- Post 3-4 a week, natively on each platform. Buffer's data puts the sweet spot at 3-5 a week on Instagram and
-  2-5 on TikTok.
-- Change one variable at a time: palette, room type, hook viewpoint, or wow type.
-- After 7 days, log engaged views, average watch time, shares or sends, saves and comments into `videos.csv`
-  (`set` = `ours`), then run `python3 research/youtube_inventory.py stats research/videos.csv --where set=ours`.
+- Post 3-4 a week, natively on each platform. Buffer puts the sweet spot at 3-5 a week on Instagram and 2-5 on
+  TikTok, and Haven Haus posted 5-6 a week at its peak.
+- For ideas 1-5, post the long cut and the 15 s cut a few days apart, then compare engaged views and average
+  watch time.
+- After 7 days, add each video's numbers to `videos.csv` (`set` = `ours`), then run
+  `python3 research/youtube_inventory.py stats research/videos.csv --where set=ours`.

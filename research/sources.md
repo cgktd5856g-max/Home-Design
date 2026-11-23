@@ -7,6 +7,9 @@ the search engine's copy of the page, which can lag the live page. View, like an
 
 | Source | Used for | Access |
 |---|---|---|
+| [YouTube @Havenhaus1 Shorts tab](https://www.youtube.com/@Havenhaus1/shorts) | all 298 Shorts with titles and displayed views; 151K subscribers, 309 videos | read in the owner's browser, 22 Nov 2026 |
+| YouTube video pages for 33 Shorts (URLs in `videos.csv`, `data_status` = "video page via browser") | exact views, likes, length, upload date | read in the owner's browser |
+| Top videos: [kitchen](https://www.youtube.com/watch?v=ZlcRIf31-6g), [loft](https://www.youtube.com/watch?v=3jQL43v_uIQ), [bedroom](https://www.youtube.com/watch?v=cGjsij1i3fA), [8 m² kids' room](https://www.youtube.com/watch?v=0_2UqtXKyOA), [24 m² flat](https://www.youtube.com/watch?v=Z_BBJKn6v64); flops: [kitchen re-cut](https://www.youtube.com/watch?v=_yiQm2amRLE), [floral kitchen](https://www.youtube.com/watch?v=Y2ttSM1k9uI) | frame contact sheets (1-2 s steps) and top comments | read in the owner's browser; analysis only, nothing saved or re-uploaded |
 | [Instagram @havenhaus_1](https://www.instagram.com/havenhaus_1/) | 1M followers, 346 posts, older bio | search snapshot |
 | [YouTube @Havenhaus1](https://www.youtube.com/@Havenhaus1) and [Shorts tab](https://www.youtube.com/@Havenhaus1/shorts) | channel ID, description, page keywords | page read; video grid not readable |
 | [X: Massimo (@Rainmaker1973)](https://x.com/Rainmaker1973/status/1999371467843104913) | balcony cabinet repost credited to havenhaus_1; date from the status ID | search snapshot |
