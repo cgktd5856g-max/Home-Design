@@ -115,6 +115,7 @@ def materials():
                   ('bk_mustard', (222, 176, 70)), ('bk_white', (242, 240, 236)), ('bk_sky', (160, 196, 226)),
                   ('bk_grey', (176, 178, 182))):
         mat(nm, col=srgb(*c), rough=0.6)
+    mat('kid_top', col=srgb(104, 148, 204), rough=0.5, f0=0.04)
     fg.materials()
 
 
@@ -395,7 +396,7 @@ def advent_drawers():
 
 
 DRAWERS = advent_drawers()
-TEASE = next(k for k, d in enumerate(DRAWERS) if d['kind'] == 'side' and d['row'] == 0 and d['col'] == 3)
+TEASE = next(k for k, d in enumerate(DRAWERS) if d['kind'] == 'side' and d['row'] == 0 and d['col'] == 2)
 
 
 # ------------------------------------------------------------------------------------------- shell + outside
@@ -641,7 +642,7 @@ def build_stair():
             put(f'ay{k}', toy(kind), (xc, d['y0'] + 0.12, d['z0'] + 0.03), sc * (1.15 if kind == 'star' else 1.0), 0.0)
     # tease glint (a small sparkle)
     d = DRAWERS[TEASE]
-    add('glint', star_prism((SX0 - 0.03, (d['y0'] + d['y1']) / 2, d['z1'] - 0.03), 0.035, 0.008, 0.004, n=4), 'star_glow')
+    add('glint', star_prism((SX0 - 0.20, (d['y0'] + d['y1']) / 2, d['z1'] + 0.02), 0.07, 0.014, 0.004, n=4), 'star_glow')
 
 
 def build():
@@ -655,7 +656,7 @@ def build():
     add('den_on', box(0.10, LY0 + 0.07, LZ0 - 0.002, 2.0, LY0 + 0.09, LZ0 - 0.0015), 'led')
     for (x, y) in DL:
         disc('dl_on', (x, y), 0.037, H - 0.005, H - 0.0035, 'dl_emis')
-    KID[0] = fg.figure('kid', 'child', pose='stand', at=(2.36, SY0 + TD * 3.5, 0), floor=RZ * 3)
+    KID[0] = fg.figure('kid', 'child', mat='kid_top', pose='stand', at=(2.36, SY0 + TD * 3.5, 0), floor=RZ * 3)
 
 
 TREE_TOP = [LZ1 + 0.9]
@@ -669,12 +670,13 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-SA = (P(0.20, 0.15, 2.20, 48.0, -24.0), P(0.50, 0.62, 1.60, 30.0, -9.0))       # high doorway corner, craning down
+SA = (P(0.20, 0.15, 2.10, 38.0, -18.0), P(0.50, 0.60, 1.60, 28.0, -9.0))       # high doorway corner, craning down
 SB = (P(0.55, 1.05, 1.00, -12.0, 2.0), P(1.55, 1.35, 0.90, 10.0, 4.0))         # the den under the loft
-SC = (P(0.30, 1.05, 0.78, 68.0, 0.0), P(1.00, 1.92, 1.32, 98.0, -16.0))       # push-in along the stair through the cascade
-SD = (P(0.45, 0.60, 1.25, 66.0, 4.0), P(0.80, 0.98, 1.48, 54.0, 10.0))         # the child, the top drawer, the tree
+SC = (P(1.22, 1.12, 0.52, 74.0, -12.0), P(1.12, 1.78, 1.30, 84.0, -17.0))      # tight push up the stair with the ripple
+SC2 = (P(0.55, 1.28, 1.05, 82.0, -10.0), P(0.82, 1.46, 1.00, 87.0, -9.0))       # all 24 open: slow push
+SD = (P(1.24, 0.86, 1.50, 46.0, 9.0), P(1.38, 1.02, 1.62, 40.0, 14.0))        # the child, the top drawer, the star, lights on
 SE = (P(0.80, 1.00, 1.82, 24.0, -15.0), SA[0])                                  # final: drift back into the frame-1 pose
-HOLDS_SHORT = [(0.0, 2.90, SA), (3.20, 5.20, SB), (5.50, 10.70, SC), (11.00, 12.60, SD), (12.90, DUR_SHORT, SE)]
+HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.55, SD), (12.85, DUR_SHORT, SE)]
 HOLDS = HOLDS_SHORT
 
 camera = hold_camera(HOLDS, VFOV, rest=REST)
@@ -831,7 +833,7 @@ def timeline_short(tl):
         base = (lambda t, col=col: tl.anims[f'stc{col}'](t))
         cyc = []
         if k == TEASE:
-            cyc.append((T_TEASE, T_TEASE + 0.36, False))
+            cyc.append((T_TEASE, T_TEASE + 0.52, True))
         to = T_C + STEP * k
         tc = T_CL + 0.035 * (23 - k)
         cyc.append((to, tc, True))
@@ -850,22 +852,24 @@ def timeline_short(tl):
                 u = c01((t - T_STAR0) / (T_STAR1 - T_STAR0))
                 e = smooth(u)
                 p = dest * e + np.array([0, 0, 0.25 * math.sin(math.pi * u)])
-                return M0 @ T(*p) @ about(cen['ay23'], R('y', 2 * math.pi * e)), v
+                sc = 1 + 0.6 * math.sin(math.pi * u)
+                return M0 @ T(*p) @ about(cen['ay23'], R('y', 2 * math.pi * e) @ S(sc, sc, sc)), v
             tl.custom(f'ay{k}', star)
         else:
             tl.custom(f'ay{k}', f_toy)
         ev(to + 0.06, f'adv{k}', 0.26, 'tick')
         ev(tc + 0.02, f'advc{k}', 0.12, 'tick')
-    ev(T_TEASE + 0.08, 'adv_tease', 0.35, 'tick'); ev(T_TEASE + 0.36 + 0.16, 'tease_shut', 0.4, 'thud')
+    ev(T_TEASE + 0.08, 'adv_tease', 0.35, 'tick'); ev(T_TEASE + 0.52 + 0.24, 'tease_shut', 0.45, 'thud')
 
     def glint(t):
-        u = (t - T_TEASE - 0.10) / 0.30
+        u = (t - T_TEASE - 0.22) / 0.34
         if u < 0 or u > 1:
             return I, False
         s = math.sin(math.pi * u)
         return about(cen['glint'], R('x', 0) @ S(s, s, s) @ np.eye(4)), True
     tl.custom('glint', glint)
     ev(T_CL + 0.035 * 23 + 0.22, 'all_shut', 0.9, 'thud')
+    ev(9.15, 'sparkle', 0.45, 'chime')
     grow('loft_posts', 1.30, 1.48, 'z', (0, 0, 0), 0.8)
     drop('loft_deck', 1.50, 1.68, 0.45, 0.02, 0.9, 'thud')
     tl.custom('cupboard', lambda t: (tl.anims['loft_deck'](t)[0], t >= 1.50))
