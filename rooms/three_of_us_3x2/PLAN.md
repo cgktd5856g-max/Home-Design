@@ -1,14 +1,25 @@
-<!-- id: C1 | reviewer_score: 6.5 | verdict: ok -->
-<!-- one_line: Three of Us in 3 × 2 m: a 6 m² bedroom for two parents and a newborn. The double bed goes up wall to wall on a 1.2 m deck, a floor-level crib parks under it by day and rolls out beside the stair at night, and the baby gets two of the three wardrobe bays. This revision fixes the geometry (1.5 m deck, standard double, crib bay swapped), moves stations clear of the stair, ends on a whole-room crane loop, warms the palette and staggers the lights. Evergreen; post about 6-7 Dec as a test of a household premise. -->
-## Three of Us in 3 × 2 m
+<!-- Final plan: research/top10_ideas.md section 3 (supersedes production/plans/C1.md), plus the production changes below. -->
+## 3. Three of Us in 3 × 2 m
 
-**Pitch**: Two parents and a newborn share a 3 × 2 m bedroom with a 2.9 m ceiling. The double bed goes up wall to wall on a 1.2 m deck. The crib always stays at floor level: it parks under the deck by day and rolls out beside the stair at night. And the baby gets two-thirds of the wardrobe.
+- **At a glance**:
+  - Candidate C1. Judges' mean 7.8; reviewer score 6.5, given before this revision.
+  - Plan ready, not started.
+  - Posting: the 15 s cut on Wed 9 Dec, the long cut on Mon 14 Dec.
+- **Why it ranks here**:
+  - A bedroom with a raised bed and a size the caption can lead with (6 m²) [measured].
+  - It answers a real request that came with dimensions [fact].
+  - The household is untested on the channel: 0 of 298 titles mention a baby [measured]. So it is also the slate's test of a household premise [inference].
 
-**Post caption** (in the post, never on screen):
+### Pitch
+
+Two parents and a newborn share a 3 × 2 m bedroom with a 2.9 m ceiling. The double bed goes up wall to wall on a 1.2 m deck. The crib always stays at floor level: it parks under the deck by day and rolls out beside the stair at night. And the baby gets two-thirds of the wardrobe.
+
+### Post caption (in the post, never on screen)
+
 "3 × 2 m bedroom, 2.9 m ceiling. Two parents and a newborn.
 The crib parks under the bed by day, and yes, the baby got two-thirds of the wardrobe.
 Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me your room size and who lives there."
-- Pinned comment: the plan with dimensions, plus "Modelled and rendered from code. No AI video, no design app." The dimensions:
+- Pinned comment: the plan with dimensions, plus "Modelled and rendered from code, no AI video, no design app." The dimensions:
   - the crib is always at floor level;
   - deck top 1.20 m; mattress 1.35 × 1.90 m (a standard double), 1.50 m below the ceiling;
   - guard rail 0.3 m above the mattress;
@@ -18,11 +29,12 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
 - Lead with the size and call it a bedroom, never an apartment.
 - Never say "you asked". Never quote, name or link the channel where the request was posted.
 
-**Why it should work**
+### Why it should work
+
 - **A bedroom with a raised bed, the pattern that held up in 2026** [measured]:
   - Bedrooms run 1.51 era-adjusted (47 Shorts).
-  - The 4 top 2026 uploads in the in-depth sample (290K-547K) are all bedrooms or kids' rooms. The report codes all 4 as raised or loft beds. The CSV frame notes confirm 3; the 536K one is noted "small bedroom; conventional layout first".
-  - The two biggest 2026 uploads (853K, a kids' room; 689K, a secondary bedroom) are not in that sample, and the files don't record their bed type.
+  - The 4 extra "best of 2026" videos in the in-depth sample (290K-547K) are all bedrooms or kids' rooms. The report codes all 4 as raised or loft beds. The CSV frame notes confirm 3; the 536K one is noted "small bedroom; conventional layout first".
+  - The two biggest 2026 uploads (853K kids' room; 689K secondary bedroom) are in the sample as matched-pair hits, but their frame notes ("kids room; zone labels ~6 s", "small bedroom") don't record the bed type.
   - One of the measured four, "Be bold! Raise the bed by 90 centimeters in a small bedroom!", got 343,222 views (10.39 era-adjusted, 43 s, motion 7.5, longest still 1.0 s).
 - **A size the caption can lead with** [measured]: titles naming a size run 1.34, against 1.00 without (15 Shorts). The four "6㎡" titles ran 4.83 (396K), 2.20 (286K), 1.34 (230K) and 0.63 (82K).
 - **A real request with real numbers** [fact]: report section 6 records a comment asking for "a compact bedroom for a husband, wife and newborn: 3 m x 2 m, ceiling 2.9 m". The checklist says to answer requests like this as a series.
@@ -40,7 +52,8 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
   - [inference] "The baby got two-thirds of the wardrobe" is a joke parents send each other. The trends file lists "a couple with a baby" as a premise that drives sends, but that is its own inference, not a measured figure.
 - **Believable beats AI-looking** [snapshot, indicative]: AI "empty room to furnished" timelapses are spreading (trends file). Real dimensions and mechanisms that visibly work are the contrast.
 
-**The room**
+### The room
+
 - **Size and shape**: 6 m², 3.0 m long (north-south) by 2.0 m wide, with a 2.9 m ceiling. Coordinates: x runs east 0-2.0, y runs north 0-3.0. Block it out in a grey-box probe before modelling, and check every camera station there.
   - **North end (window wall)**:
     - Window 1.0 m wide (x 0.5-1.5), from 1.55 to 2.6 m high, just above the mattress.
@@ -71,9 +84,9 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
   - **Free floor**: by day, 1.05 × 1.5 m between the stair and the wardrobe, plus the 0.5 m strip at the foot of the stair. At night the crib stands beside the stair (x 0.52-1.15, y 0.5-1.45). That leaves 0.4 m in front of the wardrobe: its doors open about 50° past the crib.
 - **Camera rule**: no doorway keyhole. In the hall shots the south wall, the bridge cabinet and the hall stub's walls and ceiling are hidden from the camera, so the room reads as a cut-away box. In the west shots the west wall is hidden. Both are set per hold.
 - **Palette**:
-  - **Shell**: the bedroom project's warm white (sRGB 238, 233, 225) on walls and ceiling. Pale-grey posts, rails and handrail.
+  - **Shell**: neutral white (about sRGB 242, 241, 238) on walls and ceiling, not the bedroom project's warm white (238, 233, 225), which sits at the edge of the cream zone. Pale-grey posts, rails and handrail. The warmth comes from the birch, the mustard throw and the dusk backdrop.
   - **Wood**: light birch on the floor, deck fascia, stair treads, crib and wardrobe fronts. No walnut.
-  - **One accent**: celery green on the riser-drawer fronts, echoed by a sage duvet. Sherwin-Williams Celery is one of the 2027 colour picks [fact, trends file, via snapshot].
+  - **One accent**: celery green on the riser-drawer fronts, echoed by a sage duvet. Sherwin-Williams Celery is one of the 2027 colour picks [snapshot, trends file].
   - **Colour from filled storage, early**:
     - The crib's sky-blue sheet at 0.45 s.
     - The crib-bay shelf fills with sky, coral and teal packs by 1.7 s (15 s cut; 2.55 s in the long cut).
@@ -86,25 +99,27 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
   - **Day**: soft daylight through the north window, plus the two fill slots used in the bedroom project, and a weak fill under the deck so the bays never go black.
   - **Lights on** (from 12.2 s in the 15 s cut, from 40.4 s in the long cut): evening, not night.
     - The window turns a soft lavender-peach dusk: a new backdrop, swapped in the way the bedroom project swaps in `bd_night`.
-    - Keep the fills at about 60%. The bedroom project drops them to 6-7%, which is too dark here.
+    - Keep the fills at 85% or more, the slate's rule for lights-on. The bedroom project drops them to 6-7%, which is far too dark here.
     - The lights come on one after another (see the cuts): reading light, tread LEDs bottom to top, the crib-bay shelf LED, the niche night light.
     - On the preview, check warmth 22 or more and 57 or less, saturation 0.17 or more, and brightness 138 or more.
 
-**Frame 1 and the hook**:
+### Frame 1 and the hook
+
 - **0.0 s**: the empty, tall, narrow white room, seen as a cut-away box from the hall. Bare pale-grey floor, the window at the far end, daylight.
   - The camera is already craning up. Pose P0: x 1.0, y -2.8, z 1.4 m, looking north, 1° down.
   - Lens: 62° vertical (about 37° horizontal). From here the full 2 m width and the floor-to-ceiling height are in frame, with a thin white ceiling edge at the top and the hall floor at the bottom. The 6 m² reads at once. Confirm in the probe.
 - **0.12-0.30 s**: an empty light-birch crib drops onto the bare floor, just left of centre, in line with its bay. It lands at 0.30 s with a soft thud and a small wobble, so the first question is "a crib, in here?"
 - **1.20 s**: the deck slams in wall to wall, and the room's width visibly equals one bed length.
 
-**15 s cut**
+### 15 s cut
+
 - **0.0-3.2 s · S1 hall (the frame-1 pose)**:
   - The crib lands at 0.30 s, and its mattress with the sky sheet drops in at 0.45 s.
   - Light-birch planks slap down far to near, 0.40-0.80 s; the crib hops as its row lands.
   - Two posts drop, 0.85-1.0 s.
   - **The deck slams in wall to wall at 1.20 s**: the hardest thud of the video.
   - The crib-bay shelf drops in at 1.30 s and fills with pips, 1.35-1.70 s.
-  - The crib rolls back into its bay, 1.75-2.10 s, with a soft roll and a "boop".
+  - The crib rolls back into its bay, 1.75-2.10 s, with a soft roll.
   - Guard rail 2.15 s, mattress 2.30 s, sage duvet spreads 2.45 s, two pillows 2.60 and 2.70 s, mustard throw 2.80 s.
   - The niche fills, 2.90-3.05 s (night light, two books), and the reading light clips onto the rail at 3.15 s.
   - Camera: crane up 0.46 m with a 0.16 m push-in while tilting down 4.8° (about 0.15 m/s and 1.5°/s).
@@ -115,28 +130,31 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
   - Camera: slide south 0.5 m with a 5° pan right, following the drawers. The handrail and treads give foreground parallax.
 - **7.3-10.7 s · S3 wardrobe (high west cut-away, about x -1.25, z 1.9, 10° down; the whole wardrobe fills the portrait frame above the stair)**:
   - The carcass and its top cabinets slide out of the east wall with the doors shut, 7.35-7.7 s (thud).
-  - **Wow, 7.9-9.0 s**: the three doors swing open. The parents' single skinny end-on rail slides out of bay C ("bwomp"), while bays A and B fill in a cascade of tiny outfits, nappy stacks and sock baskets (pip-pip-pip).
+  - **Wow, 7.9-9.0 s**: the three doors swing open on one sparse parents' bay (bay C's door opens with a "bwomp"; its skinny rail stays in), while bays A and B fill in a cascade of tiny outfits, nappy stacks and sock baskets (pip-pip-pip).
   - Bay A's flap folds down into the changing top and the mat drops on, 9.1-9.6 s.
   - The nappy drawer under it pulls out, fills (nappies, wipes, cream) and shuts, 9.7-10.5 s.
   - Camera: slide south 0.4 m with a 0.1 m push-in. The stair's handrail crosses the lower left.
 - **11.0-15.0 s · S4 hall wide (crane up into P0)**:
   - The flap folds up and the doors close, 11.0-11.3 s.
   - The window turns dusk at 11.1 s.
-  - The crib rolls out of its bay toward the camera, 11.3-11.9 s, and stops beside the stair with a soft roll and a "boop".
+  - The crib rolls out of its bay toward the camera, 11.3-11.9 s, and stops beside the stair with a soft roll.
   - Parent 2 pops in seated on the deck at 11.7 s, so the headroom reads.
   - Parent 1 pops in seated on step 2 at 11.95 s, facing down the stair with the crib at the left hand: the floor-level answer to the 3 a.m. question.
   - **Lights on, staggered**: reading light 12.2 s; tread LEDs 12.5, 12.7, 12.9 and 13.1 s; crib-bay shelf LED 13.4 s; niche night light 13.7 s.
   - **Late beats**: parent 1 rests a hand on the crib and it rocks about 1 cm, 13.9-14.3 s. Parent 2 lies back on the pillows, 14.0-14.6 s, and the duvet settles, 14.4-14.8 s.
   - Camera: from (1.0, -3.0, 0.83 m, 5° up) to P0, crane up 0.57 m with a 0.2 m push-in, tilting down 6°. That is about 0.15 m/s and 1.5°/s, the same speed and tilt rate as S1, so the loop is seamless.
 
-**Long cut (40-50 s)**: 44.0 s in 6 zones (6.7-7.3 s each) and 12 camera holds: 11 of 3.3-3.5 s and a final 3.1 s crane, joined by 0.3 s swings. The wow is at 26.6 s (60%). The lights stagger from 40.4 to 42.15 s and late beats run to the end. No end card.
+### Long cut (40-50 s)
+
+44.0 s in 6 zones (6.7-7.3 s each) and 12 camera holds: 11 of 3.3-3.5 s and a final 3.1 s crane, joined by 0.3 s swings. The wow is at 26.6 s (60%). The lights stagger from 40.4 to 42.15 s and late beats run to the end. No end card.
+
 - **Zone 1 · The bed deck (0.0-7.0 s)**
   - 0.0-3.4 s, hall (S1's crane, the same speed):
     - The crib lands at 0.30 s and its mattress drops in at 0.45 s.
     - Planks 0.40-1.0 s. The crib drawer pulls out and fills with coral and teal muslins, 1.05-1.5 s.
     - Posts 1.55-1.75 s. **Deck slam at 1.95 s.**
     - The crib-bay shelf drops at 2.05 s and pip-fills, 2.1-2.55 s.
-    - The crib rolls into its bay, 2.6-3.0 s ("boop"). Guard rail 3.1 s, mattress 3.3 s.
+    - The crib rolls into its bay, 2.6-3.0 s (a soft roll). Guard rail 3.1 s, mattress 3.3 s.
   - 3.7-7.0 s, west cut-away at deck height (slide north 0.6 m while panning right: a slow orbit toward the head end):
     - Duvet 3.8 s, two pillows 4.0 and 4.2 s, throw 4.4 s.
     - The niche fills, 4.7-6.0 s: monitor, night light, phone, two books.
@@ -156,8 +174,8 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
   - 22.3-25.6 s, west cut-away, low on bay A (clear of the stair), craning up from 0.9 to 1.6 m with the reach: the step-drawer person moment (below).
   - 25.9-29.4 s, high west cut-away, full-height frame (slide south, slight push-in):
     - The step drawer slides home at 26.1 s.
-    - **Wow at 26.6 s**: the doors swing open, the skinny rail slides out ("bwomp") and bays A and B fill in a 1.6 s cascade.
-    - Parent 1 shrugs, 28.7-29.3 s.
+    - **Wow at 26.6 s**: the three doors swing open on one sparse parents' bay (a "bwomp" as bay C's door opens), and bays A and B fill in a 1.6 s cascade.
+    - Parent 1 pulls bay C's skinny rail out and shrugs, 28.7-29.3 s.
 - **Zone 5 · Changing time, then evening (29.7-37.0 s)**
   - 29.7-33.2 s, west cut-away, closer on bay A (push in, slide south):
     - The changing flap folds down, 29.9-30.4 s, and the mat drops on at 30.5 s.
@@ -178,7 +196,8 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
     - Parent 1 rests a hand on the crib and it rocks about 1 cm, 42.9-43.4 s.
     - The camera reaches P0 at 44.0 s.
 
-**Storage moments** (6-12, numbered):
+### Storage moments (6-12, numbered)
+
 1. **Crib drawer** (long cut 1.05-1.5 s): the drawer under the crib pulls out and coral and teal muslins drop in.
 2. **Crib-bay shelf** (15 s 1.30-1.70 s; long 2.05-2.55 s): the open shelf drops in behind the crib's bay and pip-fills with nappy packs, wipes and spare sleepsuits before the crib parks. At night the crib rolls out and the shelf glows (15 s 13.4 s; long 41.85 s).
 3. **Headboard niche** (15 s 2.90-3.05 s; long 4.7-6.0 s): a night light and books land in the recessed niche; in the long cut, a monitor and a phone too.
@@ -187,22 +206,23 @@ Crib at floor level, bed 1.2 m up. 3 a.m. feed: genius or nightmare? Send me you
 6. **Bridge cabinet over the door** (long 15.0-17.0 s): the flaps open, a rolled winter duvet, a suitcase and a sky-blue box slide in, and the flaps swing shut.
 7. **Top cabinet via the toe-kick step drawer** (long 23.3-25.2 s): parent 1 hooks the step drawer out with a foot, steps up and slides three colour-coded next-size boxes into the top cabinet over bay A.
 8. **Wow: the baby gets two-thirds** (15 s 7.9-9.0 s; long 26.6-28.2 s):
-   - The doors swing open.
-   - The parents' one skinny end-on rail slides out of bay C: five garments in navy, denim and grey.
+   - The three doors swing open. Bay C, the parents', is sparse: its one skinny end-on rail stays in.
    - At the same time, bays A and B fill in a cascade of tiny coral, teal, mustard and sky outfits, nappy stacks, and sock and bib baskets.
+   - Long cut only: parent 1 then pulls the skinny rail out of bay C, five garments in navy, denim and grey, and shrugs (28.7-29.3 s). In the 15 s cut it stays in.
 9. **Changing table** (15 s 9.1-9.6 s; long 29.9-30.5 s): bay A's flap folds down on two brackets into a 0.5 × 0.9 m changing top at 0.9 m, and the padded mat drops on.
 10. **Nappy drawer** (15 s 9.7-10.5 s; long 30.8-31.8 s): it pulls out under the changing top, fills with nappies, wipes and cream, and shuts.
 
 The 15 s cut has 7 of these (#2, 3, 4, 5, 8, 9, 10); the long cut has all 10.
 
-**The person moment**:
+### The person moment
+
 - **Figures**: parent 1 is `fig_sage` and parent 2 is `fig_blue` (both `fig_adult` proportions, about 1.68 m), so they read against the white walls and birch fronts. Both are faceless.
 - **Long cut, 22.4-29.3 s**: parent 1.
   - Walks in from the door using `walk()`, 22.4-23.2 s.
   - Hooks the 0.2 m step drawer out from under bay A with a foot (23.3 s), steps up (`step_up` pose) and reaches up (`reach_up`). The top cabinet's flap lifts, and three next-size boxes go in one by one, in size order, colour-coded (sky, teal, coral; no numbers), 23.8-25.0 s.
   - Reach check: `reach_up` reaches about 2.05-2.1 m, so about 2.25-2.3 m from the step, against a cabinet floor at 2.05 m. Probe the pose.
   - Steps down and back, about 0.75 m from the fronts, so the doors can open (25.2-25.6 s). The drawer slides home at 26.1 s.
-  - When the doors open, parent 1 turns the head to the baby's two bays and shrugs: forearms forward and out, palms up, plus a 3 cm bob of the pelvis. A custom pose. It tells the "baby wins" joke with no text.
+  - When the doors open, parent 1 turns the head to the baby's two bays, then pulls the skinny rail out of bay C and shrugs: forearms forward and out, palms up, plus a 3 cm bob of the pelvis. A custom pose. It tells the "baby wins" joke with no text.
 - **Long cut, evening, 32.2-39.9 s**:
   - Parent 1 walks out (32.2-33.2 s) and comes back cradling the swaddled bundle (35.0-36.6 s): a faceless soft ellipsoid, about 0.5 m long, that follows the left forearm.
   - Parent 2 pops in already seated on the deck at 37.4 s (`figure.py`'s pop-in). No climb and no swing-round: they cost the most and would read as still stretches.
@@ -210,19 +230,22 @@ The 15 s cut has 7 of these (#2, 3, 4, 5, 8, 9, 10); the long cut has all 10.
   - Parent 1 stands and lays the bundle on its back in the bare crib, then later rests a hand on the crib (42.9-43.4 s). Parent 2 lies back (42.4-43.0 s).
 - **15 s cut**: parent 2 pops in seated on the deck at 11.7 s and parent 1 pops in seated on step 2 beside the crib at 11.95 s, both with the pop-in option. Late beats: the crib rock and parent 2 lying back.
 
-**Sound**:
+### Sound
+
 - **Landings**:
   - Thud: the deck (the loudest hit, at 1.20 s / 1.95 s), the posts, the carcasses and every drawer as it shuts.
   - Tick: planks, clothes, books and boxes.
   - Swish: drawers, doors and flaps opening.
   - Chime: each light coming on, rising in pitch through the stagger.
 - **Playful effect 1**: every baby-sized item (crib sheet, tiny hangers, socks, nappies) lands with a higher, softer "pip", about twice the tick's pitch, while adult items land with a deep thunk. Viewers hear the size difference.
-- **Playful effect 2**: a two-note falling "bwomp" when the parents' skinny rail slides out (about 8.1 s in the 15 s cut; 26.8 s in the long cut), and again under the shrug (28.9 s). Also a soft roll and a "boop" when the crib parks (2.1 s / 3.0 s) and when it stops at night (11.9 s / 34.8 s).
+- **Playful effect 2**: a two-note falling "bwomp" as bay C's door opens on the sparse parents' bay (about 8.0 s in the 15 s cut; 26.7 s in the long cut), and again under the shrug (28.9 s).
+- The crib's roll when it parks (2.1 s / 3.0 s) and when it stops at night (11.9 s / 34.8 s) is a plain soft roll, not a third effect.
 - **Music**:
   - An original cue from `music.py` at 120 BPM (set `{"bpm": 120}` in `music.json`), with a music-box-like pluck line. Original melody only: no known lullaby, nothing licensed.
   - Hits lean to 111-125 BPM, but that evidence is weak. There is no need to cut on the beat.
 
-**Risks and fixes**:
+### Risks and fixes
+
 - **Baby-safety pile-on.**
   - The crib is always at floor level and parks under the deck only when empty. The caption says so first ("Crib at floor level, bed 1.2 m up"), so it never implies feeding on the loft.
   - The crib stays bare: no pillow, toy or loose blanket. The throw stays on the parents' bed.
@@ -249,9 +272,9 @@ The 15 s cut has 7 of these (#2, 3, 4, 5, 8, 9, 10); the long cut has all 10.
   - The night crib is shot from the hall or the deck, never from the west.
   - Probe every station in the grey box first.
 - **Kept from the original: the stair stays visible in every hold.** The review also offered hiding it from the camera as a dollhouse section. I didn't, because it would vanish and reappear across the 0.3 s swings, and parent 1 sits on it. The high west camera does the job.
-- **Colour drifts cool, not warm.** Our renders miss the band on the cool side (kitchen warmth 14.5-18.3, saturation 0.11). The bedroom's warm white has red minus blue of only 13, while a cream cast means a whole-frame mean above 60.
-  - Fixes: keep the warm white, birch fronts and fascia, open shelves and niche, a mustard throw, and a lavender-peach dusk instead of blue.
-  - Today's extra check put "warm white" at the edge of the cream zone by eye. The preview's warmth number decides: 22-57.
+- **Colour drifts cool, not warm.** Our renders miss the band on the cool side (kitchen warmth 14.5-18.3, saturation 0.11).
+  - Fixes: neutral white walls, with the warmth from birch fronts and fascia, open shelves and niche, a mustard throw, and a lavender-peach dusk instead of blue.
+  - Today's extra check put "warm white" at the edge of the cream zone by eye, so the walls stay neutral, as in the rest of the slate. The preview's warmth number decides: 22-57.
 - **The last stretch reads as still.** Kitchen v2's longest still was 2.4 s, against a 1.8 s target (the hits' median is 1.4 s).
   - Fix: lights staggered over 1.5-1.75 s, then late figure beats, and a final crane at about 0.15 m/s instead of a slow push-in.
 - **Things that light up must land first.** The crib-bay shelf lands and fills before the crib parks, and the niche props and reading light land in S1. Otherwise it reads as the AI "room fills itself" look.
@@ -262,14 +285,15 @@ The 15 s cut has 7 of these (#2, 3, 4, 5, 8, 9, 10); the long cut has all 10.
 - **The step-drawer beat echoes the 19.3M kitchen's wow** (a woman on a pull-out step drawer reaching a top cabinet). The mechanism is generic: the trends file lists toe-kick step drawers as a copyable trick. Stage it differently: a wardrobe, not a kitchen, a foot hooking the drawer out, and colour-coded boxes in size order.
 - **Readable text on props.** Real nappy packs, wipes and size boxes carry logos and numbers. Use plain colour blocks (sizes by colour), a soft blank glow on the monitor, a dark phone screen, no clock digits, blank book spines, and plain clothes with no prints, characters or logos.
 - **Repeats across the slate.**
-  - The riser drawers that fill in turn also appear in C5 (the Advent Stair, a kids' loft, locked for 1 Dec) and C2 (five stair drawers, about 26-27 Nov). C9 (8-14 Dec) is another bed-moves-up bedroom.
-  - C6 now uses a dish lift instead of a step drawer, so the step-drawer beat is C1's alone.
-  - Post C1 about 6-7 Dec, at least 5 days after C5 and C2 and at least 5 days before C9. It is evergreen, so it can slip.
+  - Riser drawers that fill in turn also appear in #4 Advent Stair (30 Nov, 2 Dec) and #1 Tape Line (26 Nov, 3 Dec). #5 Bed on the Ceiling (19 Dec) is another bed-moves bedroom.
+  - #8 Dinner for Eight now uses a dish lift instead of a step drawer, so the step-drawer beat is this plan's alone.
+  - Post #3 on Wed 9 Dec (15 s) and Mon 14 Dec (long): at least 5 days after #1 and #4, and 5 days before #5. It is evergreen, so it can slip.
   - If a stair-drawer video posts within 5 days anyway, cut the riser fill to step 4's long drawer and give the time to the pull-out.
 
-**Build notes**:
+### Build notes
+
 - **Reuse from `rooms/bedroom/project.py`**:
-  - Materials: the oak and birch woods, the warm-white `wall`, clothing and book colours, linen and mattress.
+  - Materials: the oak and birch woods, clothing and book colours, linen and mattress. Swap the warm-white `wall` for neutral white.
   - Helpers: `garment()` (at about half size for tiny outfits), `stack()` for nappies, muslins and jumpers, `pillow()`, and `cloth()` for the duvet.
   - `drawer_fn()` for every drawer: risers, nappy drawer, crib drawer and step drawer.
   - `door_z()` for pieces that land open and swing shut: the long cut's wardrobe doors (20.6-21.6 s) and the bridge flaps (`axis='x'`).
@@ -310,6 +334,7 @@ The 15 s cut has 7 of these (#2, 3, 4, 5, 8, 9, 10); the long cut has all 10.
   - Under-deck darkness: an under-deck fill light and the bay LED.
   - Mattress or crib meeting the walls: leave 2-5 cm gaps so there are no visible intersections.
 
+
 ---
 
 ## Production changes (render session, 23 Nov 2026)
@@ -335,3 +360,9 @@ What changed from the plan above while building, and why:
   renderer (the deck shades most points, which made it speckle).
 - **Sounds**: `music.py` gained the plan's `pip` (baby items), `bwomp` (the skinny rail) and `boop` (crib parks / stops) kinds.
 - **Dusk window**: `textures.backdrop` takes p[2] = 1 for a lavender-peach evening sky (baked for Blender).
+- **Reconciled with the final top-10 plan**: neutral white shell (242, 241, 238); the parents' rail stays in during the wow
+  and the "bwomp" plays as bay C's door opens on the sparse bay; the crib's park/stop is a plain soft roll (`roll` kind,
+  replacing the earlier "boop"); at dusk the fills and the daylight stay at 85-90%.
+- **S4 split in two** (camera metric): 11.0-12.95 s a low dolly on the crib and stair (truck left 0.5 m) while the crib rolls
+  out, the parents pop in and the tread LEDs come on; 13.25-15.0 s a crane up into P0 (loops to frame 1). S1's crane is
+  bigger (0.65 m up, 0.65 m in). Tread LEDs 12.40-12.85 s, shelf LED 13.45 s, night light 13.7 s.
