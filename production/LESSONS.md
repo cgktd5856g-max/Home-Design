@@ -98,6 +98,11 @@ looks better.
   - Keep stand-in figures out of moving arcs.
   - Mirrored meshes (negative scale) flip their triangles: re-wind them.
 - **Dead time.** A close station where closed doors fill the frame for 0.5 s reads as dead time. Pull back or cut away.
+- **Check brightness over time, not just the average** (tape line, 23 Nov). The mean was 151 (in range), but the dusk
+  ending sat at 99-124 against 193 at frame 1, so the lights-on read grey and the loop jumped in brightness. Keep
+  every second at 140 or above: daylight at 85% or more, with lamps adding warmth on top.
+- **The wow needs time and the right angle.** A 0.6 s swing seen side-on reads as "turning in place". Give the big move
+  1.2-1.5 s with an ease, from the angle that shows the whole arc (for a pivot, near-overhead).
 - **The grade.** `--grade 1.35,0.03` usually brings brightness and saturation into range. Always measure after it.
 - The older lessons in `HANDOFF.md` section 8 still apply: lift-up beds seen from the side, black renders from
   winding, window views in `separate`.
@@ -123,3 +128,4 @@ Fill in the views after posting (7 days).
 | #4 The Advent Stair | 7.7 / 0.4 s / 5.22 / 0.2 s / 164 / 0.27 / 44: all in range (65 glitched frames re-rendered) | 6-6.5 | | |
 | #5 The Bed on the Ceiling | 12.7 / 0.4 s / 10.88 / 0.2 s / 150 / 0.25 / 36.3: all in range | 6 | | |
 | #3 Three of Us in 3 × 2 m | 8.6 / 0.6 s / 5.72 / 0.6 s / 142 / 0.30 / 42.5: misses clear-change share (0.36) and first move (0.6 s) | – | | |
+| #1 Tape Line, Turning Wall (v1) | 9.3 / 0.4 s / 6.31 / 0.4 s / 151 / 0.24 / 34.4: all in range; dusk too dark, v2 ordered | 8.5 / 7.5 | | |
