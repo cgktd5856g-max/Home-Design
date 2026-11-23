@@ -47,6 +47,11 @@ looks better.
 - **Check every final frame before encoding.** In one long run, 62 frames came out with a black floor (advent, 23 Nov),
   and a fresh process did not reproduce it.
   - Compute each frame's mean brightness, flag the outliers, and re-render those frames in fresh processes.
+- **Detect black-frame glitches automatically** (advent, 23 Nov). After every render, flag frames where pixels under 12
+  cover more than 2% of the frame. Re-render those with a slightly different sample count, which changes the sampling
+  pattern; a plain re-render can repeat the glitch.
+- **Coplanar faces render as black squares in Cycles** (a drawer front flush with a block, overlapping window-frame
+  boxes) but look fine in the code renderer. Leave a gap or recess of a few millimetres.
 - **Code-renderer previews cost about 3 times more with the gliding camera,** because every frame moves. Preview at
   216x384.
 - **Per-frame lens.** `pipeline/blender_render.py` keyframes the lens when the field of view changes per frame. Two
@@ -56,6 +61,9 @@ looks better.
 
 - **The hook.** The first big landing must be in frame by 0.3 s. Most first previews missed this: the advent video's
   first movement was at 1.6 s. Slam something big down close to the camera, like a bed dropped from 3 m or a loft deck.
+- **Measure the hook on a graded preview** (advent, 23 Nov). The raw code-renderer preview is washed out and hides
+  motion, and floor planks on a pale subfloor barely register. Grade the preview to the final look before reading
+  `fb`.
 - **Overhead and cut-away shots.** The room must fill the frame. Surround it with a pale ground (about 236 grey),
   never a dark or noisy void.
 - **One muted accent.** Reviewers read strong yellow, mustard and ochre duvets as "mustard" or "cream". A white duvet
@@ -89,4 +97,4 @@ Fill in the views after posting (7 days).
 | Video | 15 s metrics (motion / longest still / camera / first move / brightness / saturation / warmth) | Reviewer | Posted | Views after 7 days |
 |---|---|---|---|---|
 | #2 Same Bed, Better Room | 8.8 / 1.2 s / 7.17 / 0.2 s / 173 / 0.19 / 30.2: all in range | 6.5 | | |
-| #4 The Advent Stair | 10.2 / – / 5.22 / 0.2 s / 159 / 0.28 / 40.9 (before the black-frame fix) | 6-6.5 | | |
+| #4 The Advent Stair | 7.7 / 0.4 s / 5.22 / 0.2 s / 164 / 0.27 / 44: all in range (65 glitched frames re-rendered) | 6-6.5 | | |
