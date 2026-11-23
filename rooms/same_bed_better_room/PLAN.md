@@ -235,3 +235,15 @@
   - The rail was 1.9 m and would have hit the desk. It is now 1.4 m.
   - Problem-first openings are 2 hits and 1 flop, not 2 hits.
   - HomeCraft's 351.8K likes date from Apr 2024.
+
+---
+
+## Changes made in production (this copy is kept up to date)
+
+- **Colour.** Three reviews read the ochre duvet as "mustard / cream" and too many accents. The duvet is now white, the pillow and throw a soft grey-blue (the one accent), and colour comes from the filled storage (terracotta, rust, sage, navy, denim, light grey). Mustard is dropped from the wardrobe. The oak is a slightly cooler light oak.
+- **Frame 1.** The orbit radius is 8.25 m (starting at camera yaw -12°, 6°/s, pushing in 0.12 m/s). The room fills about 90% of the width. The bed drops from 3.2 m above its place, so the hook registers by 0.2 s (hh_metrics "first clear movement" 0.2 s).
+- **Wow shot (15 s cut, 8.95-10.9 s).** The camera is low (1.0 m) at the south end of the aisle, looking north along the rail. From the window end the oak front panel of the rail hid the shirts. The rail glides out over 8.95-9.45 s, holds for about 1.1 s, and glides back over 10.55-10.88 s. The garments are modelled as shirts: body, rounded shoulders, sleeves and a hanger. A coloured shirt hangs nearest the camera.
+- **S3 split.** The wardrobe gets its own straight-on station (7.22-8.75 s) that starts looking up at the top cupboard as it grows. Seen from the window end, the open doors would hide the interior.
+- **S4 and the tail.** The ledge, window shelf and desk things land over 11.2-12.1 s, with the camera pushing in. Lights come on in a cascade at 12.18 s, and the daylight eases down 20% so the lamps read. The rise starts at 12.4 s. During it the chair rolls out (12.85 s) and the deep drawer slides out with a suitcase (13.35-14.2 s), so the overhead return keeps landing.
+- **The window backdrop** shows whenever the camera is below 4 m (not only below 2.7 m), so the low S2 glide has a view out of the window.
+- **Long cut.** It follows the plan's zone list. The person enters through a door leaf that opens 31.0-32.75 s and is otherwise closed. The shirt-lift at the end was simplified: the figure pulls the rail out by its end handle and stays in the aisle. The headboard ledge is a shelf over the raised headboard (1.82 m). The top cupboard's "boxed bedding" beat was cut.

@@ -25,6 +25,9 @@ import roomkit as rk
 from roomkit import (srgb, mat, add, box, grid_tris, lathe, rprof, tube, ellipsoid, rbox, T, S, R, about, xform, wood,
                      wood_mats, rect_light, sphere_light, spot_rect)
 from animkit import Timeline, c01, eoc, eob, smooth
+import figure as fg
+
+FIG = [None]
 
 REST = os.environ.get('ROOM_REST') == '1'
 CUT = os.environ.get('ROOM_CUT', '15')
@@ -253,6 +256,8 @@ def build_shell():
         add(u, b, 'white_cab')
     for b in (box(DX0 - 0.05, 0, 0, DX0, 0.012, BASE_Z), box(DX1, 0, 0, DX1 + 0.05, 0.012, BASE_Z)):
         add(r, b, 'white_cab')
+    add('door', box(DX0 + 0.004, -0.045, 0.005, DX1 - 0.004, -0.008, DZ - 0.005), 'white_cab')        # door leaf (west hinge)
+    add('door', tube([(DX1 - 0.09, -0.008, 1.02), (DX1 - 0.09, 0.04, 1.02), (DX1 - 0.20, 0.04, 1.02)], 0.009, 10), 'metal')
     add('ceiling', box(-0.12, -0.12, CEIL_Z, W + 0.12, D + 0.12, CEIL_Z + 0.1), 'ceiling')
     add('backdrop', box(-6, D + 4.5, -3, 8, D + 4.55, 9), 'backdrop')
     add('fadekey', box(-0.01, -0.01, -5.01, 0.01, 0.01, -4.99), 'ground')        # hidden carrier of the light fade value
@@ -456,6 +461,9 @@ def build():
     build_platform(rng)
     build_wardrobe(rng)
     build_desk(rng)
+    if LONG:
+        fg.materials()
+        FIG[0] = fg.figure('fig', 'adult', pose='stand', at=(0.74, 0.70, 58.0))
 
 
 # ------------------------------------------------------------------------------------------- camera
@@ -524,7 +532,38 @@ def rise(a, b, u):
     return mix(a, b, s, sa=sa)
 
 
-SEGS = segs_15()
+def segs_long():
+    """45 s cut: orbit, descent, then one zone at a time (see PLAN.md, long cut), rising back to frame 1 at 45 s."""
+    o_end = orbit(PHI0 + RATE * 5.0, 5.0)
+    LA = P(0.62, -1.30, 2.92, 18.0, -31.0, VF_OVER)
+    A = (P(0.74, 0.75, 1.55, 0.0, 6.0), P(0.76, 1.85, 1.42, 2.0, -22.0))                 # window desk, push in
+    Bs = (P(1.36, 2.15, 1.40, -55.0, -16.0), P(1.30, 1.70, 1.32, -35.0, -14.0))          # slide along the window
+    C = (P(0.62, 0.42, 0.95, 52.0, 6.0), P(0.95, 0.22, 0.90, 28.0, 8.0))                 # low circle, bed corner
+    Ds = (P(0.62, 0.18, 1.55, 72.0, -32.0), P(1.05, 0.10, 1.75, 84.0, -40.0))            # along the stairs
+    E = (P(1.42, 1.22, 1.50, 270.0, 14.0), P(1.42, 1.62, 1.40, 266.0, -6.0))             # wardrobe, straight on
+    F = (P(1.35, 1.25, 1.15, 260.0, -24.0), P(1.35, 1.90, 1.25, 245.0, -20.0))           # wardrobe drawers, toward the desk
+    G = (P(1.88, 0.06, 1.30, 2.0, -4.0), P(1.90, 0.45, 2.02, 8.0, -24.0))                # rising glide up the stairs
+    Hs = (P(1.12, 0.10, 1.05, 4.0, -12.0, 56.0), P(0.98, 0.42, 0.98, 14.0, -10.0, 56.0))  # the rail, low in the aisle
+    J1 = (P(1.40, 0.12, 1.35, -28.0, -12.0), P(1.38, 0.45, 1.30, -48.0, -12.0))            # dolly: the person comes in
+    J2 = (P(0.92, 2.50, 1.55, 176.0, -14.0), P(0.98, 2.20, 1.45, 168.0, -16.0))          # window end, down the aisle
+    K = (P(2.85, 0.12, 2.40, -42.0, -30.0), P(2.62, 0.22, 2.32, -36.0, -27.0))           # high south-east corner
+    sw = lambda a, b: (lambda u, t: mix(a, b, smooth(u), lift=2.0))
+    gl = lambda st: (lambda u, t: mix(st[0], st[1], u))
+    return [
+        (0.0, 5.0, lambda u, t: orbit(PHI0 + RATE * t, t)),
+        (5.0, 5.5, lambda u, t: mix(o_end, LA, smooth(u))),
+        (5.5, 7.0, lambda u, t: mix(LA, A[0], ease_in_out(u, 1.6), sa=smooth(c01((u - 0.4) / 0.6)), sv=smooth(c01((u - 0.45) / 0.55)))),
+        (7.0, 9.8, gl(A)), (9.8, 10.1, sw(A[1], Bs[0])), (10.1, 12.75, gl(Bs)), (12.75, 13.0, sw(Bs[1], C[0])),
+        (13.0, 16.0, gl(C)), (16.0, 16.3, sw(C[1], Ds[0])), (16.3, 19.0, gl(Ds)), (19.0, 19.25, sw(Ds[1], E[0])),
+        (19.25, 21.45, gl(E)), (21.45, 21.7, sw(E[1], F[0])), (21.7, 24.0, gl(F)), (24.0, 24.25, sw(F[1], G[0])),
+        (24.25, 27.3, gl(G)), (27.3, 27.6, sw(G[1], Hs[0])), (27.6, 31.0, gl(Hs)), (31.0, 31.25, sw(Hs[1], J1[0])),
+        (31.25, 34.6, gl(J1)), (34.6, 34.9, sw(J1[1], J2[0])), (34.9, 38.6, gl(J2)), (38.6, 38.9, sw(J2[1], K[0])),
+        (38.9, 41.0, gl(K)),
+        (41.0, 45.0, lambda u, t: rise(K[1], orbit(PHI0 + RATE * (t - 45.0), t - 45.0), u)),
+    ]
+
+
+SEGS = segs_long() if LONG else segs_15()
 REST_STATIONS = [orbit(PHI0), S2A[0], S2C, S3A[0], S3B[0], S4[0], orbit(PHI0 + 22.5), mix(S4[1], orbit(PHI0), 0.3)]
 
 
@@ -657,6 +696,44 @@ def beats_15():
                 on=12.18, slippers=11.32, chair_out=(12.85, 14.30), ddr=(13.35, 14.20))
 
 
+def beats_long():
+    """45 s cut: the same opening (shuffle a little slower), then one zone at a time; the bed stays low until 13 s."""
+    B = beats_15()
+    sc = lambda t: round(1.3 + (t - 1.3) * 1.13, 3) if t >= 1.3 else t
+    B['desk_s'] = tuple(sc(t) for t in B['desk_s'])
+    B['bed_slide'] = tuple(sc(t) for t in B['bed_slide'])
+    B['wr_keys'] = [(sc(t), c, a, m) for (t, c, a, m) in B['wr_keys']]
+    B['desk_keys'] = [(sc(t), c, a, m) for (t, c, a, m) in B['desk_keys']]
+    B.update(wshelf=7.40, wsh_bk=7.75, wsh_box=7.98, desk_drs=[(8.30, 9.20), (8.50, 9.40)],
+             chair_out=(10.30, 12.55), desk_lamp=10.75, desk_nb=11.05, desk_pl=11.35,
+             legs=(13.05, 13.22), plat=(13.20, 14.20), steps=(14.55, 14.85, 15.15),
+             sdr=[(16.40, 16.95), (16.62, 17.17), (16.84, 17.39)], ddr=(17.85, 18.80),
+             wr_top=(19.10, 19.55), wd_opens=[(20.10, 23.40), (32.80, 33.80)], wr_cl=(20.35, 20.75),
+             wr_drs=[(21.80, 22.60), (22.05, 22.85)],
+             ledge=(24.20, 24.36), ledge_bk=24.55, ledge_pl=24.78, hb_lamp=25.00, slippers=25.25, mslide=(25.80, 26.55),
+             rails=[((27.80, 28.50), (30.40, 30.75)), ((37.05, 37.65), (38.60, 38.95))], on=39.40)
+    return B
+
+
+def person(tl, B):
+    """Long cut: a faceless stand-in walks in through the door, opens the wardrobe (no bonk), stretches in the aisle,
+    steps back and pulls the rail out by its end handle; then stays, so the last wide shows the room in use."""
+    fig = FIG[0]
+    A0, A1, A2, A3 = (0.55, -0.55, 0.0), (0.72, 0.62, None), (1.15, 1.45, -90.0), (0.74, 0.70, 58.0)
+    wpose, wat = fg.walk([(31.15, A0), (31.85, A1), (32.45, A2), (36.0, A2), (36.65, A3)], fig)
+    OPEN = dict(sh_r=72, sh_r_out=4, elbow_r=18, sh_l=10, sh_l_out=6, elbow_l=10, spine=4)
+    PULL = dict(sh_r=48, sh_l=40, sh_r_out=6, sh_l_out=8, elbow_r=12, elbow_l=20, spine=22, neck=8, hip_l=12, hip_r=6, knee_l=10, knee_r=4)
+    poses = fg.track([(32.45, 'stand'), (32.70, OPEN), (33.05, OPEN), (33.35, 'stand'), (33.65, OPEN), (33.95, 'stand'),
+                      (35.20, 'stand'), (35.45, 'reach_both'), (35.80, 'reach_both'), (36.0, 'stand'),
+                      (36.65, 'stand'), (36.95, PULL), (38.45, PULL), (38.75, 'stand')])
+
+    def pose(t):
+        if t < 32.45 or 36.0 <= t < 36.65:
+            return wpose(t)
+        return poses(t)
+    fig.animate(tl, pose=pose, at=wat, visible=lambda t: t >= 31.0)
+
+
 def timeline():
     tl = Timeline(rk, FPS)
     I = np.eye(4)
@@ -671,7 +748,18 @@ def timeline():
 
     cam_vis('ceiling', inside)
     cam_vis('backdrop', lambda t: camera(t)['pos'][2] < 4.0)
-    cam_vis('south_up', lambda t: inside(t) and camera(t)['pos'][1] > 0.02)
+    up = lambda t: inside(t) and camera(t)['pos'][1] > 0.02
+    cam_vis('south_up', up)
+    dopen = (31.0, 32.75) if LONG else None
+
+    def door(t):                                   # closed, except while the person comes in (long cut)
+        a = 0.0
+        if dopen and dopen[0] - 0.3 < t < dopen[1] + 0.3:
+            a = 92 * (smooth((t - dopen[0] + 0.3) / 0.3) if t < dopen[1] else 1 - smooth((t - dopen[1]) / 0.3))
+        return about((DX0, -0.03, 0), R('z', math.radians(a))), up(t)
+    tl.custom('door', door)
+    if dopen:
+        ev(dopen[0], 'door_open', 0.35, 'swish'); ev(dopen[1] + 0.3, 'door_shut', 0.5, 'thud')
 
     def fade(t):                                 # light fade value carried by a hidden piece
         ts = np.linspace(t - 0.25, t + 0.25, 11)
@@ -681,7 +769,7 @@ def timeline():
         for nm in ('led_lip', 'led_step0', 'led_step1', 'led_step2', 'hb_on', 'desk_on', 'wr_led'):
             tl.custom(nm, hidden)
         return tl
-    B = beats_15()
+    B = beats_long() if LONG else beats_15()
     drop, fly, slide, grow = tl.drop, tl.fly, tl.slide, tl.grow
 
     def appear(name, t_on, t_off=None):
@@ -693,8 +781,19 @@ def timeline():
     # ---------------- the bed (frame, legs, mattress, bedding all ride together)
     bed = bed_path(B)
     l0, l1 = B['legs']
-    for nm in ('bed_frame', 'mattress', 'duvet', 'throw', 'pil_w', 'pil_b'):
-        tl.custom(nm, bed)
+    tl.custom('bed_frame', bed)
+    ms = B.get('mslide')
+
+    def bedding(t):                                # long cut: the mattress slides 30 cm toward the aisle and back
+        M, v = bed(t)
+        if ms is None or t < ms[0]:
+            return M, v
+        x = -0.30 * (smooth((t - ms[0]) / 0.35) if t < ms[1] else 1 - smooth((t - ms[1]) / 0.35))
+        return T(x, 0, 0) @ M, v
+    for nm in ('mattress', 'duvet', 'throw', 'pil_w', 'pil_b'):
+        tl.custom(nm, bedding)
+    if ms is not None:
+        ev(ms[0] + 0.35, 'mattress_out', 0.5, 'swish'); ev(ms[1] + 0.35, 'mattress_in', 0.55, 'clack')
     tl.custom('bed_legs', lambda t: (bed(t)[0] @ about((0, 0, 0.85), S(1, 1, 1 - 0.98 * smooth((t - l0) / (l1 - l0)))), bed(t)[1]))
     ev(B['bed'], 'bed_land', 1.0, 'thud')
     ev(B['bed_slide'][0], 'bed_scrape', 0.8, 'scrape', len=0.62)
@@ -714,12 +813,25 @@ def timeline():
         z = 0.7 * (1 - u * u) if u < 1 else 0.025 * math.exp(-(t - t_w) / 0.07) * abs(math.sin(math.pi * (t - t_w) / 0.11))
         return T(0, 0, z) @ M, True
     tl.custom('wr', wr)
-    for nm in ('wr_dr0', 'wr_dr1', 'wr_dr1_c', 'wr_box'):
-        tl.custom(nm, wr)
+    tl.custom('wr_box', wr)
+    wdr = B.get('wr_drs')
+    for k in range(2):
+        if wdr is None:
+            tl.custom(f'wr_dr{k}', wr)
+            continue
+        o, c = wdr[k]
+        f = lambda t, o=o, c=c: (wr(t)[0] @ T(0.36 * (eob(c01((t - o) / 0.18), 0.8) if t < c else 1 - smooth((t - c) / 0.16)), 0, 0), wr(t)[1])
+        tl.custom(f'wr_dr{k}', f)
+        ev(o + 0.1, f'wr_dr{k}_open', 0.35, 'swish'); ev(c + 0.16, f'wr_dr{k}_shut', 0.5, 'clack')
+        if k == 1:
+            drop('wr_dr1_c', o + 0.22, o + 0.40, 0.3, 0.05, 0.35, parent=f)
+    if wdr is None:
+        tl.custom('wr_dr1_c', wr)
     ev(t_w, 'wr_land', 0.85, 'thud')
     ev(wkeys[1][0], 'wr_clack1', 0.6, 'clack'); ev(wkeys[2][0], 'wr_clack2', 0.7, 'clack'); ev(wkeys[3][0], 'wr_clack3', 0.9, 'clack')
     tb = B['bonk']
-    to, tc = B['wd_open'], B['wd_close']
+    opens = B.get('wd_opens', [(B.get('wd_open'), B.get('wd_close'))])
+    to, tc = opens[0]
 
     def door_angle(t):
         a = 0.0
@@ -731,18 +843,21 @@ def timeline():
                 a = 64 - 7 * math.exp(-tau / 0.06) * abs(math.sin(math.pi * tau / 0.07))
             else:
                 a = 64 * (1 - smooth((t - tb - 0.22) / 0.18))
-        if to - 0.18 < t < tc + 0.18:                  # wide open, no bonk
-            if t < to:
-                a = 100 * eob((t - (to - 0.18)) / 0.18, 0.8)
-            elif t < tc:
-                a = 100
-            else:
-                a = 100 * (1 - smooth((t - tc) / 0.18))
+        for to_, tc_ in opens:                         # wide open, no bonk
+            if to_ - 0.18 < t < tc_ + 0.18:
+                if t < to_:
+                    a = 100 * eob((t - (to_ - 0.18)) / 0.18, 0.8)
+                elif t < tc_:
+                    a = 100
+                else:
+                    a = 100 * (1 - smooth((t - tc_) / 0.18))
         return a
     for nm, hinge, sg in (('wd_s', (0.55, 1.0, 0), -1), ('wd_n', (0.55, 2.0, 0), 1)):
         tl.custom(nm, lambda t, hinge=hinge, sg=sg: (wr(t)[0] @ about(hinge, R('z', math.radians(sg * door_angle(t)))), wr(t)[1]))
     ev(tb, 'bonk', 1.0, 'bonk'); ev(tb + 0.40, 'wd_shut0', 0.4, 'clack')
     ev(to, 'no_bonk', 0.9, 'chime2'); ev(tc + 0.18, 'wd_shut', 0.7, 'thud')
+    for k, (to_, tc_) in enumerate(opens[1:]):
+        ev(to_, f'no_bonk{k}', 0.45, 'chime2'); ev(tc_ + 0.18, f'wd_shut{k}', 0.6, 'thud')
     # contents fly in while the doors are open
     for k, nm in enumerate(('wr_cl0', 'wr_cl1')):
         ta = B['wr_cl'][k]
@@ -764,8 +879,17 @@ def timeline():
         u = (t - (t_d - 0.2)) / 0.2
         z = 0.6 * (1 - u * u) if u < 1 else 0.02 * math.exp(-(t - t_d) / 0.07) * abs(math.sin(math.pi * (t - t_d) / 0.11))
         return T(0, 0, z) @ dpath0(t), True
-    for nm in ('desk', 'desk_dr0', 'desk_dr1', 'desk_dr0_c', 'desk_dr1_c'):
-        tl.custom(nm, desk)
+    tl.custom('desk', desk)
+    ddrs = B.get('desk_drs')
+    for k in range(2):
+        if ddrs is None:
+            tl.custom(f'desk_dr{k}', desk); tl.custom(f'desk_dr{k}_c', desk)
+            continue
+        o, c = ddrs[k]
+        f = lambda t, o=o, c=c: (desk(t)[0] @ T(0, -0.30 * (eob(c01((t - o) / 0.16), 0.8) if t < c else 1 - smooth((t - c) / 0.15)), 0), desk(t)[1])
+        tl.custom(f'desk_dr{k}', f)
+        drop(f'desk_dr{k}_c', o + 0.20, o + 0.36, 0.25, 0.05, 0.35, parent=f)
+        ev(o + 0.08, f'desk_dr{k}_open', 0.35, 'swish'); ev(c + 0.15, f'desk_dr{k}_shut', 0.5, 'clack')
     tk = B['knock']
 
     def pull(t):                                   # chair pull-out along the desk's local -y
@@ -822,20 +946,23 @@ def timeline():
         ev(o + 0.06, f'sdr{k}_open', 0.4, 'swish'); ev(c + 0.14, f'sdr{k}_shut', 0.55, 'clack')
 
     # ---------------- the rail (rides the platform growth, then glides out and back)
-    r0, r1 = B['rail_out']; b0, b1 = B['rail_back']
+    rails = B.get('rails', [(B.get('rail_out'), B.get('rail_back'))])
 
     def rail(t):
         M, v = pg(t)
-        if t < r0:
+        if t < rails[0][0][0]:
             return M, v
-        if t < b0:
-            x = -0.55 * eob((t - r0) / (r1 - r0), 0.35)
-        else:
-            x = -0.55 * (1 - smooth((t - b0) / (b1 - b0)))
+        x = 0.0
+        for (r0, r1), (b0, b1) in rails:
+            if r0 <= t < b0:
+                x = -0.55 * eob((t - r0) / (r1 - r0), 0.35)
+            elif b0 <= t < b1 + 0.01:
+                x = -0.55 * (1 - smooth((t - b0) / (b1 - b0)))
         return T(x, 0, 0), True
     tl.custom('rail', rail); tl.custom('rail_cl', rail)
-    ev(r0, 'rail_zip', 1.0, 'zip', len=(r1 - r0) * 0.85)
-    ev(b1, 'rail_back', 0.6, 'clack')
+    for k, ((r0, r1), (b0, b1)) in enumerate(rails):
+        ev(r0, f'rail_zip{k}', 1.0 if k == 0 else 0.7, 'zip', len=(r1 - r0) * 0.85)
+        ev(b1, f'rail_back{k}', 0.6, 'clack')
 
     # ---------------- headboard ledge, window shelf things, desk things, lights on
     e0, e1 = B['ledge']
@@ -854,6 +981,8 @@ def timeline():
         appear(nm, on + dt)
     ev(on, 'lights_on', 0.8, 'chime'); ev(on + 0.52, 'lamp_on', 0.4, 'tick'); ev(on + 0.70, 'desk_on', 0.4, 'tick')
     drop('slippers', B['slippers'] - 0.16, B['slippers'], 0.3, 0.06, 0.4)
+    if LONG:
+        person(tl, B)
     return tl
 
 
