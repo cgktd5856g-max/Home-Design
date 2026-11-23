@@ -936,7 +936,7 @@ def timeline_15(tl):
         from_camera(f'tile{k}', t1 - 0.16, t1, cam_s1, 0.40, 0.25, 'tick')
     # ---- base units grow out of the back wall (1.05-1.65)
     for i, nm in enumerate(('b_dw', 'b_hob', 'b_sink', 'b_corner')):
-        grow(nm, 0.92 + 0.15 * i, 1.08 + 0.15 * i, 'y', (0, D, 0), 0.75)
+        slide(nm, 0.90 + 0.15 * i, 1.08 + 0.15 * i, (0, -0.75, 0.0), 0.9, 0.75)
     base_cor = tl.anims['b_corner']
     for nm in ('dw_door', 'dw_rack0', 'dw_rack1'):
         ride(nm, tl.anims['b_dw'])
@@ -1128,7 +1128,7 @@ def timeline_long(tl):
         t1 = 0.30 + 0.11 * i
         from_camera(f'tile{k}', t1 - 0.15, t1, cam1, 0.22, 0.25, 'tick')
     for i, nm in enumerate(('b_dw', 'b_hob', 'b_sink', 'b_corner')):
-        grow(nm, 1.22 + 0.22 * i, 1.38 + 0.22 * i, 'y', (0, D, 0), 0.75)
+        slide(nm, 1.18 + 0.22 * i, 1.38 + 0.22 * i, (0, -0.75, 0.0), 0.9, 0.75)
     base_cor = tl.anims['b_corner']
     drop('worktop', 2.07, 2.24, 0.40, 0.02, 0.9, 'thud')
     drop('sink', 2.34, 2.47, 0.30, 0.03, 0.5, 'thud')
@@ -1369,7 +1369,7 @@ def timeline_long(tl):
         if t < 39.50:
             return I, False
         u = c01((t - 39.50) / 0.55)
-        return about((0, 1.37, 1.87), S(1, 0.05 + 0.95 * eob(u, 0.6), 1)), True
+        return T(0.45 * (1 - eob(u, 0.8)), 0, 0), True
     tl.custom('ob_books', books)
     for k in range(5):
         ev(39.62 + 0.15 * k, 'book', 0.3, 'tick')
