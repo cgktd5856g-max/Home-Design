@@ -540,12 +540,12 @@ def segs_long():
     Bs = (P(1.38, 2.40, 1.45, -70.0, -20.0), P(1.25, 1.40, 1.30, -22.0, -12.0))          # slide along the window
     C = (P(0.50, 0.60, 0.95, 62.0, 6.0), P(1.20, 0.12, 0.90, 14.0, 10.0))                 # low circle, bed corner
     Ds = (P(0.50, 0.30, 1.50, 62.0, -28.0), P(1.20, 0.10, 1.80, 90.0, -42.0))            # along the stairs
-    E = (P(1.42, 1.22, 1.50, 270.0, 14.0), P(1.42, 1.62, 1.40, 266.0, -6.0))             # wardrobe, straight on
-    F = (P(1.35, 1.25, 1.15, 260.0, -24.0), P(1.35, 1.90, 1.25, 245.0, -20.0))           # wardrobe drawers, toward the desk
-    G = (P(1.88, 0.06, 1.30, 2.0, -4.0), P(1.90, 0.45, 2.02, 8.0, -24.0))                # rising glide up the stairs
+    E = (P(1.42, 1.10, 1.55, 276.0, 16.0), P(1.42, 1.80, 1.36, 260.0, -8.0))             # wardrobe, straight on
+    F = (P(1.38, 1.05, 1.10, 285.0, -26.0), P(1.30, 2.10, 1.30, 235.0, -18.0))           # wardrobe drawers, toward the desk
+    G = (P(1.75, 0.05, 1.20, -8.0, -2.0), P(2.00, 0.55, 2.10, 14.0, -26.0))                # rising glide up the stairs
     Hs = (P(1.20, 0.05, 1.12, -2.0, -13.0, 56.0), P(0.92, 0.62, 0.95, 18.0, -9.0, 56.0))  # the rail, low in the aisle
-    J1 = (P(1.40, 0.12, 1.35, -28.0, -12.0), P(1.38, 0.45, 1.30, -48.0, -12.0))            # dolly: the person comes in
-    J2 = (P(0.90, 2.55, 1.60, 180.0, -14.0), P(1.08, 1.95, 1.42, 160.0, -18.0))          # window end, down the aisle
+    J1 = (P(1.42, 0.08, 1.38, -20.0, -12.0), P(1.36, 0.60, 1.28, -58.0, -12.0))            # dolly: the person comes in
+    J2 = (P(0.82, 2.62, 1.70, 188.0, -12.0), P(1.18, 1.80, 1.35, 150.0, -18.0))          # window end, down the aisle
     K = (P(2.88, 0.10, 2.40, -46.0, -30.0), P(2.40, 0.38, 2.30, -28.0, -26.0))           # high south-east corner
     sw = lambda a, b: (lambda u, t: mix(a, b, smooth(u), lift=2.0))
     gl = lambda st: (lambda u, t: mix(st[0], st[1], u))
