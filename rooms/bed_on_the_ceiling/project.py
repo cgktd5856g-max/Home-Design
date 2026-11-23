@@ -76,7 +76,7 @@ def materials():
     mat('pil_white', tex=3, col=srgb(246, 244, 240), rough=0.9, p=(0.04,))
     mat('pil_mustard', tex=6, col=srgb(208, 162, 66))
     mat('pil_paleblue', tex=3, col=srgb(184, 198, 210), rough=0.9, p=(0.05,))
-    mat('throw', tex=5, col=srgb(192, 114, 84), p=(0, 0.012))
+    mat('throw', tex=5, col=srgb(198, 128, 100), p=(0, 0.012))
     mat('throw2', tex=5, col=srgb(214, 200, 176), p=(0, 0.012))
     mat('sofa', tex=6, col=srgb(124, 142, 158))
     mat('sofa_pad', tex=6, col=srgb(132, 150, 166))
@@ -391,7 +391,7 @@ def build_bed(rng):
     add('bed', rbox(((BX0 + BX1) / 2, (BY0 + BY1) / 2, z0 + 0.12), (BX1 - BX0 - 0.05, BY1 - BY0 - 0.05, 0.17), 0.04, 5), 'mattress')
     cloth('bed', BX0 + 0.03, BX1, BY0, 2.12, z0 + 0.215, z0 + 0.155, 0.035, 'linen', 3, sides=('e', 's'), puff=0.010)
     add('bed', rbox(((BX0 + BX1) / 2 + 0.01, 2.10, z0 + 0.225), (BX1 - BX0 - 0.02, 0.12, 0.03), 0.013, 3), 'pil_white')
-    cloth('bed', BX0 + 0.03, BX1 + 0.015, 0.62, 1.02, z0 + 0.240, z0 + 0.17, 0.03, 'throw', 7, sides=('e',), puff=0.004)
+    cloth('bed', BX0 + 0.03, BX1 + 0.02, 0.62, 0.94, z0 + 0.240, z0 + 0.01, 0.03, 'throw', 7, sides=('e',), puff=0.004)
     # straps across the bedding (unclip once it is down)
     for y in (1.12, 1.92):
         add('bed_straps', box(BX0 + 0.03, y - 0.022, z0 + 0.252, BX1 + 0.006, y + 0.022, z0 + 0.258), 'strap')
@@ -418,31 +418,31 @@ def build_desk(rng):
     x0, x1, fy, dz = DESK
     wood('desk', x0, fy, dz - 0.035, x1, D, dz, 'oak')
     add('desk', box(x0, D - 0.03, dz - 0.10, 2.55, D, dz - 0.035), 'oak_x')
-    add('desk', tube([(x0 + 0.03, fy + 0.04, dz - 0.035), (x0 + 0.03, fy + 0.04, 0.0)], 0.015, 12), 'steel')
-    # pedestal (x 2.55..3.0): shell + three drawers (top one opens)
-    px0 = 2.55
-    for b in (box(px0, fy + 0.02, 0.0, x1, D, 0.04), box(px0, fy + 0.02, 0.04, px0 + 0.018, D, dz - 0.035),
-              box(px0, D - 0.018, 0.04, x1, D, dz - 0.035)):
+    add('desk', tube([(x1 - 0.04, fy + 0.04, dz - 0.035), (x1 - 0.04, fy + 0.04, 0.0)], 0.015, 12), 'steel')
+    # pedestal at the west end (x 1.60..2.05): shell + three drawers (top one opens toward the room)
+    px0, px1 = 1.60, 2.05
+    for b in (box(px0, fy + 0.02, 0.0, px1, D, 0.04), box(px0, fy + 0.02, 0.04, px0 + 0.018, D, dz - 0.035),
+              box(px1 - 0.018, fy + 0.02, 0.04, px1, D, dz - 0.035), box(px0, D - 0.018, 0.04, px1, D, dz - 0.035)):
         add('ped', b, 'white_cab')
     zs = [0.045, 0.27, 0.49, dz - 0.04]
     for k in range(3):
         nm = 'ped_dr' if k == 2 else 'ped_fixed'
         a, b = zs[k], zs[k + 1]
-        add(nm, box(px0 + 0.02, fy + 0.02, a + 0.003, x1 - 0.002, fy + 0.04, b - 0.003), 'oak_x')
-        add(nm, box(2.72, fy + 0.008, b - 0.05, 2.84, fy + 0.02, b - 0.04), 'steel')
+        add(nm, box(px0 + 0.002, fy + 0.02, a + 0.003, px1 - 0.002, fy + 0.04, b - 0.003), 'oak_x')
+        add(nm, box(1.77, fy + 0.008, b - 0.05, 1.89, fy + 0.02, b - 0.04), 'steel')
         if k == 2:
-            add(nm, box(px0 + 0.03, fy + 0.04, a + 0.01, x1 - 0.02, D - 0.03, a + 0.02), 'white_in')
-            for bb in (box(px0 + 0.03, fy + 0.04, a + 0.02, px0 + 0.042, D - 0.03, b - 0.03), box(x1 - 0.032, fy + 0.04, a + 0.02, x1 - 0.02, D - 0.03, b - 0.03),
-                       box(px0 + 0.03, D - 0.042, a + 0.02, x1 - 0.02, D - 0.03, b - 0.03)):
+            add(nm, box(px0 + 0.03, fy + 0.04, a + 0.01, px1 - 0.03, D - 0.03, a + 0.02), 'white_in')
+            for bb in (box(px0 + 0.03, fy + 0.04, a + 0.02, px0 + 0.042, D - 0.03, b - 0.03), box(px1 - 0.042, fy + 0.04, a + 0.02, px1 - 0.03, D - 0.03, b - 0.03),
+                       box(px0 + 0.03, D - 0.042, a + 0.02, px1 - 0.03, D - 0.03, b - 0.03)):
                 add(nm, bb, 'white_in')
     a = zs[2] + 0.02
-    add('ped_items', box(2.62, 2.55, a, 2.80, 2.75, a + 0.016), 'bk_sage')
-    add('ped_items', box(2.63, 2.56, a + 0.016, 2.79, 2.74, a + 0.030), 'bk_mustard')
-    add('ped_items', rbox((2.88, 2.62, a + 0.012), (0.07, 0.07, 0.024), 0.008, 3), 'ceramic')
-    add('ped_items', tube([(2.88, 2.62, a + 0.02), (2.92, 2.70, a + 0.02), (2.86, 2.80, a + 0.02)], 0.004, 6), 'cl_white')
-    add('ped_items', box(2.66, 2.80, a, 2.92, 2.90, a + 0.012), 'bk_slate')
+    add('ped_items', box(1.66, 2.55, a, 1.84, 2.75, a + 0.016), 'bk_sage')
+    add('ped_items', box(1.67, 2.56, a + 0.016, 1.83, 2.74, a + 0.030), 'bk_mustard')
+    add('ped_items', rbox((1.93, 2.62, a + 0.012), (0.07, 0.07, 0.024), 0.008, 3), 'ceramic')
+    add('ped_items', tube([(1.93, 2.62, a + 0.02), (1.97, 2.70, a + 0.02), (1.91, 2.80, a + 0.02)], 0.004, 6), 'cl_white')
+    add('ped_items', box(1.70, 2.80, a, 1.96, 2.90, a + 0.012), 'bk_slate')
     # laptop (lid hinges at its north edge), desk lamp, mug, plant
-    lx, ly = 2.05, 2.72
+    lx, ly = 2.40, 2.72
     add('laptop', box(lx - 0.15, ly - 0.105, dz, lx + 0.15, ly + 0.105, dz + 0.012), 'alu')
     add('laptop', box(lx - 0.13, ly - 0.03, dz + 0.012, lx + 0.13, ly + 0.09, dz + 0.0125), 'kb')
     add('lid', box(lx - 0.15, ly - 0.105, dz + 0.0131, lx + 0.15, ly + 0.105, dz + 0.020), 'alu')
@@ -456,7 +456,7 @@ def build_desk(rng):
     add('mug', tube([(2.49, 2.62, dz + 0.07), (2.515, 2.62, dz + 0.055), (2.49, 2.62, dz + 0.025)], 0.006, 8), 'ceramic_s')
     plant('dplant', 1.70, 2.88, dz, 0.05, 0.08, rng, 9)
     # chair (faces north, tucked under the desk)
-    cx, cy = 2.05, 2.40
+    cx, cy = 2.45, 2.62
     add('chair', rbox((cx, cy, 0.47), (0.46, 0.44, 0.07), 0.03, 3), 'chair_fab')
     add('chair', xform(rbox((cx, cy - 0.21, 0.78), (0.42, 0.06, 0.36), 0.03, 3), about((cx, cy - 0.21, 0.6), R('x', 0.12))), 'chair_fab')
     add('chair', tube([(cx, cy, 0.11), (cx, cy, 0.44)], 0.024, 12), 'blackm')
@@ -547,7 +547,7 @@ def build():
     build_desk(rng)
     build_wardrobe(rng)
     global FIG
-    FIG = fg.figure('fig', 'adult', pose='stand', at=(1.95, 1.95, -60), mat='fig_sage')
+    FIG = fg.figure('fig', 'adult', pose='stand', at=(1.95, 1.95, -60), mat='fig_adult')
 
 
 FIG = None
@@ -599,10 +599,10 @@ def P(x, y, z, yaw, pitch):
 
 
 S1 = (P(2.34, 0.22, 1.50, -42.0, -7.0), P(2.18, 0.42, 1.46, -46.0, 13.0))
-S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.30, 1.30, 1.28, 34.0, -7.0))
-S3 = (P(2.12, 0.16, 1.75, -24.0, 7.0), P(2.02, 0.22, 1.30, -31.0, -8.0))
-S4 = (P(2.36, 0.45, 1.28, -30.0, -12.0), S1[0])
-HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.7, S3), (11.0, DUR, S4)]
+S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.55, 1.62, 1.30, 24.0, -14.0))
+S3 = (P(2.26, 0.14, 1.22, -22.0, 15.0), P(2.14, 0.22, 1.00, -28.0, 4.0))
+S4 = (P(1.98, 0.95, 0.98, -30.0, -16.0), S1[0])
+HOLDS = [(0.0, 3.08, S1), (3.3, 7.08, S2), (7.3, 10.78, S3), (11.0, DUR, S4)]
 RIDE = 2                                             # index of the ride hold
 EASE_IN = {0: 0.2}                                   # holds whose glide eases in over the first x seconds
 EASE_OUT = {3: 0.4}                                  # ... or eases out over the last x seconds
@@ -670,7 +670,7 @@ L_ST = [
     (16.9, 20.1, (P(1.30, 1.50, 1.30, 12.0, -10.0), P(1.85, 1.55, 1.30, 2.0, -10.0))),     # L6 slide toward the window
     (20.4, 23.4, (P(1.55, 1.55, 1.45, 28.0, -14.0), P(2.20, 1.60, 1.45, -12.0, -14.0))),   # L7 orbit behind the chair
     (23.7, 26.8, (P(2.85, 2.85, 2.05, -132.0, -24.0), P(2.62, 2.62, 1.95, -128.0, -20.0))),  # L8 NE corner, push south-west
-    (27.1, 31.0, (P(2.12, 0.16, 1.75, -24.0, 7.0), P(2.02, 0.22, 1.30, -31.0, -8.0))),     # L9 the ride
+    (27.1, 31.0, (P(2.26, 0.14, 1.22, -22.0, 15.0), P(2.14, 0.22, 1.00, -28.0, 4.0))),     # L9 the ride
     (31.3, 34.4, (P(2.20, 0.85, 0.80, -58.0, -12.0), P(2.20, 1.65, 0.80, -100.0, -12.0))), # L10 low slide along the front rail
     (34.7, 37.5, (P(2.30, 1.15, 1.30, -32.0, -14.0), P(2.22, 1.55, 1.25, -50.0, -16.0))),  # L11 orbit round the head end
     (37.8, 40.9, (P(1.15, 0.95, 1.30, 100.0, -6.0), P(1.15, 1.90, 1.30, 78.0, -6.0))),     # L12 facing east, slide north
@@ -689,13 +689,13 @@ camera = make_camera(HOLDS, RIDE, EASE_IN, EASE_OUT, ride_cam)
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (10.0, 10.6, 11.6)
-LSUN = (66000.0, 59000.0, 47000.0)
+LSUN = (78000.0, 70000.0, 56000.0)
 LFILL = (1.9, 1.86, 1.80)
 LFILL2 = (1.1, 1.08, 1.04)
 LDOWN = (380.0, 340.0, 270.0)
-LRAIL = (55.0, 48.0, 36.0)
-LSHELF = (26.0, 22.0, 16.0)
-LLAMP = (90.0, 70.0, 44.0)
+LRAIL = (95.0, 84.0, 64.0)
+LSHELF = (48.0, 41.0, 30.0)
+LLAMP = (150.0, 118.0, 76.0)
 T_CLOUD0, T_CLOUD1 = (12.0, 14.0) if not LONG else (1e9, 1e9)
 
 
@@ -901,7 +901,7 @@ def timeline_15(tl, kit):
     ev(5.62, 'ped_open', 0.6, 'swish'); ev(6.19, 'ped_shut', 0.8, 'thud')
     drop('ped_items', 5.74, 5.92, 0.28, 0.04, 0.35, parent=fp)
     ch_c = tl.cen['chair']
-    ch_start = np.array([1.70, 1.90, ch_c[2]])
+    ch_start = np.array([1.80, 2.05, ch_c[2]])
 
     def chair(t, t0=6.02, t1=6.35):
         if t < t0:
@@ -929,7 +929,7 @@ def timeline_15(tl, kit):
         dict(t=7.42, kind='pose', pose='stand'),
         dict(t=7.62, kind='pose', pose=PRESS),
         dict(t=7.74, kind='pose', pose=PRESS),
-        dict(t=8.15, kind='walk', to=(2.02, 1.88, -60), pose=LOOKUP),
+        dict(t=8.15, kind='walk', to=(1.92, 1.92, -50), pose=LOOKUP),
         dict(t=10.40, kind='pose', pose=LOOKUP),
         dict(t=10.85, kind='sit', at=(1.62, 2.24, 95), seat=BED_SEAT),
     ])
@@ -1335,9 +1335,9 @@ def timeline_long(tl, kit):
     # ---- the stand-in
     fig_rig(tl, [
         dict(t=20.40, kind='show', at=(2.45, 0.25, 0)),
-        dict(t=21.30, kind='walk', to=(2.05, 1.86, 0)),
-        dict(t=21.40, kind='sit', at=(2.05, 2.06, 0), seat=0.505),
-        dict(t=23.80, kind='stand', at=(2.05, 1.86, 0)),
+        dict(t=21.30, kind='walk', to=(2.45, 2.10, 0)),
+        dict(t=21.40, kind='sit', at=(2.45, 2.30, 0), seat=0.505),
+        dict(t=23.80, kind='stand', at=(2.45, 2.08, 0)),
         dict(t=24.05, kind='pose', pose=dict(sh_l=60, sh_r=60, elbow_l=20, elbow_r=20, spine=14)),
         dict(t=24.35, kind='pose', pose='stand'),
         dict(t=25.45, kind='walk', to=(1.88, 2.24, -49)),
