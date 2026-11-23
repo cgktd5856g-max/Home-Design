@@ -92,12 +92,12 @@ def materials():
     mat('box_white', col=srgb(240, 240, 238), rough=0.5)
     mat('suitcase', col=srgb(124, 150, 176), rough=0.3, f0=0.05, glossy=True)
     for nm, c in (('cl_rust', (150, 160, 174)), ('cl_mustard', (216, 210, 198)), ('cl_terra', (112, 140, 178)), ('cl_white', (242, 242, 240)),
-                  ('cl_sage', (146, 166, 138)), ('cl_navy', (54, 66, 100)), ('cl_denim', (90, 114, 152)), ('cl_grey', (192, 192, 196))):
+                  ('cl_sage', (176, 190, 206)), ('cl_navy', (54, 66, 100)), ('cl_denim', (90, 114, 152)), ('cl_grey', (192, 192, 196))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
-    for nm, c in (('bk_sage', (150, 168, 144)), ('bk_white', (240, 238, 232)), ('bk_terra', (194, 116, 84)), ('bk_navy', (56, 68, 102)),
-                  ('bk_mustard', (214, 168, 70)), ('bk_blue', (110, 138, 172)), ('bk_grey', (176, 176, 180))):
+    for nm, c in (('bk_sage', (196, 204, 214)), ('bk_white', (240, 238, 232)), ('bk_terra', (150, 170, 196)), ('bk_navy', (56, 68, 102)),
+                  ('bk_mustard', (226, 224, 218)), ('bk_blue', (110, 138, 172)), ('bk_grey', (176, 176, 180))):
         mat(nm, col=srgb(*c), rough=0.6)
-    mat('shoe_white', col=srgb(244, 244, 240), rough=0.5); mat('shoe_tan', col=srgb(184, 140, 98), rough=0.4, f0=0.04, glossy=True)
+    mat('shoe_white', col=srgb(244, 244, 240), rough=0.5); mat('shoe_tan', col=srgb(206, 204, 198), rough=0.5)
     mat('sole', col=srgb(236, 232, 224), rough=0.7)
 
 
