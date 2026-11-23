@@ -536,17 +536,17 @@ def segs_long():
     """45 s cut: orbit, descent, then one zone at a time (see PLAN.md, long cut), rising back to frame 1 at 45 s."""
     o_end = orbit(PHI0 + RATE * 5.0, 5.0)
     LA = P(0.62, -1.30, 2.92, 18.0, -31.0, VF_OVER)
-    A = (P(0.74, 0.75, 1.55, 0.0, 6.0), P(0.76, 1.85, 1.42, 2.0, -22.0))                 # window desk, push in
-    Bs = (P(1.36, 2.15, 1.40, -55.0, -16.0), P(1.30, 1.70, 1.32, -35.0, -14.0))          # slide along the window
-    C = (P(0.62, 0.42, 0.95, 52.0, 6.0), P(0.95, 0.22, 0.90, 28.0, 8.0))                 # low circle, bed corner
-    Ds = (P(0.62, 0.18, 1.55, 72.0, -32.0), P(1.05, 0.10, 1.75, 84.0, -40.0))            # along the stairs
+    A = (P(0.74, 0.65, 1.55, -8.0, 6.0), P(0.82, 2.05, 1.40, 8.0, -26.0))                 # window desk, push in
+    Bs = (P(1.38, 2.40, 1.45, -70.0, -20.0), P(1.25, 1.40, 1.30, -22.0, -12.0))          # slide along the window
+    C = (P(0.50, 0.60, 0.95, 62.0, 6.0), P(1.20, 0.12, 0.90, 14.0, 10.0))                 # low circle, bed corner
+    Ds = (P(0.50, 0.30, 1.50, 62.0, -28.0), P(1.20, 0.10, 1.80, 90.0, -42.0))            # along the stairs
     E = (P(1.42, 1.22, 1.50, 270.0, 14.0), P(1.42, 1.62, 1.40, 266.0, -6.0))             # wardrobe, straight on
     F = (P(1.35, 1.25, 1.15, 260.0, -24.0), P(1.35, 1.90, 1.25, 245.0, -20.0))           # wardrobe drawers, toward the desk
     G = (P(1.88, 0.06, 1.30, 2.0, -4.0), P(1.90, 0.45, 2.02, 8.0, -24.0))                # rising glide up the stairs
-    Hs = (P(1.12, 0.10, 1.05, 4.0, -12.0, 56.0), P(0.98, 0.42, 0.98, 14.0, -10.0, 56.0))  # the rail, low in the aisle
+    Hs = (P(1.20, 0.05, 1.12, -2.0, -13.0, 56.0), P(0.92, 0.62, 0.95, 18.0, -9.0, 56.0))  # the rail, low in the aisle
     J1 = (P(1.40, 0.12, 1.35, -28.0, -12.0), P(1.38, 0.45, 1.30, -48.0, -12.0))            # dolly: the person comes in
-    J2 = (P(0.92, 2.50, 1.55, 176.0, -14.0), P(0.98, 2.20, 1.45, 168.0, -16.0))          # window end, down the aisle
-    K = (P(2.85, 0.12, 2.40, -42.0, -30.0), P(2.62, 0.22, 2.32, -36.0, -27.0))           # high south-east corner
+    J2 = (P(0.90, 2.55, 1.60, 180.0, -14.0), P(1.08, 1.95, 1.42, 160.0, -18.0))          # window end, down the aisle
+    K = (P(2.88, 0.10, 2.40, -46.0, -30.0), P(2.40, 0.38, 2.30, -28.0, -26.0))           # high south-east corner
     sw = lambda a, b: (lambda u, t: mix(a, b, smooth(u), lift=2.0))
     gl = lambda st: (lambda u, t: mix(st[0], st[1], u))
     return [
@@ -711,7 +711,7 @@ def beats_long():
              wr_top=(19.50, 19.95), wd_opens=[(20.10, 23.40), (32.80, 33.80)], wr_cl=(20.35, 20.75),
              wr_drs=[(21.80, 22.60), (22.05, 22.85)],
              ledge=(24.50, 24.68), ledge_bk=24.85, ledge_pl=25.08, hb_lamp=25.30, slippers=25.50, mslide=(25.80, 26.55),
-             rails=[((27.80, 28.50), (30.40, 30.75)), ((37.05, 37.65), (38.60, 38.95))], on=39.40)
+             rails=[((27.80, 28.50), (29.75, 30.10)), ((37.05, 37.65), (38.60, 38.95))], on=39.40)
     return B
 
 
