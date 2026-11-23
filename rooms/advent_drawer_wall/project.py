@@ -412,13 +412,15 @@ def build_shell():
     # north wall with the window
     add(r, box(-0.2, D, -0.25, WX0, D + 0.2, H + 0.1), 'wall'); add(r, box(WX1, D, -0.25, W + 0.2, D + 0.2, H + 0.1), 'wall')
     add(r, box(WX0, D, -0.25, WX1, D + 0.2, WZ0), 'wall'); add(r, box(WX0, D, WZ1, WX1, D + 0.2, H + 0.1), 'wall')
-    for b in (box(WX0, D, WZ0, WX0 + 0.006, D + 0.2, WZ1), box(WX1 - 0.006, D, WZ0, WX1, D + 0.2, WZ1), box(WX0, D, WZ1 - 0.006, WX1, D + 0.2, WZ1)):
+    for b in (box(WX0, D, WZ0, WX0 + 0.006, D + 0.2, WZ1), box(WX1 - 0.006, D, WZ0, WX1, D + 0.2, WZ1),
+              box(WX0 + 0.006, D, WZ1 - 0.006, WX1 - 0.006, D + 0.2, WZ1)):
         add(r, b, 'sill')
     add(r, box(WX0 - 0.03, D - 0.03, WZ0 - 0.02, WX1 + 0.03, D + 0.17, WZ0), 'sill')
     fy0, fy1 = D + 0.10, D + 0.14
     xm = (WX0 + WX1) / 2
-    for b in (box(WX0, fy0, WZ0, WX0 + 0.05, fy1, WZ1), box(WX1 - 0.05, fy0, WZ0, WX1, fy1, WZ1), box(WX0, fy0, WZ1 - 0.05, WX1, fy1, WZ1),
-              box(WX0, fy0, WZ0, WX1, fy1, WZ0 + 0.05), box(xm - 0.022, fy0, WZ0, xm + 0.022, fy1, WZ1)):
+    for b in (box(WX0, fy0, WZ0, WX0 + 0.05, fy1, WZ1), box(WX1 - 0.05, fy0, WZ0, WX1, fy1, WZ1),
+              box(WX0 + 0.05, fy0, WZ1 - 0.05, WX1 - 0.05, fy1, WZ1), box(WX0 + 0.05, fy0, WZ0, WX1 - 0.05, fy1, WZ0 + 0.05),
+              box(xm - 0.022, fy0, WZ0 + 0.05, xm + 0.022, fy1, WZ1 - 0.05)):
         add(r, b, 'winframe')
     for b in (box(0, 0, 0, 0.012, D, 0.07), box(0, 0, 0, W, 0.012, 0.07)):
         add(r, b, 'white_cab')
@@ -609,6 +611,9 @@ def build_den(rng):
             add(f'books{g}', box(x, 2.92, z, x + th, D - 0.01, z + hh), m)
             x += th + 0.003
             k += 1
+    add('pouf', lathe(rprof(0.21, 0.016, 0.24, 0.07, 5), 28, (0.62, 1.55)), 'plush_light')
+    for dy in (-0.05, 0.05):
+        add('slippers', ellipsoid((1.78, 0.62 + dy, 0.03), (0.11, 0.04, 0.03), 8), 'knit_red' if dy < 0 else 'knit_red')
     add('rug', rbox((1.05, 1.25, 0.008), (1.5, 1.1, 0.016), 0.006, 3), 'rug')
 
 
@@ -628,7 +633,7 @@ def build_stair():
         if d['kind'] == 'side':
             yc = (d['y0'] + d['y1']) / 2
             add(f'af{k}', box(SX0, d['y0'] + GAP, d['z0'] + GAP, SX0 + 0.012, d['y1'] - GAP, d['z1'] - GAP), 'oakl_y')
-            add(f'af{k}', box(SX0 + 0.012, d['y0'] + GAP + 0.003, d['z0'] + GAP, SX0 + 0.018, d['y1'] - GAP - 0.003, d['z1'] - GAP - 0.003), 'white_cab')
+            add(f'af{k}', box(SX0 + 0.012, d['y0'] + GAP + 0.003, d['z0'] + GAP, SX0 + 0.018, d['y1'] - GAP - 0.003, d['z1'] - GAP - 0.003), 'oakl_y')
             add(f'af{k}', xform(lathe(rprof(0.012, 0, 0.016, 0.006, 3), 14), T(SX0, yc, d['z0'] + RZ * 0.6) @ R('y', -math.pi / 2)), 'knob')
             add(f'at{k}', box(SX0 + 0.018, d['y0'] + 0.012, d['z0'] + 0.02, SX0 + SDEP, d['y1'] - 0.012, d['z0'] + 0.03), 'white_in')
             for bb in (box(SX0 + 0.018, d['y0'] + 0.012, d['z0'] + 0.03, SX0 + SDEP, d['y0'] + 0.02, d['z0'] + 0.08),
@@ -638,7 +643,7 @@ def build_stair():
         else:
             xc = (SX0 + SDEP + SX1) / 2
             add(f'af{k}', box(SX0 + SDEP + GAP, d['y0'], d['z0'] + GAP, SX1 - GAP, d['y0'] + 0.012, d['z1'] - GAP), 'oakl_x')
-            add(f'af{k}', box(SX0 + SDEP + GAP + 0.003, d['y0'] + 0.012, d['z0'] + GAP, SX1 - GAP - 0.003, d['y0'] + 0.018, d['z1'] - GAP - 0.003), 'white_cab')
+            add(f'af{k}', box(SX0 + SDEP + GAP + 0.003, d['y0'] + 0.012, d['z0'] + GAP, SX1 - GAP - 0.003, d['y0'] + 0.018, d['z1'] - GAP - 0.003), 'oakl_x')
             add(f'af{k}', xform(lathe(rprof(0.012, 0, 0.016, 0.006, 3), 14), T(xc, d['y0'], d['z0'] + RZ * 0.6) @ R('x', math.pi / 2)), 'knob')
             add(f'at{k}', box(SX0 + SDEP + 0.012, d['y0'] + 0.018, d['z0'] + 0.02, SX1 - 0.012, d['y1'] - 0.01, d['z0'] + 0.03), 'white_in')
             put(f'ay{k}', toy(kind), (xc, d['y0'] + 0.12, d['z0'] + 0.03), sc * (1.15 if kind == 'star' else 1.0), 0.0)
@@ -684,7 +689,7 @@ def P(x, y, z, yaw, pitch):
 SA = (P(0.20, 0.15, 2.30, 37.0, -26.0), P(0.55, 0.70, 1.55, 28.0, -8.0))       # high doorway corner, craning down fast
 SB = (P(0.55, 1.05, 1.00, -12.0, 2.0), P(1.55, 1.35, 0.90, 10.0, 4.0))         # the den under the loft
 SC = (P(1.32, 0.66, 0.46, 52.0, 6.0), P(1.05, 1.56, 1.02, 82.0, -8.0))        # low, looking up the stair, rising with the ripple
-SC2 = (P(0.30, 1.20, 0.85, 80.0, -4.0), P(0.80, 1.56, 0.86, 90.0, -4.0))       # all 24 open: push in, level
+SC2 = (P(0.80, 1.46, 0.96, 85.0, -6.0), P(0.96, 1.58, 0.98, 90.0, -6.0))       # all 24 open: keep pushing in
 SD = (P(0.95, 0.60, 1.40, 48.0, 6.0), P(1.20, 0.90, 1.66, 36.0, 13.0))        # the child, the top drawer, the star, lights on
 SE = (P(0.64, 0.72, 1.82, 30.0, -13.0), SA[0])                                  # final: drift back into the frame-1 pose
 HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.75, SD), (13.02, DUR_SHORT, SE)]
@@ -696,8 +701,8 @@ camera = hold_camera(HOLDS, VFOV, rest=REST)
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (12.4, 12.4, 12.4)
 LSUN = (42000.0, 38500.0, 33000.0)
-LFILL = (2.4, 2.4, 2.35)
-LCEIL = (0.6, 0.6, 0.6)
+LFILL = (3.4, 3.35, 3.25)
+LCEIL = (1.0, 0.99, 0.97)
 LTREE = (40.0, 30.0, 17.0)
 LGARL = (26.0, 21.0, 13.0)
 LDEN = (30.0, 25.0, 18.0)
@@ -728,7 +733,7 @@ def lights(mats4, vis):
 
 SEPARATE = ['sky_day', 'snow_day', 'pineo_day', 'house_day', 'roof_day', 'flake', 'bulb_on', 'star_glow', 'led', 'dl_emis', 'lamp_bulb', 'glint_glow']
 BLENDER = dict(
-    exposure=-0.45,
+    exposure=-0.40,
     look='AgX - Medium High Contrast',
     translucent={'lampshade': 0.5},
     separate=SEPARATE,
@@ -830,7 +835,7 @@ def timeline_short(tl):
 
     # ================= S1 (0-2.9, high corner): planks, the stair lands (and teases one drawer), posts, deck, bed
     for k in range(6):
-        t1 = 0.08 + 0.03 * (5 - k)
+        t1 = 0.12 + 0.03 * (5 - k)
         drop(f'floor{k}', t1 - 0.08, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
     for i in range(NST):
         drop(f'stc{i}', 0.46 + 0.07 * i, 0.62 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
@@ -944,6 +949,8 @@ def timeline_short(tl):
     appear('den_on', T_LIGHTS + 0.26); ev(T_LIGHTS + 0.26, 'den_on', 0.45, 'chime')
     appear('dlamp_on', T_LIGHTS + 0.34)
     appear('dl_on', T_LIGHTS + 0.44); ev(T_LIGHTS + 0.44, 'down_on', 0.4, 'chime')
+    drop('pouf', 13.18, 13.36, 0.45, 0.06, 0.5, 'thud')
+    drop('slippers', 13.60, 13.74, 0.30, 0.06, 0.3)
     return tl
 
 
