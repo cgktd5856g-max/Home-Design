@@ -79,7 +79,7 @@ def tumbler_pos(i):
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('screed', tex=3, col=srgb(186, 185, 182), p=(0.10,))
+    mat('screed', tex=3, col=srgb(184, 183, 180), p=(0.12,))
     mat('floor', tex=1, col=srgb(222, 204, 176), col2=srgb(204, 184, 154), rough=0.4, f0=0.04, glossy=True, p=(0.19, 1.8))
     mat('wall', tex=3, col=srgb(242, 241, 238), p=(0.015,))
     mat('ceiling', col=srgb(246, 246, 244))
@@ -89,13 +89,13 @@ def materials():
     wood_mats('oak', srgb(216, 186, 148), seed=3.0)
     wood_mats('oakl', srgb(226, 202, 168), seed=6.0)
     mat('worktop', tex=15, col=srgb(222, 222, 220), col2=srgb(186, 186, 186), rough=0.18, f0=0.045, glossy=True, p=(600.0, 0.82))
-    mat('clay', tex=12, col=srgb(196, 136, 110), col2=srgb(232, 222, 212), rough=0.2, f0=0.04, glossy=True,
+    mat('clay', tex=12, col=srgb(198, 160, 146), col2=srgb(236, 230, 224), rough=0.2, f0=0.04, glossy=True,
         p=(0.075, 0.30, 0.003, 0, 0.5))
     mat('steel', tex=14, col=srgb(208, 209, 212), rough=0.26, metal=1, p=(1,))
     mat('basin', col=srgb(184, 186, 190), rough=0.28, f0=0.07, glossy=True)
     mat('hob', col=srgb(16, 16, 18), rough=0.06, f0=0.05, glossy=True)
     mat('hob_ring', col=srgb(84, 84, 88))
-    mat('ovenglass', col=srgb(28, 28, 30), rough=0.08, f0=0.05, glossy=True)
+    mat('ovenglass', col=srgb(78, 80, 84), rough=0.08, f0=0.05, glossy=True)
     mat('grille', col=srgb(120, 120, 124), rough=0.4)
     mat('vent', col=srgb(60, 60, 64))
     mat('winframe', col=srgb(236, 236, 234), rough=0.4)
@@ -189,7 +189,7 @@ def chair_parts(seat_m):
         A.append((tube([(sx, -0.19, 0.0), (sx, -0.205, 0.45), (sx, -0.225, 0.86)], 0.014, 10), 'oak_z'))
     A.append((box(-0.205, -0.243, 0.62, 0.205, -0.221, 0.84), 'oak_x'))
     A.append((tube([(-0.19, -0.195, 0.16), (0.19, -0.195, 0.16)], 0.009, 8), 'oak_x'))
-    B.append((box(-0.20, -0.19, 0.425, 0.20, 0.19, 0.445), 'oak_x'))
+    B.append((box(-0.20, -0.19, 0.425, 0.20, 0.19, 0.445), seat_m[:-2]))
     B.append((rbox((0, 0.0, 0.458), (0.38, 0.36, 0.028), 0.012, 3), seat_m))
     for sx in (-0.175, 0.175):
         C.append((tube([(sx, 0.17, 0.0), (sx, 0.17, 0.43)], 0.013, 10), 'oak_z'))
@@ -305,7 +305,8 @@ def build_run(rng):
         z = 0.022 + k * 0.007
         add('grille', box(FX - 0.036, Y_FR + 0.025, z, FX - 0.030, Y_SINK - 0.045, z + 0.003), 'vent')
     # --- sink unit with three pull-out bins (one sage)
-    base_box('base_sink', Y_SINK, Y_DW, [(0.10, WZ - 0.03)])
+    base_box('base_sink', Y_SINK, Y_DW, [])
+    add('sink_front', box(FX - 0.02, Y_SINK + 0.003, 0.102, FX, Y_DW - 0.003, WZ - 0.032), 'oak_y')
     for k, (y0, y1, m) in enumerate(((1.08, 1.27, 'white_in'), (1.27, 1.45, 'g_sage'), (1.45, 1.62, 'white_in'))):
         add(f'bin{k}', rbox((0.30, (y0 + y1) / 2, 0.34), (0.44, y1 - y0 - 0.02, 0.40), 0.02, 3), m)
     # --- dishwasher
@@ -331,12 +332,16 @@ def build_run(rng):
     add('pan_dr', lathe([(0, 0.132), (0.08, 0.132), (0.085, 0.22), (0.078, 0.22), (0.073, 0.145), (0, 0.145)], 24, (0.44, 2.54)), 'steel')
     # --- oven base (black glass door, blank display)
     base_box('base_ov', Y_OV, Y_SP, [(0.10, 0.18), (0.78, WZ - 0.03)])
-    add('base_ov', box(FX - 0.025, Y_OV + 0.01, 0.18, FX - 0.003, Y_SP - 0.01, 0.78), 'ovenglass')
-    add('base_ov', box(FX - 0.003, Y_OV + 0.08, 0.70, FX + 0.02, Y_SP - 0.08, 0.715), 'steel')
+    add('oven', box(FX - 0.025, Y_OV + 0.01, 0.18, FX - 0.003, Y_SP - 0.01, 0.78), 'ovenglass')
+    add('oven', box(FX - 0.003, Y_OV + 0.08, 0.70, FX + 0.02, Y_SP - 0.08, 0.715), 'steel')
     # --- spice pull-out (narrow)
-    base_box('base_sp', Y_SP, D, [(0.10, WZ - 0.03)])
+    base_box('base_sp', Y_SP, D, [])
+    add('sp_pull', box(FX - 0.02, Y_SP + 0.003, 0.102, FX, D - 0.003, WZ - 0.032), 'oak_z')
+    for z in (0.18, 0.40, 0.62):
+        add('sp_pull', box(0.06, Y_SP + 0.03, z, FX - 0.02, D - 0.03, z + 0.012), 'white_in')
+    add('sp_pull', box(0.06, Y_SP + 0.03, 0.18, FX - 0.02, Y_SP + 0.04, 0.80), 'steel')
     sp_cols = ['g_clay', 'g_ochre', 'g_sage', 'red_pot', 'g_blue', 'g_butter']
-    for k, z in enumerate((0.20, 0.42, 0.64)):
+    for k, z in enumerate((0.192, 0.412, 0.632)):
         for j, x in enumerate((0.12, 0.24, 0.36, 0.48)):
             add(f'spice{k}', lathe(rprof(0.026, z, z + 0.09, 0.006, 2), 16, (x, 3.50)), 'jar')
             add(f'spice{k}', lathe(rprof(0.028, z + 0.09, z + 0.115, 0.006, 2), 16, (x, 3.50)), sp_cols[(k * 4 + j) % 6])
@@ -365,11 +370,16 @@ def build_run(rng):
     # uppers: from the fridge to the window wall, with a hood cabinet over the hob and the dinner column's
     # lift-up (tumblers) and top cabinet (dish lift) as separate pieces
     for (y0, y1) in ((Y_SINK, Y_DIN), (Y_SP, D)):
-        add('uppers', box(0, y0 + 0.002, UZ0, UX - 0.02, y1 - 0.002, H), 'white_in')
+        # hollow carcass: back, sides, bottom, top, one shelf
+        for b in (box(0, y0 + 0.002, UZ0, 0.02, y1 - 0.002, H), box(0, y0 + 0.002, UZ0, UX - 0.02, y0 + 0.02, H),
+                  box(0, y1 - 0.02, UZ0, UX - 0.02, y1 - 0.002, H), box(0, y0 + 0.002, UZ0, UX - 0.02, y1 - 0.002, UZ0 + 0.018),
+                  box(0, y0 + 0.002, H - 0.02, UX - 0.02, y1 - 0.002, H), box(0, y0 + 0.002, 1.98, UX - 0.02, y1 - 0.002, 1.996)):
+            add('uppers', b, 'white_in')
         nd = max(1, int(round((y1 - y0) / 0.5)))
         for k in range(nd):
             a0, a1 = y0 + (y1 - y0) * k / nd, y0 + (y1 - y0) * (k + 1) / nd
-            add('uppers', box(UX - 0.02, a0 + 0.002, UZ0 + 0.002, UX, a1 - 0.002, H - 0.002), 'white_cab')
+            nm = f'updoor{k}' if y0 == Y_SINK else 'uppers'
+            add(nm, box(UX - 0.02, a0 + 0.002, UZ0 + 0.002, UX, a1 - 0.002, H - 0.002), 'white_cab')
     # dinner column uppers: carcass (part of 'uppers'), lift-up door, top door, tumbler shelf
     add('uppers', box(0, Y_DIN, UZ0, UX - 0.02, Y_DIN + 0.018, H), 'white_in')
     add('uppers', box(0, Y_OV - 0.018, UZ0, UX - 0.02, Y_OV, H), 'white_in')
@@ -380,13 +390,16 @@ def build_run(rng):
     add('liftup', box(UX - 0.02, Y_DIN + 0.002, UZ0 + 0.002, UX, Y_OV - 0.002, 1.868), 'oak_y')
     add('topdoor', box(UX - 0.02, Y_DIN + 0.002, 1.872, UX, Y_OV - 0.002, H - 0.002), 'white_cab')
     # dish lift in the top cabinet: basket + two arms, the platter on it
-    add('dlift', box(0.05, Y_DIN + 0.05, 1.92, 0.30, Y_OV - 0.05, 1.93), 'steel')
-    for y in (Y_DIN + 0.05, Y_OV - 0.06):
-        add('dlift', box(0.05, y, 1.93, 0.30, y + 0.01, 2.00), 'steel')
-    add('dlift_arms', tube([(0.03, Y_DIN + 0.04, 2.45), (0.06, Y_DIN + 0.04, 1.97)], 0.008, 8), 'steel')
-    add('dlift_arms', tube([(0.03, Y_OV - 0.04, 2.45), (0.06, Y_OV - 0.04, 1.97)], 0.008, 8), 'steel')
-    add('platter', xform(lathe([(0, 1.932), (0.14, 1.932), (0.18, 1.952), (0.175, 1.956), (0.13, 1.942), (0, 1.942)], 36, (0, 0)),
-                         T(0.175, 2.40, 0) @ S(0.62, 1.0, 1.0)), 'plate_in')
+    ex, ez = DL_END
+    add('dlift', box(ex - 0.12, Y_DIN + 0.05, ez - 0.10, ex + 0.12, Y_OV - 0.05, ez - 0.09), 'steel')
+    for y in (Y_DIN + 0.04, Y_OV - 0.05):
+        add('dlift', box(ex - 0.12, y, ez - 0.10, ex + 0.12, y + 0.01, ez), 'steel')
+        add('dlift_arms', tube([(DL_PIV[0], y + 0.005, DL_PIV[1]), (ex, y + 0.005, ez)], 0.009, 8), 'steel')
+    add('platter', xform(lathe([(0, 0.0), (0.14, 0.0), (0.18, 0.02), (0.175, 0.024), (0.13, 0.01), (0, 0.01)], 36, (0, 0)),
+                         T(ex, 2.40, ez - 0.088) @ S(0.62, 1.0, 1.0)), 'plate_in')
+    for k, (dx, dy) in enumerate(((0, -0.09), (0.03, -0.03), (-0.03, 0.02), (0.02, 0.07), (-0.02, 0.11), (0.0, -0.13))):
+        add('platter', ellipsoid((ex + dx, 2.40 + dy, ez - 0.06), (0.028, 0.034, 0.022), 8), 'bread' if k % 2 else 'j_pasta')
+    add('platter', ellipsoid((ex, 2.40, ez - 0.07), (0.06, 0.05, 0.012), 8), 'j_pea')
     # bowls / mugs / jars in the uppers over the sink (shown in the long cut) -- they live inside the closed cabinets
     for k, y in enumerate(np.arange(1.12, 2.06, 0.135)):
         bowl('up_bowls', 0.16, y, 1.47, 0.06, 0.05, ['g_blue', 'g_sage', 'g_clay', 'g_butter'][k % 4])
@@ -447,6 +460,10 @@ def build_east(rng):
 
 # ------------------------------------------------------------------------------------------- island / table
 ISL_HALF = 0.40          # each half slides this far
+DL_PIV = (0.32, 1.95)    # dish-lift arm pivot (x, z), at the top cabinet's front bottom
+DL_LEN = 0.60
+DL_B0, DL_B1 = -15.0, 150.0   # arm angle from straight up toward +x: stowed / pulled down
+DL_END = (DL_PIV[0] + DL_LEN * math.sin(math.radians(DL_B0)), DL_PIV[1] + DL_LEN * math.cos(math.radians(DL_B0)))
 
 
 def build_island():
@@ -484,7 +501,7 @@ def build_setting(rng):
     # bread board, fruit bowl, potted fir (+ berries)
     add('bread', box(TCX - 0.10, 1.32, TZ + 0.003, TCX + 0.10, 1.56, TZ + 0.02), 'board')
     add('bread', ellipsoid((TCX, 1.44, TZ + 0.055), (0.07, 0.10, 0.045), 12), 'bread')
-    bowl('fruit', TCX, 2.16, TZ + 0.003, 0.11, 0.06, 'g_slate')
+    bowl('fruit', TCX, 2.16, TZ + 0.003, 0.11, 0.06, 'g_blue')
     for k, (dx, dy, m) in enumerate(((0, 0, 'orange'), (0.05, 0.03, 'apple'), (-0.05, 0.02, 'orange'), (0.01, -0.05, 'apple'),
                                      (-0.03, -0.04, 'orange'))):
         add('fruit', ellipsoid((TCX + dx, 2.16 + dy, TZ + 0.07 + (0.03 if k == 0 else 0)), (0.037, 0.037, 0.035), 10), m)
@@ -496,12 +513,13 @@ def build_setting(rng):
         z = 0.12 + (k % 4) * 0.075
         rr = 0.105 - (k % 4) * 0.022
         add('berries', ellipsoid((TCX + rr * math.cos(a), CY + rr * math.sin(a), TZ + z + 0.01), (0.011, 0.011, 0.011), 6), 'berry')
+    add('berry_last', ellipsoid((TCX, CY, TZ + 0.465), (0.016, 0.016, 0.016), 8), 'berry')
     # pendant over the table centre
-    pz = 0.10
+    pz = 0.24
     add('pendant', tube([(TCX, CY, H), (TCX, CY, 1.86 + pz)], 0.004, 6), 'cord')
-    add('pendant', lathe([(0.0, 1.88 + pz), (0.025, 1.88 + pz), (0.075, 1.85 + pz), (0.125, 1.79 + pz), (0.15, 1.72 + pz), (0.155, 1.70 + pz),
-                          (0.150, 1.70 + pz), (0.12, 1.785 + pz), (0.03, 1.865 + pz), (0, 1.865 + pz)], 40, (TCX, CY)), 'dome')
-    add('pend_on', ellipsoid((TCX, CY, 1.70 + pz), (0.04, 0.045, 0.045), 10), 'bulb')
+    add('pendant', lathe([(0.0, 1.88 + pz), (0.022, 1.88 + pz), (0.065, 1.855 + pz), (0.108, 1.80 + pz), (0.13, 1.74 + pz), (0.134, 1.72 + pz),
+                          (0.129, 1.72 + pz), (0.104, 1.795 + pz), (0.03, 1.865 + pz), (0, 1.865 + pz)], 40, (TCX, CY)), 'dome')
+    add('pend_on', ellipsoid((TCX, CY, 1.73 + pz), (0.035, 0.045, 0.045), 10), 'bulb')
 
 
 # ------------------------------------------------------------------------------------------- build
@@ -533,18 +551,37 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-F1 = P(2.80, 3.38, 2.08, 212.0, -40.0)                       # frame-1 pose: high north-east corner, looking at the door
-S1 = (F1, P(2.68, 3.12, 2.00, 210.0, -35.0))                   # slow push-in
-S2 = (P(2.92, 2.45, 2.00, 262.0, -13.0), P(2.92, 1.50, 1.95, 246.0, -11.0))   # the run: slide south, turn to the pantry
-S3a = (P(0.80, 0.20, 2.15, 6.0, -33.0), P(0.90, 0.24, 2.12, 17.0, -32.0))   # SW corner: the island clacks, plates out
-S3b = (P(0.80, 0.45, 2.15, 54.0, -27.0), P(0.92, 0.70, 2.12, 62.0, -26.0))    # orbit on to the chair wall
-S4 = (P(2.85, 0.45, 2.05, 318.0, -30.0), F1)                   # wide drift north and round into the frame-1 pose
-HOLDS = [(0.0, 3.00, S1), (3.30, 7.00, S2), (7.30, 8.55, S3a), (8.75, 10.75, S3b), (11.00, 15.0, S4)]
+F1 = P(2.80, 3.38, 2.08, 212.0, -46.0)                       # frame-1 pose: high north-east corner, looking at the door
+S1 = (F1, P(2.40, 2.80, 1.88, 205.0, -36.0))                   # slow push-in
+S2 = (P(1.26, 3.18, 1.84, 198.0, -27.0), P(1.30, 3.05, 1.82, 214.0, -13.0))    # north aisle: plate drawer, uppers, splashback
+S2b = (P(1.18, 2.05, 1.78, 201.0, -13.0), P(1.06, 1.78, 1.66, 198.0, -10.0))    # push in on the pantry   # the run: slide south, turn to the pantry
+S3a = (P(0.98, 3.36, 1.92, 166.0, -36.0), P(1.20, 3.30, 1.84, 156.0, -34.0))   # SW corner: the island clacks, plates out
+S3b = (P(0.78, 0.55, 2.40, 57.0, -37.0), P(0.86, 0.75, 2.32, 62.0, -35.0))    # orbit on to the chair wall
+S4 = (P(2.62, 1.15, 1.95, 298.0, -22.0), F1)                   # wide drift north and round into the frame-1 pose
+HOLDS = [(0.0, 3.00, S1), (3.30, 4.92, S2), (5.12, 7.00, S2b), (7.30, 8.55, S3a), (8.75, 10.92, S3b), (11.15, 15.0, S4)]
 if os.environ.get('ROOM_ST'):                                   # probe arbitrary stations: ROOM_ST="S3a,S3b"
     HOLDS = [(k, k + 1, globals()[nm]) for k, nm in enumerate(os.environ['ROOM_ST'].split(','))]
 
-if LONG:
-    HOLDS = []            # set in the long-cut section below
+# long cut: 14 angles in 7 zones
+A1 = S1
+A2 = (P(2.92, 0.95, 2.02, 290.0, -18.0), P(2.92, 2.55, 1.98, 262.0, -15.0))     # east side, sliding north along the run
+A3 = (P(2.92, 2.45, 2.00, 258.0, -15.0), P(2.92, 1.15, 1.95, 232.0, -12.0))     # sliding toward the south-west corner
+A4 = (P(2.70, 1.75, 1.90, 238.0, -12.0), P(2.30, 1.30, 1.78, 236.0, -9.0))      # push in on the pantry
+A5 = (P(2.92, 0.85, 1.92, 286.0, -15.0), P(2.92, 1.95, 1.86, 266.0, -13.0))     # sink, bins, splashback
+A6 = (P(2.60, 3.05, 1.90, 252.0, -16.0), P(2.20, 2.80, 1.78, 258.0, -13.0))     # push in: oven, hood, spices, pans, lift-up
+A7 = (P(2.25, 1.55, 1.80, 302.0, -8.0), P(2.25, 3.15, 1.78, 236.0, -8.0))       # orbit round the dinner column: dish lift
+A8 = (P(1.00, 0.95, 1.72, 78.0, -9.0), P(1.00, 2.75, 1.70, 64.0, -9.0))         # slide along the plain oak wall
+A9 = (P(0.75, 0.15, 2.20, 2.0, -35.0), P(0.95, 0.30, 2.08, 20.0, -31.0))                                                                        # high orbit over the island: clacks
+A10 = (P(0.80, 0.45, 2.15, 54.0, -27.0), P(1.02, 0.95, 2.05, 66.0, -25.0))      # the chair wall, push toward the table
+A11 = (P(TCX, 3.35, 2.32, 180.0, -52.0), P(TCX, 3.28, 1.72, 180.0, -30.0))      # crane down the table from the window end
+A12 = (P(2.88, 0.95, 1.18, 288.0, -15.0), P(2.88, 2.60, 1.15, 252.0, -15.0))    # low from the east, sliding north
+A13 = (P(2.88, 0.22, 1.98, 328.0, -24.0), P(2.62, 0.72, 1.82, 322.0, -21.0))    # south-east corner push-in
+A14 = (P(2.86, 2.55, 2.02, 236.0, -38.0), F1)                                    # 2 s drift into the frame-1 pose
+HOLDS_LONG = [(0.0, 3.0, A1), (3.3, 6.3, A2), (6.6, 9.6, A3), (9.9, 12.9, A4), (13.2, 16.2, A5), (16.5, 19.5, A6),
+              (19.8, 23.1, A7), (23.4, 26.4, A8), (26.7, 29.1, A9), (29.4, 33.0, A10), (33.3, 36.3, A11),
+              (36.6, 39.6, A12), (39.9, 43.7, A13), (44.0, 46.0, A14)]
+if LONG and not os.environ.get('ROOM_ST'):
+    HOLDS = HOLDS_LONG
 
 camera = None
 
@@ -573,7 +610,7 @@ def lights(mats4, vis):
     Ls.append(rect_light((DX0, -0.9, 0.1), (0, 0, 2.0), (DX1 - DX0, 0, 0), LDOOR, always=1))                  # 1 door fill (+y)
     Ls.append(rect_light((W - 0.03, 0.4, 0.5), (0, 0, 1.7), (0, 2.8, 0), LBOUNCE))                             # 2 bounce (-x)
     Ls.append(rect_light((0.6, 0.5, H - 0.02), (0, 2.6, 0), (2.0, 0, 0), LTOP))                                # 3 ceiling bounce (down)
-    Ls.append(spot_rect((TCX, CY, 1.80), (0, 0, -1), 0.09, k(LPEND, vis.get('pend_on')), 1.5))                 # 4 pendant
+    Ls.append(spot_rect((TCX, CY, 1.94), (0, 0, -1), 0.08, k(LPEND, vis.get('pend_on')), 1.5))                 # 4 pendant
     Ls.append(rect_light((0.26, Y_SINK + 0.03, UZ0 - 0.008), (0, Y_OV - Y_SINK - 0.06, 0), (0.03, 0, 0),
                          k(LUNDER, vis.get('led_under'))))                                                    # 5 under-cabinet
     Ls.append(rect_light((2.97, 3.0, 2.15), (0, D - 3.04, 0), (0.02, 0, 0), k(LSHELF, vis.get('led_shelf'))))  # 6 shelf
@@ -869,12 +906,12 @@ def stage_bifold(kit, wall, t_open, t_close, out=0.25, shut=0.22):
     tl.ev(t_close + shut, 'bifold_shut', 0.9, 'thud')
 
 
-def host_hand(pose, at):
-    """World position of the host's right hand for a pose and place."""
+def host_hand(pose, at, side='r'):
+    """World position of the host's hand for a pose and place."""
     Mr = HOST.root(pose, at)
     Ms = HOST.fk(pose, Mr)
     p = HOST.p
-    return (Ms['farm_r'] @ np.array([0, 0.0, -p['fore'] - 0.07, 1.0]))[:3]
+    return (Ms[f'farm_{side}'] @ np.array([0, 0.0, -p['fore'] - 0.07, 1.0]))[:3]
 
 
 SIT = None
@@ -895,8 +932,8 @@ def timeline_short():
     ev, drop, slide, grow = tl.ev, tl.drop, tl.slide, tl.grow
     cen = tl.cen
     # --- S1 (0.0-3.0): the plate ring, planks, base run, columns, island, worktop, oak wall
-    T_PL = [0.30 + 0.10 * k for k in range(8)]                     # plates land on the bare screed
-    band_t = [0.62 + 0.15 * k for k in range(6)]                   # planks land far (south) to near
+    T_PL = [0.15 + 0.105 * k for k in range(8)]                    # plates land on the bare screed (the first is falling in frame 1)
+    band_t = [0.36 + 0.14 * k for k in range(6)]                   # planks land far (south) to near
     edges = [-0.12, 0.6, 1.2, 1.8, 2.4, 3.0, D + 0.01]
     for k in range(6):
         drop(f'floor{k}', band_t[k] - 0.14, band_t[k], 0.30, 0.04, 0.35 + 0.05 * k, 'thud' if k % 2 == 0 else 'tick')
@@ -905,7 +942,7 @@ def timeline_short():
         slide(nm, t - 0.16, t, (-0.62, 0, 0), 0.8, 0.7)
     sP = grow('pantry', 1.70, 1.92, 'z', (0, 0, 0), 0.8)
     grow('fridge', 1.82, 2.02, 'z', (0, 0, 0), 0.9)
-    slide('grille', 6.78, 6.92, (0.25, 0, 0), 0.8, 0.5, 'clack')
+    slide('grille', 6.86, 6.98, (0.25, 0, 0), 0.8, 0.5, 'clack')
     slide_din = tl.anims['base_din']
     sF, nF = stage_island(kit, 2.00, 7.32, 7.62, 7.98)
     drop('worktop', 2.52, 2.68, 0.35, 0.02, 0.8, 'thud')
@@ -920,7 +957,7 @@ def timeline_short():
             if edges[k] <= y < edges[k + 1]:
                 return band_t[k]
         return band_t[-1]
-    fD = kit.drawer(1.54, [3.30, 8.22], [3.96, 8.80], (0.45, 0, 0), base=slide_din, events='plate_dr')
+    fD = kit.drawer(1.54, [3.42, 8.22], [4.02, 8.80], (0.45, 0, 0), base=slide_din, events='plate_dr')
     tl.custom('plate_dr', fD)
     tl.custom('pan_dr', lambda t: (slide_din(t)[0], t >= 1.38))
     din_in = lambda t: (I4, True)
@@ -933,13 +970,17 @@ def timeline_short():
         tp = plank_t(py)
         stack_pos = (TCX, CY - ISL_HALF, TZ + 0.018 * i)
         dr_pos = (0.30, 2.40, 0.512 + 0.016 * i)
-        th_in = 3.40 + 0.05 * i
+        th_in = 3.50 + 0.045 * i
         th_out = 8.30 + 0.06 * i
-        keys = [('at', T_PL[i], floor0, None),
-                ('hop', tp - 0.02, tp + 0.12, floor1, None, 0.05, 'none'),
-                ('hop', 2.24 + 0.035 * i, 2.40 + 0.035 * i, stack_pos, sF, 0.25, 'tick', 0.3),
+        early = tp - 0.02 > T_PL[i] + 0.03             # the plank lands under a plate already on the floor
+        keys = [('at', T_PL[i] - 0.17, (px, py, 0.75), None),
+                ('hop', T_PL[i] - 0.13, T_PL[i], floor0 if early else floor1, None, 0.0, 'none')]
+        if early:
+            keys.append(('hop', tp - 0.02, tp + 0.12, floor1, None, 0.05, 'none'))
+        keys += [
+                 ('hop', 2.24 + 0.035 * i, 2.40 + 0.035 * i, stack_pos, sF, 0.25, 'tick', 0.3),
                 ('hop', th_in, th_in + 0.16, dr_pos, fD, 0.28, 'clink', 0.4),
-                ('hop', th_out, th_out + 0.22, (px, py, TZ), None, 0.35, 'clink', 0.45)]
+                 ('hop', th_out, th_out + 0.22, (px, py, TZ), None, 0.35, 'clink', 0.45)]
         kit.track(f'plate{i}', ref, keys)
         ev(T_PL[i], f'plate_ring{i}', 0.5, 'clink')
     # --- S2 (3.3-7.0): plate drawer, uppers, hob / hood / sink, pantry pull-out fills, splashback
@@ -948,16 +989,21 @@ def timeline_short():
     tl.custom('topdoor', lambda t: (sU(t)[0], t >= 4.10))
     tl.custom('dlift', lambda t: (sU(t)[0], t >= 4.10)); tl.custom('dlift_arms', lambda t: (sU(t)[0], t >= 4.10))
     tl.custom('platter', lambda t: (sU(t)[0], t >= 4.10))
-    fL = kit.flap('liftup', (UX, 0.0, 1.868), 'y', math.radians(-95), lambda t: (sU(t)[0], t >= 4.10), 11.12, 12.05)
+    kit.flap('updoor0', (UX, Y_SINK, 0), 'z', math.radians(-100), lambda t: (sU(t)[0], t >= 4.10), 4.30, 4.72)
+    kit.flap('updoor1', (UX, Y_DIN, 0), 'z', math.radians(100), lambda t: (sU(t)[0], t >= 4.10), 4.36, 4.78)
+    tl.custom('sink_front', lambda t: (tl.anims['base_sink'](t)[0], t >= 1.14))
+    tl.custom('sp_pull', lambda t: (tl.anims['base_sp'](t)[0], t >= 1.62))
+    tl.custom('oven', lambda t: (tl.anims['base_ov'](t)[0], t >= 1.50))
+    fL = kit.flap('liftup', (UX, 0.0, 1.868), 'y', math.radians(-95), lambda t: (sU(t)[0], t >= 4.10), 11.22, 12.05)
     drop('hood', 4.30, 4.46, 0.35, 0.02, 0.6, 'thud')
     drop('hob', 4.40, 4.54, 0.25, 0.02, 0.5, 'thud')
     drop('sink', 4.52, 4.66, 0.30, 0.02, 0.5, 'thud')
-    PO, PB = 5.02, 6.50
+    PO, PB = 5.12, 6.75
     pull = kit.drawer(1.70, PO, PB, (0.52, 0, 0), base=sP, out=0.24, shut=0.22, events='pantry')
     tl.custom('pan_pull', pull)
-    camS2 = np.array([2.55, 1.6, 1.9])
+    camS2 = np.array([1.1, 1.85, 1.7])
     for k in range(6):
-        t0 = 5.28 + 0.17 * k
+        t0 = 5.40 + 0.19 * k
         name = f'jar{k}'
         piv = np.array([*cen[name], 1.0])
 
@@ -983,17 +1029,17 @@ def timeline_short():
         tl.custom(f'bin{k}', lambda t: (tl.anims['base_sink'](t)[0], t >= 1.14))
         tl.custom(f'spice{k}', lambda t: (tl.anims['base_sp'](t)[0], t >= 1.62))
     # --- S3 (7.3-10.7): clack, clack, clack; plates to the places; the chair wall
-    stage_bifold(kit, sW, 8.48, 10.58)
+    stage_bifold(kit, sW, 8.48, 10.72)
     lands = stage_chairs(kit, sW, 8.72, gap=0.2, flight=0.40)
     # --- S4 (11.0-15.0): runner, tumblers, pendant + lights, centrepiece, host, napkins, berries
-    grow('runner', 11.00, 11.30, 'y', (0, 1.17, 0), 0.4, 'swish')
+    grow('runner', 10.55, 10.85, 'y', (0, 1.17, 0), 0.4, 'swish')
     SITp, GRAB, LIFT = host_poses()
     for n, i in enumerate(order):
         tx, ty = tumbler_pos(i)
         r = n % 4
         c = n // 4
         cab = (0.10 + 0.11 * c, Y_DIN + 0.09 + 0.14 * r, UZ0 + 0.018)
-        t0 = 11.30 + 0.075 * n
+        t0 = 11.42 + 0.07 * n
         keys = [('at', 4.10, cab, lambda t: (sU(t)[0], True)),
                 ('hop', t0, t0 + 0.2, (tx, ty, TZ), None, 0.30, 'tick', 0.35)]
         kit.track(f'tum{i}', (tx, ty, TZ), keys)
@@ -1017,6 +1063,7 @@ def timeline_short():
     for n, i in enumerate(order):
         drop(f'nap{i}', 13.00 + 0.08 * n, 13.14 + 0.08 * n, 0.25, 0.03, 0.25)
     kit.appear('berries', 13.82); ev(13.82, 'berries', 0.5, 'tick')
+    kit.appear('berry_last', 14.40); ev(14.40, 'berry_last', 0.4, 'tick')
     # host: pops in beside the window-end chair, sits, then lifts the tumbler
     at0 = (0.98, 2.98, 120.0)
 
@@ -1042,7 +1089,268 @@ def timeline_short():
 
 # ------------------------------------------------------------------------------------------- long cut (set below)
 def timeline_long():
-    raise NotImplementedError
+    tl = Timeline(rk, FPS)
+    kit = Kit(tl)
+    ev, drop, slide, grow = tl.ev, tl.drop, tl.slide, tl.grow
+    cen = tl.cen
+    rides = lambda base, t_on: (lambda t: (base(t)[0], t >= t_on))
+    # ===== Zone 1 / A1 (0-3.0): plate ring, planks far to near
+    T_PL = [0.30 + 0.10 * k for k in range(8)]
+    band_t = [0.36 + 0.40 * k for k in range(6)]
+    edges = [-0.12, 0.6, 1.2, 1.8, 2.4, 3.0, D + 0.01]
+    for k in range(6):
+        drop(f'floor{k}', band_t[k] - 0.16, band_t[k], 0.30, 0.04, 0.35 + 0.05 * k, 'thud' if k % 2 == 0 else 'tick')
+
+    def plank_t(y):
+        for k in range(6):
+            if edges[k] <= y < edges[k + 1]:
+                return band_t[k]
+        return band_t[-1]
+    # ===== A2 (3.3-6.3): base carcasses south to north, worktop, uppers (doors flip on bowls), island + stack
+    for k, nm in enumerate(('base_sink', 'base_dw', 'base_din', 'base_ov', 'base_sp')):
+        t1 = 3.58 + 0.17 * k
+        slide(nm, t1 - 0.16, t1, (-0.62, 0, 0), 0.8, 0.7)
+    slide_sink, slide_din, slide_ov, slide_sp = (tl.anims[n] for n in ('base_sink', 'base_din', 'base_ov', 'base_sp'))
+    drop('worktop', 4.26, 4.42, 0.35, 0.02, 0.8, 'thud')
+    sU = drop('uppers', 4.50, 4.66, 0.45, 0.02, 0.9, 'thud')
+    for nm in ('up_bowls', 'dlift', 'dlift_arms'):
+        tl.custom(nm, rides(sU, 4.50))
+    kit.flap('updoor0', (UX, Y_SINK, 0), 'z', math.radians(-100), rides(sU, 4.50), 4.82, 5.30)
+    kit.flap('updoor1', (UX, Y_DIN, 0), 'z', math.radians(100), rides(sU, 4.50), 4.90, 5.38)
+    sF, nF = stage_island(kit, 5.48, 27.38, 27.86, 28.60)
+    # ===== A3 (6.6-9.6): plate drawer swallows the stack; pantry + fridge columns; fridge grille
+    fD = kit.drawer(3.76, [6.62, 28.82], [7.58, 29.42], (0.45, 0, 0), base=slide_din, events='plate_dr')
+    tl.custom('plate_dr', fD)
+    sP = grow('pantry', 7.80, 8.04, 'z', (0, 0, 0), 0.8)
+    grow('fridge', 8.10, 8.34, 'z', (0, 0, 0), 0.9)
+    slide('grille', 8.70, 8.86, (0.25, 0, 0), 0.8, 0.5, 'clack')
+    for i in range(8):
+        px, py = PLACES[i][0], PLACES[i][1]
+        tp = plank_t(py)
+        th_in = 6.80 + 0.075 * i
+        th_out = 28.88 + 0.055 * i
+        early = tp - 0.02 > T_PL[i] + 0.03
+        keys = [('at', T_PL[i] - 0.17, (px, py, 0.75), None),
+                ('hop', T_PL[i] - 0.13, T_PL[i], (px, py, -0.012 if early else 0.0), None, 0.0, 'none')]
+        if early:
+            keys.append(('hop', tp - 0.02, tp + 0.12, (px, py, 0.0), None, 0.05, 'none'))
+        keys += [('hop', 5.74 + 0.055 * i, 5.92 + 0.055 * i, (TCX, CY - ISL_HALF, TZ + 0.018 * i), sF, 0.25, 'tick', 0.3),
+                ('hop', th_in, th_in + 0.17, (0.30, 2.40, 0.512 + 0.016 * i), fD, 0.28, 'clink', 0.4),
+                ('hop', th_out, th_out + 0.22, (px, py, TZ), None, 0.35, 'clink', 0.45)]
+        kit.track(f'plate{i}', (px, py, TZ), keys)
+        ev(T_PL[i], f'plate_ring{i}', 0.5, 'clink')
+    # ===== A4 (9.9-12.9): pantry pull-out fills
+    PO, PB = 10.00, 12.50
+    pull = kit.drawer(7.80, PO, PB, (0.52, 0, 0), base=sP, out=0.24, shut=0.22, events='pantry')
+    tl.custom('pan_pull', pull)
+    camA4 = np.array([2.4, 1.4, 1.8])
+    for k in range(6):
+        t0 = 10.30 + 0.30 * k
+        piv = np.array([*cen[f'jar{k}'], 1.0])
+
+        def fill(t, t0=t0, piv=piv):
+            if t < t0:
+                return I4, False
+            Mp = pull(t)[0]
+            pc = (Mp @ piv)[:3]
+            if t < t0 + 0.2:
+                u = (t - t0) / 0.2
+                off = (1 - eoc(u)) * 0.35 * (camA4 - pc)
+                sc = 0.45 + 0.55 * smooth(u / 0.3)
+                return T(*off) @ about(pc, S(sc, sc, sc)) @ Mp, True
+            sc = tl.settle(t - t0 - 0.2, 0.015)
+            return about(pc, S(sc, sc, sc)) @ Mp, True
+        tl.custom(f'jar{k}', fill)
+        ev(t0 + 0.2, f'jar{k}', 0.4, 'tick')
+    # ===== Zone 3 / A5 (13.2-16.2): bins, sink + tap, splashback
+    fS = kit.drawer(3.42, 13.30, 14.60, (0.42, 0, 0), base=slide_sink, out=0.22, events='bins')
+    tl.custom('sink_front', fS); tl.custom('bin0', fS)
+    drop('bin1', 13.56, 13.72, 0.35, 0.04, 0.4, 'tick', parent=fS)
+    drop('bin2', 13.82, 13.98, 0.35, 0.04, 0.4, 'tick', parent=fS)
+    drop('sink', 14.90, 15.06, 0.30, 0.02, 0.6, 'thud')
+    ev(15.20, 'tap', 0.3, 'tick')
+    for g in range(6):
+        grow(f'splash{g}', 15.30 + 0.13 * g, 15.44 + 0.13 * g, 'z', (0, 0, WZ), 0.35, 'tick')
+    # ===== A6 (16.5-19.5): oven + hob, hood, spice pull-out, pan drawer, lift-up on the tumblers
+    slide('oven', 16.44, 16.60, (0.35, 0, 0), 0.8, 0.8)
+    drop('hob', 16.62, 16.76, 0.25, 0.02, 0.5, 'thud')
+    drop('pots', 16.74, 16.90, 0.30, 0.04, 0.45, 'thud')
+    sH = drop('hood', 16.86, 17.04, 0.40, 0.02, 0.6, 'thud')
+    fSp = kit.drawer(3.98, 17.20, 18.00, (0.40, 0, 0), base=slide_sp, out=0.18, events='spice')
+    tl.custom('sp_pull', fSp)
+    for k in range(3):
+        drop(f'spice{k}', 17.36 + 0.18 * k, 17.52 + 0.18 * k, 0.30, 0.05, 0.4, 'tick', parent=fSp)
+    fPan = kit.drawer(3.76, 18.20, 18.80, (0.42, 0, 0), base=slide_din, out=0.18, events='pan_dr')
+    tl.custom('pan_dr', fPan)
+    fL = kit.flap('liftup', (UX, 0.0, 1.868), 'y', math.radians(-95), rides(sU, 4.50), [19.00, 36.62], [19.42, 38.02])
+    # ===== Zone 4 / A7 (19.8-23.1): the host and the dish lift
+    def beta(t):
+        if t < 20.55:
+            return DL_B0
+        if t < 21.30:
+            return DL_B0 + (DL_B1 - DL_B0) * smooth((t - 20.55) / 0.75)
+        if t < 22.00:
+            return DL_B1
+        if t < 22.50:
+            return DL_B1 + (DL_B0 - DL_B1) * smooth((t - 22.00) / 0.50)
+        return DL_B0
+    piv = np.array([0.0, 0.0, 0.0])
+    end0 = np.array([DL_END[0], 0.0, DL_END[1]])
+
+    def lift_end(t):
+        b = math.radians(beta(t))
+        return np.array([DL_PIV[0] + DL_LEN * math.sin(b), 0.0, DL_PIV[1] + DL_LEN * math.cos(b)])
+
+    def basket(t):
+        M, v = sU(t)
+        return M @ T(*(lift_end(t) - end0)), v and t >= 4.50
+
+    def arms(t):
+        M, v = sU(t)
+        P3 = np.array([DL_PIV[0], 0.0, DL_PIV[1]])
+        return M @ about(P3, R('y', math.radians(beta(t) - DL_B0))), v and t >= 4.50
+    tl.custom('dlift', basket); tl.custom('dlift_arms', arms)
+    ev(21.30, 'dish_lift_down', 0.6, 'thud'); ev(20.70, 'hiss', 0.5, 'swish'); ev(22.50, 'dish_lift_up', 0.6, 'thud')
+    kit.flap('topdoor', (UX, 0.0, H - 0.002), 'y', math.radians(-100), rides(sU, 4.50), 20.15, 22.62)
+    # host: stands at the dinner column, then serves and sits at the end
+    HOST_STAND = (1.24, 2.40, 270.0)
+    SITp, GRAB, LIFT = host_poses()
+    CARRY = dict(sh_l=38, sh_r=38, elbow_l=62, elbow_r=62, sh_l_out=8, sh_r_out=8)
+    pose_fn = fg.track([(19.90, 'stand'), (20.25, 'stand'), (20.50, 'reach_up'), (20.62, 'reach_both'), (21.30, 'reach_both'),
+                        (21.55, CARRY), (21.95, CARRY), (22.10, 'reach_both'), (22.50, 'reach_both'), (22.75, 'stand'),
+                        (39.90, CARRY), (40.70, CARRY), (40.85, 'reach_both'), (41.00, 'stand'), (41.10, 'stand'),
+                        (41.55, SITp), (42.55, SITp), (42.75, GRAB), (42.85, GRAB), (43.25, LIFT)])
+    at1 = (0.98, 2.98, 150.0)
+
+    def at_fn(t):
+        if t < 30.0:
+            return HOST_STAND
+        u = smooth(c01((t - 41.10) / 0.45))
+        return (at1[0] + (HOST_AT[0] - at1[0]) * u, at1[1] + (HOST_AT[1] - at1[1]) * u, at1[2] + (HOST_AT[2] - at1[2]) * u)
+    vis = lambda t: 19.90 <= t < 23.20 or t >= 39.90
+    HOST.animate(tl, pose=pose_fn, at=at_fn, visible=vis, pop=19.90)
+    ev(23.20, 'host_out', 0.35, 'tick'); ev(40.10, 'host_in', 0.35, 'tick')
+    for nm in HOST.pieces:                        # second pop-in at 39.9
+        def wrap(t, f=tl.anims[nm]):
+            M, v = f(t)
+            if 39.90 <= t < 40.10:
+                x, y, _ = at_fn(t)
+                sc = 0.55 + 0.45 * smooth((t - 39.90) / 0.2)
+                M = about((x, y, 0.0), S(sc, sc, sc)) @ M
+            return M, v
+        tl.custom(nm, wrap)
+
+    def hands(t):
+        return 0.5 * (host_hand(pose_fn(t), at_fn(t), 'l') + host_hand(pose_fn(t), at_fn(t), 'r'))
+    pl_ref = np.array([DL_END[0], 2.40, DL_END[1] - 0.088])
+    work_pos = np.array([0.33, 2.40, WZ])
+    table_pos = np.array([TCX, 2.16, TZ])
+
+    def platter(t):
+        if t < 4.50:
+            return I4, False
+        if t < 21.40:
+            return basket(t)[0], True
+        if t < 21.95:                              # off the lift into the hands
+            a = (basket(21.40)[0] @ np.array([*pl_ref, 1.0]))[:3]
+            b = hands(21.95) + np.array([0, 0, 0.04])
+            u = smooth((t - 21.40) / 0.55)
+            return T(*(a + (b - a) * u - pl_ref)), True
+        if t < 22.60:
+            return T(*(hands(t) + np.array([0, 0, 0.04]) - pl_ref)), True
+        if t < 22.95:                              # onto the worktop
+            a = hands(22.60) + np.array([0, 0, 0.04])
+            u = (t - 22.60) / 0.35
+            p = a + (work_pos - a) * smooth(u) + np.array([0, 0, 0.12 * 4 * u * (1 - u)])
+            return T(*(p - pl_ref)), True
+        if t < 39.95:
+            return T(*(work_pos - pl_ref)), True
+        if t < 40.25:
+            b = hands(40.25) + np.array([0, 0, 0.04])
+            u = (t - 39.95) / 0.30
+            p = work_pos + (b - work_pos) * smooth(u) + np.array([0, 0, 0.1 * 4 * u * (1 - u)])
+            return T(*(p - pl_ref)), True
+        if t < 40.70:
+            return T(*(hands(t) + np.array([0, 0, 0.04]) - pl_ref)), True
+        if t < 41.05:                              # served
+            a = hands(40.70) + np.array([0, 0, 0.04])
+            u = (t - 40.70) / 0.35
+            p = a + (table_pos - a) * u + np.array([0, 0, 0.30 * 4 * u * (1 - u)])
+            return T(*(p - pl_ref)) @ about(p, R('z', math.pi / 2 * smooth(u) * 0)), True
+        return T(*(table_pos - pl_ref)), True
+    tl.custom('platter', platter)
+    ev(22.95, 'platter_worktop', 0.4, 'clink'); ev(41.05, 'platter_table', 0.5, 'clink')
+    # ===== A8 (23.4-26.4): the plain oak wall, cookbooks, shelf stacks
+    sW = slide('ewall', 23.72, 24.00, (0.35, 0, 0), 0.9, 1.0)
+    for k in range(3):
+        fly(tl, f'books{k}', 24.55 + 0.32 * k, 24.80 + 0.32 * k, (-0.45, 0, 0.05), 0.04, 0.45, 'tick', sW)
+    for k in range(2):
+        fly(tl, f'shelfst{k}', 25.60 + 0.30 * k, 25.82 + 0.30 * k, (-0.40, 0, 0.05), 0.04, 0.4, 'tick', sW)
+    # ===== Zone 5 / A9-A10: the wow (island clacks above; chairs)
+    stage_bifold(kit, sW, 29.40, 31.52)
+    stage_chairs(kit, sW, 29.62, gap=0.2, flight=0.40)
+    # ===== Zone 6 / A11 (33.3-36.3): runner, napkins, pendant
+    grow('runner', 33.40, 34.00, 'y', (0, 1.17, 0), 0.45, 'swish')
+    for n in range(8):
+        drop(f'nap{n}', 34.20 + 0.15 * n, 34.34 + 0.15 * n, 0.28, 0.03, 0.25)
+    drop('pendant', 35.62, 35.86, 0.8, 0.03, 0.5, 'tick')
+    pend_base = tl.anims['pendant']
+
+    def pend(t):
+        M, v = pend_base(t)
+        if t < 35.86:
+            return M, v
+        a = math.radians(5.0) * math.exp(-(t - 35.86) / 0.6) * math.sin(2 * math.pi * (t - 35.86) / 1.1)
+        return M @ about((TCX, CY, H), R('x', a)), v
+    tl.custom('pendant', pend)
+    # ===== A12 (36.6-39.6): tumblers from the lift-up, fruit and the fir
+    for n in range(8):
+        tx, ty = tumbler_pos(n)
+        cab = (0.10 + 0.11 * (n // 4), Y_DIN + 0.09 + 0.14 * (n % 4), UZ0 + 0.018)
+        t0 = 36.78 + 0.15 * n
+        kit.track(f'tum{n}', (tx, ty, TZ), [('at', 4.50, cab, rides(sU, 4.5)), ('hop', t0, t0 + 0.22, (tx, ty, TZ), None, 0.30, 'tick', 0.35)])
+    fr = drop('fruit', 38.20, 38.38, 0.35, 0.05, 0.45)
+    tl.custom('fruit', lambda t: (T(0, 1.44 - 2.16, 0) @ fr(t)[0], fr(t)[1]))
+    drop('fir', 38.70, 38.90, 0.35, 0.04, 0.5, 'thud')
+    tl.custom('bread', lambda t: (I4, False))
+    # ===== Zone 7 / A13 (39.9-43.7): host serves and sits; lights on; berries; the toast
+    T_ON = 42.20
+    kit.appear('pend_on', T_ON); kit.appear('led_under', T_ON + 0.06); kit.appear('led_shelf', T_ON + 0.12)
+    kit.appear('bd_day', 0.0, T_ON); kit.appear('bd_dusk', T_ON)
+    ev(T_ON, 'lights_on', 0.9, 'chime')
+    kit.appear('berries', 42.70); ev(42.70, 'berries', 0.5, 'tick')
+    hand_grab = host_hand(GRAB, HOST_AT)
+    tum_base = tl.anims[f'tum{HOST_SEAT}']
+
+    def tum_h(t):
+        M, v = tum_base(t)
+        if t < 42.85:
+            return M, v
+        return T(*(host_hand(pose_fn(t), HOST_AT) - hand_grab)), True
+    tl.custom(f'tum{HOST_SEAT}', tum_h)
+    ev(43.30, 'cheers', 0.4, 'clink')
+    # ===== A14 (44.0-46.0): last berry, last clink, drift into the loop
+    kit.appear('berry_last', 44.80); ev(44.80, 'berry_last', 0.5, 'clink')
+    return tl
+
+
+def fly(tl, name, t0, t1, off, arc, strength, kind, parent):
+    """Fly in from an offset, riding a parent piece."""
+    piv = tl.cen[name]
+    off = np.array(off, float)
+
+    def f(t):
+        if t < t0:
+            return I4, False
+        u = (t - t0) / (t1 - t0)
+        if u < 1:
+            o = (1 - eoc(u)) * off + np.array([0, 0, arc * math.sin(math.pi * u)])
+            sc = 0.5 + 0.5 * smooth(u / 0.3)
+        else:
+            o = np.zeros(3); sc = tl.settle(t - t1, 0.015)
+        return parent(t)[0] @ T(*o) @ about(piv, S(sc, sc, sc)), True
+    tl.custom(name, f)
+    tl.ev(t1, name, strength, kind)
 
 
 def rest_timeline():
