@@ -297,10 +297,11 @@ def build_shell():
 
 # ------------------------------------------------------------------------------------------- west: loft (child A)
 def build_west(rng):
-    for (y0, y1) in ((LY0, LY0 + 0.06), (D - 0.06, D)):
-        add('loftPosts', box(LX1 - 0.06, y0, 0.0, LX1, y1, LZ1 + 0.33), 'oak_z')
+    for (y0, y1) in ((LY0 - 0.004, LY0 + 0.056), (D - 0.06, D)):        # the front post stands 4 mm proud of the deck face
+        add('loftPosts', box(LX1 - 0.058, y0, 0.0, LX1 + 0.006, y1, LZ1 + 0.33), 'oak_z')
     add('loftDeck', box(0, LY0, LZ0, LX1, D, LZ0 + 0.004), 'white_in')
     wood('loftDeck', 0, LY0, LZ0 + 0.004, LX1 + 0.004, D, LZ1, 'oak')
+    add('loftDeck', box(0.0, LY0 - 0.008, LZ0 - 0.006, LX1 - 0.058, LY0 - 0.001, LZ1 + 0.002), 'oak_x')     # front fascia
     add('loftDeck', box(LX1 - 0.09, LY0 + 0.1, LZ0 - 0.012, LX1 - 0.075, D - 0.1, LZ0), 'led_off')
     g = 'loftRail'
     wood(g, LX1 - 0.035, 1.78, LZ1 + 0.30, LX1, D, LZ1 + 0.33, 'oak')
@@ -329,6 +330,8 @@ def build_west(rng):
     xb1 = LX1 - 0.06
     add(f, box(0.0, LY0 - 0.012, 0.0, xb1, LY0, LZ0), 'white_in')
     add(f, box(xb1 - 0.018, BW_Y0, 0.0, xb1, LY0, LZ0), 'white_cab')
+    add(f, box(0.0, BW_Y0, LZ0 - 0.02, xb1 - 0.018, LY0 - 0.012, LZ0 - 0.001), 'white_cab')   # top: closes the gap under the deck corner
+    add(f, box(xb1, BW_Y0, LZ0 - 0.14, LX1, BW_Y0 + 0.018, LZ0), 'white_cab')
     for z in (0.0, 0.39, 0.77, 1.15):
         add(f, box(0.0, BW_Y0, z, xb1, LY0, z + 0.022), 'white_cab')
     pal = ['bk_terra', 'bk_mustard', 'bk_cream', 'bk_sage', 'bk_terra', 'bk_rust', 'bk_white', 'bk_mustard', 'bk_blue', 'bk_cream']
@@ -618,7 +621,7 @@ S3B = (P(2.98, 1.62, 1.74, -44.0, -13.0), P(2.86, 1.76, 1.72, -58.0, -11.0))
 S3W = (P(CX, -0.40, 1.88, 0.0, -17.0, 95.0), P(CX, -0.28, 1.84, 0.0, -17.0, 95.0))      # daylight payoff wide on the tape          # face B: the cubbies fill   # near-overhead: the swing (wow)
 S4 = (P(CX, 0.14, 2.22, -24.0, -22.0, 98.0), P(CX, 0.16, 2.18, -10.0, -23.0, 98.0))      # night: A's side
 S5 = (P(CX, 0.16, 2.18, 20.0, -24.0, 98.0), F1)                                        # B's side -> frame 1                                                # the two bedrooms -> frame 1
-HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.74, 7.00, S2), (7.04, 9.00, S3), (9.04, 9.95, S3W), (10.15, 11.30, S3B),
+HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.72, 7.00, S2), (7.04, 9.00, S3), (9.04, 9.95, S3W), (10.15, 11.30, S3B),
          (11.55, 12.35, S4), (12.55, DUR, S5)]
 
 
