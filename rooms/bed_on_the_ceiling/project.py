@@ -56,10 +56,10 @@ CAPTIONS = []                                        # no on-screen text
 def materials():
     mat('subfloor', tex=3, col=srgb(176, 174, 170), p=(0.10,))
     mat('floor', tex=1, col=srgb(210, 180, 142), col2=srgb(190, 158, 120), rough=0.38, f0=0.04, glossy=True, p=(0.18, 1.6))
-    mat('wall', tex=3, col=srgb(242, 238, 231), p=(0.02,))
+    mat('wall', tex=3, col=srgb(242, 241, 238), p=(0.02,))
     mat('ceiling', col=srgb(247, 246, 243))
-    mat('white_cab', col=srgb(243, 240, 233), rough=0.45)
-    mat('white_in', col=srgb(236, 233, 226))
+    mat('white_cab', col=srgb(243, 242, 239), rough=0.45)
+    mat('white_in', col=srgb(237, 236, 233))
     mat('plinth', col=srgb(214, 210, 202))
     wood_mats('oak', srgb(212, 178, 136), seed=3.0)
     wood_mats('birch', srgb(228, 208, 176), seed=8.0)
@@ -266,8 +266,7 @@ def build_bay(rng):
     add('crank', xform(lathe(rprof(0.016, 0, 0.012, 0.004, 3), 20, (0, 0)), T(x + PR + 0.018, y, 1.10) @ R('y', math.pi / 2)), 'blackm')
     x, y = POSTS[3]
     add('btnpad', rbox((x + PR + 0.008, y, 1.10), (0.022, 0.07, 0.12), 0.008, 3), 'button')
-    for dz in (0.025, -0.025):
-        add('btnpad', xform(lathe(rprof(0.013, 0, 0.006, 0.003, 3), 18, (0, 0)), T(x + PR + 0.019, y, 1.10 + dz) @ R('y', math.pi / 2)), 'steel')
+    add('btnpad', xform(lathe(rprof(0.016, 0, 0.007, 0.003, 3), 20, (0, 0)), T(x + PR + 0.019, y, 1.10) @ R('y', math.pi / 2)), 'steel')
     # ---- ceiling rail tying the post tops together (+ its LED strip on the front run)
     rz0 = H - 0.05
     for b in (box(POSTS[0][0] - 0.02, POSTS[0][1] - 0.02, rz0, POSTS[1][0] + 0.02, POSTS[0][1] + 0.02, H),
@@ -605,7 +604,7 @@ S3 = (P(2.12, 0.16, 1.75, -24.0, 7.0), P(2.02, 0.22, 1.30, -31.0, -8.0))
 S4 = (P(2.36, 0.45, 1.28, -30.0, -12.0), S1[0])
 HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.7, S3), (11.0, DUR, S4)]
 RIDE = 2                                             # index of the ride hold
-EASE_IN = {0: 0.4}                                   # holds whose glide eases in over the first x seconds
+EASE_IN = {0: 0.2}                                   # holds whose glide eases in over the first x seconds
 EASE_OUT = {3: 0.4}                                  # ... or eases out over the last x seconds
 
 
@@ -679,7 +678,7 @@ L_ST = [
 if LONG:
     HOLDS = L_ST
     RIDE = 8
-    EASE_IN = {0: 0.4}
+    EASE_IN = {0: 0.2}
     EASE_OUT = {14: 0.4}
 
 camera = make_camera(HOLDS, RIDE, EASE_IN, EASE_OUT, ride_cam)
@@ -702,8 +701,8 @@ def cloud(t):
     if t < T_CLOUD0:
         return 1.0
     if t < T_CLOUD1:
-        return 1.0 - 0.25 * smooth((t - T_CLOUD0) / 0.35)
-    return 0.75 + 0.25 * smooth((t - T_CLOUD1) / 0.8)
+        return 1.0 - 0.14 * smooth((t - T_CLOUD0) / 0.35)
+    return 0.86 + 0.14 * smooth((t - T_CLOUD1) / 0.8)
 
 
 def lights(mats4, vis):
@@ -843,18 +842,15 @@ def timeline_15(tl, kit):
     appear = kit.appear
     # ---- S1 (0.0-3.0): planks, the bed rises and docks, rail, posts, towers, motor, books, sofa
     for k in range(6):
-        t1 = 0.30 + 0.07 * k
-        drop(f'floor{k}', t1 - 0.16, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
+        t1 = 0.26 + 0.075 * k
+        drop(f'floor{k}', t1 - 0.18, t1, 0.55, 0.05, 0.3 + 0.03 * k, 'tick')
     tl.custom('bed', bed_fn)
     ev(T_UP0 + 0.1, 'bed_pop', 0.4, 'tick')
     ev(T_UP1, 'bed_dock', 1.0, 'clunk')
-    rail_fn = grow('rail', 1.25, 1.40, 'y', (0, POSTS[0][1], 0), 0.5, 'swish')
-    for k, nm in enumerate(('post2', 'post0', 'post3', 'post1')):
-        grow(nm, 1.40 + 0.07 * k, 1.62 + 0.07 * k, 'z', (0, 0, H), 0.45, 'tink')
-    grow('crank', 1.40 + 0.07 * 3, 1.62 + 0.07 * 3, 'z', (0, 0, H), 0.0, 'none')
-    grow('btnpad', 1.40 + 0.07 * 2, 1.62 + 0.07 * 2, 'z', (0, 0, H), 0.0, 'none')
-    grow('twN', 1.85, 2.08, 'z', (0, 0, 0), 0.8)
-    grow('twS', 1.88, 2.10, 'z', (0, 0, 0), 0.0, 'none')
+    slide('rail', 1.25, 1.40, (0.6, 0, 0), 1.0, 0.5, 'swish')
+    land_posts(tl, 1.40, True)
+    slide('twN', 1.85, 2.08, (0.55, 0, 0), 1.0, 0.8)
+    slide('twS', 1.88, 2.10, (0.55, 0, 0), 1.0, 0.0, 'none')
     tl.custom('twN_led', lambda t: (I4, t >= 12.32))
     tl.custom('twS_led', lambda t: (I4, t >= 12.36))
     drop('motor', 2.00, 2.15, 0.25, 0.02, 0.45, 'tick')
@@ -978,6 +974,16 @@ def timeline_15(tl, kit):
     ev(12.32, 'shelf_on', 0.0, 'none')
 
 
+def land_posts(tl, t0, fitted):
+    """The four posts swing in whole from the room side (one rigid piece each) and land with a steel tink."""
+    for k, nm in enumerate(('post2', 'post0', 'post3', 'post1')):
+        a = t0 + 0.07 * k
+        tl.fly(nm, a, a + 0.18, (0.45, 0, 0.0), 0.10, 0.45, 'tink')
+    if fitted:
+        tl.custom('btnpad', lambda t, f=tl.anims['post3']: f(t))
+        tl.custom('crank', lambda t, f=tl.anims['post1']: f(t))
+
+
 def kit_flip(tl, name, hinge, t0, t1):
     """Nightstand flap: flips down out of the tower face about a y-axis hinge at its inner bottom edge."""
     hinge = np.array(hinge, float)
@@ -1091,16 +1097,15 @@ def timeline_long(tl, kit):
     hide = lambda t: (I4, False)
     # ---- L1 (0.0-3.0): planks, the bed rises and docks, rail, posts, towers, motor, first shelf of books
     for k in range(6):
-        t1 = 0.30 + 0.07 * k
-        drop(f'floor{k}', t1 - 0.16, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
+        t1 = 0.26 + 0.075 * k
+        drop(f'floor{k}', t1 - 0.18, t1, 0.55, 0.05, 0.3 + 0.03 * k, 'tick')
     tl.custom('bed', bed_fn)
     ev(T_UP0 + 0.1, 'bed_pop', 0.4, 'tick')
     ev(T_UP1, 'bed_dock', 1.0, 'clunk')
-    grow('rail', 1.25, 1.40, 'y', (0, POSTS[0][1], 0), 0.5, 'swish')
-    for k, nm in enumerate(('post2', 'post0', 'post3', 'post1')):
-        grow(nm, 1.40 + 0.07 * k, 1.62 + 0.07 * k, 'z', (0, 0, H), 0.45, 'tink')
-    grow('twN', 1.90, 2.12, 'z', (0, 0, 0), 0.8)
-    grow('twS', 1.98, 2.20, 'z', (0, 0, 0), 0.5)
+    slide('rail', 1.25, 1.40, (0.6, 0, 0), 1.0, 0.5, 'swish')
+    land_posts(tl, 1.40, False)
+    slide('twN', 1.90, 2.12, (0.55, 0, 0), 1.0, 0.8)
+    slide('twS', 1.98, 2.20, (0.55, 0, 0), 1.0, 0.5)
     drop('motor', 2.26, 2.40, 0.25, 0.02, 0.45, 'tick')
     fly('bk_twN0', 2.36, 2.50, (0.35, 0, 0.05), 0.04, 0.3, 'riffle')
     fly('bk_twN1', 2.62, 2.76, (0.35, 0, 0.05), 0.04, 0.3, 'riffle')
@@ -1167,7 +1172,7 @@ def timeline_long(tl, kit):
     ev(11.0, 'ottoman', 0.6, 'thud'); ev(11.42, 'ot_open', 0.4, 'swish'); ev(12.40, 'ot_shut', 0.6, 'thud'); ev(24.6, 'ot_park', 0.4, 'thud')
     ot_items_drop = drop('ot_items', 11.55, 11.75, 0.30, 0.04, 0.3)
     tl.custom('ot_items', lambda t: (ottoman(t)[0] @ ot_items_drop(t)[0], ot_items_drop(t)[1]))
-    grow('rug', 12.48, 12.62, 'x', (0.65, 0, 0), 0.5, 'swish')
+    drop('rug', 12.48, 12.62, 0.25, 0.02, 0.5, 'swish')
     tl.custom('dplant', lambda t, f=drop('dplant', 12.88, 13.00, 0.25, 0.06, 0.3): f(t))
     # ---- L5 (13.7-16.6): downlights blink twice (tease), crane up past the mechanism
     tl.custom('bed_dl', lambda t: (bed_fn(t)[0], (14.40 <= t < 14.58) or (14.72 <= t < 14.90) or (26.40 <= t < T_DN1 + 0.05)

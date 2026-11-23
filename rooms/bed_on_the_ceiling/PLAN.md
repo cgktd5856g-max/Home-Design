@@ -1,22 +1,35 @@
-<!-- id: C9 | reviewer_score: 7 | verdict: ok -->
-<!-- one_line: The Bed on the Ceiling: a 9 m² bedroom with a sofa and a desk, where a made double bed docks on the ceiling at 1.2 s and a stand-in sends it 2.06 m down onto the sofa (15 s wow at 7.95-10.15 s; the 49.5 s long cut lands it at 61%). New rotated layout, 10 storage moments, a mechanism you can see, warm-white shell; post 8-14 Dec. -->
+## 5. The Bed on the Ceiling
 
-## The Bed on the Ceiling
+- **At a glance**:
+  - Candidate C9. Judges' mean 6.6; reviewer score 7 (the highest of the 12), given before this revision.
+  - Plan ready, not started.
+  - Posting: the 15 s cut on Sat 19 Dec, the long cut on Wed 23 Dec.
+- **Why it ranks here**:
+  - The biggest single picture in the slate, a made bed coming down from the ceiling, on the strongest room type [inference; measured].
+  - It could read as a flip-bed gimmick: "Flip the Bed" ran 0.43 [measured].
+  - Ceiling beds are not new, so the caption must never claim invention.
 
-**Pitch**: A 9 m² bedroom builds as a bright room with a sofa and a desk. In second 1 a fully made double bed rises off the new floor and docks on the ceiling. Later a stand-in presses a button on a steel post, and the bed glides 2.06 m down onto the sofa. In the long cut it goes back up at the end.
+### Pitch
 
-**Post caption** (in the post, never on screen): "9 m² (3 × 3 m, about 10 × 10 ft) bedroom that also fits a sofa and a desk: the bed lives on the ceiling until bedtime. Would you sit under it? Send this to the friend whose bed eats their room."
-- Pin three things: the plan with dimensions; "Modelled and rendered from code: no AI video, no design app"; and the power-cut answer (see Risks and fixes).
+A 9 m² bedroom builds as a bright room with a sofa and a desk. In second 1 a fully made double bed rises off the new floor and docks on the ceiling. Later a stand-in presses a button on a steel post, and the bed glides 2.06 m down onto the sofa. In the long cut it goes back up at the end.
 
-**Why it should work**
+### Post caption (in the post, never on screen)
+
+"9 m² (3 × 3 m, about 10 × 10 ft) bedroom that also fits a sofa and a desk: the bed lives on the ceiling until bedtime. Would you sit under it? Send this to the friend whose bed eats their room."
+
+- Pin three things: the plan with dimensions; "Modelled and rendered from code, no AI video, no design app."; and the power-cut answer (see Risks and fixes).
+
+### Why it should work
+
 - [measured] Bedrooms are the strongest room type at 1.51 times normal (47 Shorts). Living rooms run 0.70, and titles naming a size run 1.34.
-- [measured] report.md says all 4 best 2026 uploads (290K-547K) were bedrooms or kids' rooms with a raised or loft bed. The frame notes in deep_analysis.csv confirm the raised or loft bed for 3 of them. The 4th (536K, the best era-adjusted score of 2026 at 16.75) is a small-bedroom layout fix: its title says the bed was moved out of the middle. Two "raise the bed" titles ran 10.39 (343K) and 7.81 (289K). [inference] A bed that leaves the floor completely is the far end of the raised-bed premise and is a layout fix too. So the caption calls the room a bedroom and gives its size.
+- [measured] report.md says all 4 best 2026 uploads (290K-547K) were bedrooms or kids' rooms with a raised or loft bed. The frame notes in deep_analysis.csv confirm the raised or loft bed for 3 of them. The 4th (536K, era-adjusted 16.75, the best of the four "recent_top" videos; the best of 2026 is the 853K kids' room at 26.66) is a small-bedroom layout fix: its title says the bed was moved out of the middle. Three raise-the-bed titles ran 10.39 (343K), 7.81 (289K) and 2.53 (149K). [inference] A bed that leaves the floor completely is the far end of the raised-bed premise and is a layout fix too. So the caption calls the room a bedroom and gives its size.
 - [measured] 28 of 29 hits build or transform a whole room, against 12 of 30 flops. Add a neutral palette and it is 27 of 29 against 4 of 30. [inference] All four walls build here, and the descent changes the whole room, not one piece.
 - [measured] The hit's camera moved more than its flop's in 21 of 25 pairs (2.9 against 1.0, p = 0.0009). report.md calls this the biggest gap between our kitchen render and the hits. Between hits and flops, whole-room scope, length and motion separate even more strongly. The 24 s two-beds Short (991K) has the highest camera score of the 29 hits (11.88). It is 2nd of all 59, behind a 6,836-view kitchen dimension guide (12.1), so camera movement helps but does not make a hit on its own. [inference] The ride camera lowers with the bed and never stops drifting.
 - [measured] The top comments argue about practicality: a fridge with no room to vent (167 likes), "how do you make your bed?" (32). [inference] People will ask "what about a power cut?" without being prompted. The picture already answers it: a made bed held by straps, and a crank socket at hand height. That keeps the argument friendly.
 - [measured, confounded by account size] Premise videos have a median of 307,650 likes, against 634 for plain showcases. [fact, trends file; indicative] Instagram ranks on watch time, likes per reach and sends per reach. Content that inspires awe is shared more (Berger & Milkman, 2012). [inference] A made bed docking on the ceiling at 1.2 s raises the question "when does it come down?". The descent supplies the awe, and the caption asks for a send.
 
-**The room**
+### The room
+
 - **Size and shape**: 9 m², 3.0 × 3.0 m, 2.85 m ceiling, a plain box (x east, y north). The plan is rotated from the 11 m² bedroom project: bed bay on the west wall, window and desk on the north wall, wardrobe on the east wall, door in the south-east corner.
   - **West (bed bay)**:
     - A 2.0 × 0.75 m blue-grey sofa (x 0.06-0.81, y 0.50-2.50, seat 0.42 m), with three padded back pads fixed to the wall, each 6 cm thick.
@@ -35,7 +48,7 @@
   - **South**: a 0.7 m door at the east end (x 2.15-2.85). Its swing clears the wardrobe by 0.2 m. Three oak peg hooks west of the door (a coat, a tote bag), clear of the front-south post.
   - **Floor**: about 0.9 m between the bed's front edge and the wardrobe. A 0.40 m storage ottoman on castors stands in front of the sofa by day.
 - **Palette**:
-  - Shell: light warm-white walls and ceiling (about sRGB 242, 238, 231), a little less warm than the bedroom project's 238, 233, 225. Pale grey subfloor at frame 1.
+  - Shell: neutral white walls and ceiling (about sRGB 242, 241, 238), not the bedroom project's warm white (238, 233, 225), which sits at the edge of the cream zone. Pale grey subfloor at frame 1.
   - Wood: light oak for the floor, the tower shelves, the bed frame and underside, the desk and one wardrobe front. No walnut.
   - One accent: the muted blue-grey sofa and wall pads. Muted blues are 2 of the 7 paint-brand picks for 2027 [fact, trends file; snapshots].
   - Colour comes from filled storage:
@@ -48,17 +61,20 @@
   - Daylight only. A warm, low morning sun comes through the north window at a slant, laying a sunbeam across the bare subfloor inside the frame-1 view, with a soft sky fill.
   - The window never switches to night, so the bedroom project's day-to-night swap is dropped. [measured] 13 of 25 flops sit off the colour band, against 2 of 25 hits. Off the band means a cream or orange cast (warmth above 60), oversaturation (0.45 or more) or darkness (brightness under 125).
   - The bed's four downlights blink as a "the bed is moving" signal: in the long-cut tease at 14.4 s, and at 26.4 s just before the descent.
-  - Lights-on, 15 s cut: at 12.0 s a passing cloud dims the sun by about 25%, with brightness kept at 138 or more. Then the LED strip in the ceiling rail, the tower shelf LEDs, the nightstand lamp and the desk lamp come on, staggered 12.20-12.45 s.
+  - Lights-on, 15 s cut: at 12.0 s a passing cloud dims the sun by no more than 15%, with brightness kept at 138 or more. Then the LED strip in the ceiling rail, the tower shelf LEDs, the nightstand lamp and the desk lamp come on, staggered 12.20-12.45 s.
   - Lights-on, long cut: the downlights are the main beat. They come on as the bed starts back up (44.6 s), and their pools slide up the sofa as it rises. Then the rail LED, the shelf LEDs and the lamps come on at 47.5-47.8 s.
   - Keep the sky light on and the exposure as in the bedroom project (-0.38).
 
-**Frame 1 and the hook**: At 0.0 s, the empty room is seen from the south-east corner at 1.5 m, looking north-west at the bare west wall and the ceiling. A sunbeam lies across the grey subfloor, and the camera eases into a push-in. By 0.3 s the first light-oak planks slap down against the far wall. They land far to near and are all down by 0.65 s. At 0.60 s an obviously made double bed (white duvet, terracotta throw, pillows) rises off the new floor against the west wall. It docks on the ceiling with an upside-down clunk at 1.20 s, and the camera tilts up after it. The premise is clear in second 1, and the suspense is when the bed comes down.
+### Frame 1 and the hook
 
-**15 s cut**
+At 0.0 s, the empty room is seen from the south-east corner at 1.5 m, looking north-west at the bare west wall and the ceiling. A sunbeam lies across the grey subfloor, and the camera eases into a push-in. By 0.3 s the first light-oak planks slap down against the far wall. They land far to near and are all down by 0.65 s. At 0.60 s an obviously made double bed (white duvet, terracotta throw, pillows) rises off the new floor against the west wall. It docks on the ceiling with an upside-down clunk at 1.20 s, and the camera tilts up after it. The premise is clear in second 1, and the suspense is when the bed comes down.
+
+### 15 s cut
+
 - 0.0-3.0 s · S1 south-east corner (frame-1 view):
   - Planks land 0.30-0.65 s. The bed rises 0.60-1.20 s and docks.
-  - The ceiling rail runs out round the bed at 1.25-1.40 s. The four posts grow down at 1.40-1.85 s, with crank socket and button pad already fitted, and four bright tinks as the floor plates land.
-  - Both towers grow at 1.85-2.10 s, and the motor box clicks into the north-west tower top at 2.15 s.
+  - The ceiling rail runs out round the bed at 1.25-1.40 s. The four posts drop in whole at 1.40-1.85 s, with crank socket and button pad already fitted, and four bright tinks as the floor plates land.
+  - Both towers slide in whole at 1.85-2.10 s, and the motor box clicks into the north-west tower top at 2.15 s.
   - Books cascade onto the shelves at 2.15-2.45 s, so colour is on screen.
   - The sofa box drops at 2.55 s, the wall pads slap on at 2.65-2.75 s, and the cushions land at 2.85 s.
   - Camera: an eased-in push-in north-west (about 0.3 m), tilting up after the bed (pitch 6° to 14°).
@@ -79,13 +95,17 @@
   - Camera: a slow drift back (pull back, rise, tilt up) to the exact frame-1 pose by 15.0 s, easing out over the last 0.4 s. S1 eases in over its first 0.4 s, so the loop seam is near-still for under 1 s.
   - The loop restarts on the empty room, and the bed rising at 0.6 s echoes the bed you just saw. It is an echo, not a seamless match.
 
-**Long cut (40-50 s)**: 49.5 s in 7 zones and 15 camera stations, each 2-4 s long, every one gliding, joined by 0.3 s swings. The wow lands at 30.0 s (61%), and the bed goes back up at 44.7-47.0 s, so the wow plays twice. No end card.
+### Long cut (40-50 s)
+
+49.5 s in 8 zones and 15 camera stations, each 2-4 s long, every one gliding, joined by 0.3 s swings. The wow lands at 30.0 s (61%), and the bed goes back up at 44.7-47.0 s, so the wow plays twice. No end card.
+
 - **0.0-6.6 s · Hook and towers**
-  - L1 (0.0-3.0, frame-1 view, push-in, tilt after the bed): planks land, the bed rises at 0.60-1.20, the rail runs out at 1.25-1.40, the posts grow at 1.40-1.85, the towers grow at 1.9-2.2, the motor box lands at 2.4, and the first shelf of books lands at 2.5.
+  - L1 (0.0-3.0, frame-1 view, push-in, tilt after the bed): planks land, the bed rises at 0.60-1.20, the rail runs out at 1.25-1.40, the posts drop in whole at 1.40-1.85, the towers slide in whole at 1.9-2.2, the motor box lands at 2.4, and the first shelf of books lands at 2.5.
   - L2 (3.3-6.6, low slide south to north along the bay, facing west): books land shelf by shelf in the gradient, 3.4-5.6. One cubby in the south-west tower is left empty. The crank socket clicks onto the front-south post at 5.9, and the button pad clicks onto the front-north post at 6.2.
-- **6.9-16.6 s · Sofa bay**
+- **6.9-13.4 s · Sofa bay**
   - L3 (6.9-10.2, orbit left to right): the seat box lands at 7.0, the wall pads at 7.3-7.5 and the cushions at 7.8. Both gas-strut lids lift at 8.2, board games stack in at 8.4-8.9, throws at 9.0-9.3, and the lids shut at 9.6.
   - L4 (10.5-13.4, push-in at seat height): the mustard and pale blue-grey pillows land at 10.6 and 10.8. The ottoman rolls in at 11.0; its lid lifts on slippers and a throw at 11.4 and shuts at 12.3. The rug lands at 12.6 and a plant on a tower at 13.0.
+- **13.7-16.6 s · The mechanism**
   - L5 (13.7-16.6, crane up beside the bed's front edge): the four downlights blink twice at 14.4. The camera rises past the crank socket and a belt slot in the front post to the ceiling rail. It then glides along the mattress side, a strap buckle and the safety-sensor strip.
 - **16.9-23.4 s · Window desk**
   - L6 (16.9-20.1, slide west to east, facing the window): the desk top lands at 17.0 and the pedestal at 17.3. Three drawers open, fill and shut in a cascade, 17.6-19.0. The laptop, lamp and mug land at 19.2-19.7, and the chair at 19.9.
@@ -103,7 +123,8 @@
   - L14 (44.3-47.2, from the north-east corner, higher than L8, slow tilt up with a slow pull-in): the stand-in presses the post button at 44.4 and steps back by 44.6. The downlights come on at 44.6. The bed rises at 44.7-47.0 (2.3 s, the same easing as the descent, with a hum) and docks softly with a low clunk and no overshoot.
   - L15 (47.5-49.5, a 2.0 s drifting wide): the rail LED, shelf LEDs, desk lamp and nightstand lamp come on at 47.5-47.8. The camera drifts back to the frame-1 pose, easing out over its last 0.4 s.
 
-**Storage moments** (10, numbered)
+### Storage moments (10, numbered)
+
 1. **Book towers** (build): two floor-to-ceiling towers fill shelf by shelf with a book gradient. One cubby in the south-west tower stays empty until the sofa pillows hop into it just before the descent.
 2. **Sofa seat** (reveal): two lids lift on gas struts over board games and folded throws, then shut.
 3. **Ottoman coffee table** (reveal, then a move): its lid lifts on slippers and a spare throw. Before the descent it rolls into the bedside alcove, clearing the bed's landing zone.
@@ -115,7 +136,8 @@
 9. **Fold-down ironing board** (reveal, in use): the stand-in folds it down to waist height, then folds it away.
 10. **Mirror front** (reveal): it slides across, and the shoe pull-out under the hanging section glides out with shoes and back.
 
-**The person moment**
+### The person moment
+
 - **The figure**: the adult stand-in from pipeline/figure.py (about 1.68 m, a faceless mannequin). Start with fig_adult and switch to fig_sage if it fades into the white walls.
 - **15 s cut**:
   - It pops in by the front-north post at 7.3 s and presses the button at 1.1 m with a forward right-arm reach (sh_r about 60, elbow_r about 10). With the shoulder at about 1.40 m and a 0.6 m arm, that puts the hand at about 1.10 m.
@@ -128,7 +150,8 @@
   - then it sends the bed back up and stays clear, looking up.
 - **Safety**: it is never under or on the bed while the bed moves. The bed only moves when the figure is at least 0.35 m east of the bed's front edge (x 1.83 or more) and out of the ottoman's path.
 
-**Sound**
+### Sound
+
 - **Landing sounds**: soft ticks for planks, and a quick riffle for each shelf of books. A short metal slide for the ceiling rail, and four bright steel tinks for the post plates. Thuds for the sofa, desk, wardrobe and towers. A gas-strut hiss for the seat lids. A slide and a thud on every drawer. Swishes for garments and the roller blind.
 - **The mechanism**:
   - a deep upside-down clunk when the bed docks (1.20 s), and a softer one on the long-cut dock (47.0 s);
@@ -143,13 +166,14 @@
   - [measured, weak evidence] 12 of 25 hits sit at about 111-125 BPM, against 5 of 25 flops.
   - [measured] There is no need to cut on the beat: 23% of the hits' scene changes land on a strong sound, against 24% by chance.
 
-**Risks and fixes**
+### Risks and fixes
+
 - **It looks fake, AI-made or unsafe.**
   - Show the mechanism from 1.25 s: the ceiling rail, 65 mm posts with floor and ceiling plates, belts hidden in the posts, the crank socket at hand height, an unlabelled button, and a thin safety-sensor strip on the bed's front rail.
   - Use the same easing both ways, with a soft dock and no bounce on the bed itself: 2.2 s down in the 15 s cut, 2.4 s down and 2.3 s up in the long cut. Stop the bed 2 cm above the cushions, and keep the stand-in clear.
   - Pin the power-cut reply: "a self-locking drive holds it where it is, and a hand crank at hand height on the front post lowers it". This is a design answer, not research.
   - Keep our own look: round steel posts and an oak frame, with nothing modelled on a commercial ceiling-bed product.
-- **It is not new to the genre.** Ceiling beds are sold commercially [general knowledge], and the trends file lists a 2026 3D Short, "Motorized loft bed in a 6 m² drum room" (no view counts).
+- **It is not new to the genre.** Ceiling beds are sold commercially [general knowledge], and the trends file lists an undated 3D Short, "Motorized loft bed in a 6 m² drum room" (no view counts).
   - Never claim invention. Sell what is ours: a sofa, a desk and 10 storage moments in 9 m², the pillows hopping into the empty cubby, and the figure using the bed.
   - Keep the household angle in the caption.
 - **It reads as a living room (0.70) or a flip-bed gimmick.** [measured, videos.csv] "Small Bedroom? Flip the Bed, Double the Space!" ran 0.43. The 6 titles with fold, flip or multi run a median of 0.88.
@@ -161,19 +185,18 @@
   - Run `python3 research/hh_metrics.py <video>` on both cuts. Hold to motion 7.5+, longest still 1.8 s or less, camera movement 1.8+, warmth 22-57 and saturation 0.17+.
   - With all 9 targets, only 6 of 29 hits pass (the median hit misses 1, the median flop 5.5). Leaving out length, 9 of 29 pass (the median flop misses 5). So treat the other targets as direction.
   - The long cut (49.5 s) sits above hh_metrics' 34-46 s length target. It is still inside the top 12's 34-53 s and the owner's 40-50 s format.
-  - The kitchen's near-neutral whites measured warmth 14.5 and saturation 0.11, and a blue-grey accent pulls cooler still. So the walls are warm white and the sun is warm from frame 1. If warmth reads over 57, move the walls back toward neutral (240, 240, 237).
+  - The kitchen's near-neutral whites measured warmth 14.5 and saturation 0.11, and a blue-grey accent pulls cooler still. So the sun is warm from frame 1, and the warmth comes from the light oak, the mustard books and pillows and the terracotta throw, not from the walls, which stay neutral white (242, 241, 238) like the rest of the slate.
 - **It repeats the 11 m² bedroom project.** That project has a north bed nook, an east window desk with sheers, the door at the west end of the south wall, a three-panel oak-mirror-oak wardrobe with brass pulls and a pull-down rail, and ceiling downlights.
   - Here the plan is rotated: bed bay west, desk and window north, wardrobe east, door in the south-east corner.
   - The pull-down rail becomes an ironing board, the sheers a roller blind, and the colour-blocked books a gradient. The pillows are new (mustard and pale blue-grey), the wardrobe has two fronts with steel pulls, and the downlights ride on the bed.
   - New camera paths and a new frame-1 corner. Post it as a separate video, never as a near-copy.
 - **Lights-on is lost in daylight.** In the 15 s cut the bed's downlights face the sofa once it is down, so a passing cloud and the ceiling-rail LED carry the beat. In the long cut the downlights are the main beat as the bed rises.
 - **The posting slot clashes with near-duplicates.** Trends idea #6 (a guest-ready study where a wall bed drops, posted 1-12 Dec) and next_videos #4 (a studio panel that folds down into a bed) deliver the same beat.
-  - Post this one 8-14 Dec, apart from #6.
-  - If only one bed-appears video gets made before Christmas, make this one and give it #6's 1-7 Dec slot.
+  - Post the 15 s cut on Sat 19 Dec and the long cut on Wed 23 Dec, at least 5 days after #3's long cut. Trends idea #6 (the guest-ready study) is not on this slate, so there is no clash.
 - **Props could carry text or logos.**
   - A laptop with no logo. The laptop and phone screens show a plain gradient glow with no interface.
   - Blank book spines and covers, plain board-game boxes and plain clothes.
-  - No labels, numbers, brand plate or warning stickers on the motor box, button pad or bed: an unlabelled button, or arrow icons only.
+  - No labels, numbers, brand plate or warning stickers on the motor box, button pad or bed: a plain, unlabelled button with no icons.
 - **The render budget is optimistic.** The README's 35 s per frame was measured on the kitchen at 18 samples with --nobevel. Books, garments, a figure and motion blur will be slower.
   - Effort is medium-high.
   - Render the 15 s cut first. Pass hh_metrics.py (camera 1.8+, longest still 1.8 s or less, warmth 22+) before starting the long cut.
@@ -183,7 +206,8 @@
   - The ottoman parks in the bedside alcove, not under the desk. That keeps a 0.95 m knee space, and the chair never meets the wardrobe.
   - The frame-1 rise stays fast (0.6 s). It is a build move made before the posts exist, while the motor moves are the slow, matched ones.
 
-**Build notes**
+### Build notes
+
 - **Reuse from rooms/bedroom/project.py**:
   - `materials()` subsets: oak, birch, floor, books `bk_*` (add ochre and slate blue), clothes `cl_*`, pillows (add mustard and pale blue-grey), led, bulb, `dl_emis`. Drop `sheer`.
   - Helpers: `disc`, `garment`, `stack`, `plant`, `cloth`, `pillow`.
@@ -198,7 +222,7 @@
 - **New pieces**:
   - The bed: one piece `bed` with the oak frame, oak underside, four downlight discs, corner sleeves, the safety-sensor strip, mattress, a duvet from `cloth()`, the terracotta throw and two straps. Child pieces `bed_pillows` (for the bounce) and `bed_drawer` are composed on its transform.
   - One custom track, `bed_z(t)`: rise from the floor 0.60-1.20 s, park, an eased descent, and an eased rise with the same curve and no overshoot.
-  - Four 65 mm steel posts (`tube`, grown down) with floor and ceiling plates, the ceiling rail with its LED strip, the motor box, the crank socket and the button pad.
+  - Four 65 mm steel posts (`tube`, each dropped in whole) with floor and ceiling plates, the ceiling rail with its LED strip, the motor box, the crank socket and the button pad.
   - The sofa: seat box, two gas-strut lids, `rbox` cushions and three 6 cm wall pads.
   - Two book towers with an empty cubby, the nightstand flap, the ottoman on castors, the ironing board with a swing-down leg, the roller blind and the peg hooks.
   - A custom camera segment for the ride: a lowering that follows `bed_z` with `smooth()`, plus a constant slow sideways drift, because camkit glides at constant speed.
@@ -223,4 +247,56 @@
   - the faceless figure, so no hair or face;
   - the straps are thin boxes;
   - no crowds.
-- **Posting**: the 8-14 Dec week, apart from trends idea #6. It is evergreen, so the date can slip.
+- **Posting**: the 15 s cut on Sat 19 Dec and the long cut on Wed 23 Dec, at least 5 days after #3's long cut (moved from 8-14 Dec). Trends idea #6 (the guest-ready study) is not on this slate, so there is no clash. It is evergreen, so the date can slip.
+
+
+
+## Rules for all 10
+
+**Originality**
+- Original work only. Never copy Haven Haus's or anyone's titles, on-screen text, watermarks, end cards, music or exact designs.
+- No on-screen text: no captions, labels, arrows, readable letters or numbers on props, and no end card. Captions go in the post.
+- No copyrighted characters, logos or recognisable IP. Keep book spines plain, jars and boxes unlabelled, and devices and shoes free of logos.
+- A different layout every video. Never repeat a whole look: change the shell, camera path, music track and accent each time, against the rest of the slate and against `rooms/bedroom` and `rooms/kitchen`.
+
+**Structure**
+- Frame 1 is the empty room, and something lands by 0.3 s [measured: 22 of 29 hits open empty]. The one exception is #10, which opens on its closed studio with the wall moving at 0.10 s.
+- Build the whole room, and build it around the star feature [measured: 28 of 29 hits against 12 of 30 flops].
+- 6-12 storage moments (a few 15 s cuts show fewer), with colourful contents on screen within the first 2-3 s.
+- A faceless stand-in (`pipeline/figure.py`) uses the cleverest feature, at least in the long cut. No figure is ever under, on or inside the arc of a moving part.
+- The camera never stops [measured: motion 8.4 against 5.1, longest still 1.4 s against 2.6 s]:
+  - a glide in every station (`pipeline/camkit.py`), joined by 0.3 s swings;
+    - Exceptions: #7 hard-cuts into and out of the walk-in (no swing through a wall); #10 straight-cuts into a11 and a13 (turns over 120°).
+  - no still stretch over about 1.5 s;
+  - a final wide that drifts into the frame-1 pose, so the video loops.
+- Two cuts:
+  - a 15 s cut on its own camera path, rendered first;
+  - a 40-50 s long cut with a new zone every 3-8 s, as in the top 5, and the wow at about 60-70% of the runtime.
+
+**Look**
+- **Shell**: neutral white for all ten (about sRGB 242, 241, 238).
+- **Wood**: light oak or birch, never walnut or dark wood.
+- **Colour**: one muted accent (one per child where two children share, as in #1), plus the colour from filled storage.
+- **Avoid**: cream or orange casts, saturated walls, busy patterns, and pink or red-and-gold themes.
+- **Clean and bright**: brightness 138-178 the whole way through. Lights-on adds lamps; daylight may ease to no less than 85%. Use fill lights in recesses and enough samples, so nothing is grainy.
+
+**Sound**
+- A sound on every landing, plus one or two playful effects.
+- Original music at about 118-120 BPM. No licensed or recognisable tracks.
+- Export an SFX-only mix as well.
+
+**Believability**
+- Real dimensions; hinges, posts, castors and runners you can see; things land with weight. Nothing assembles itself or morphs: viewers are tired of AI-looking content [fact, trends file].
+- Pin a plan with dimensions and "Modelled and rendered from code, no AI video, no design app."
+- Keep away from what the pipeline renders badly: water, hair, faces, draped fabric, crowds and clear glass.
+
+**Captions**
+- Lead with the size and who lives there, and end with a debate question and a prompt to send or save.
+- Keep every claim exact. A bedroom is a bedroom, never an apartment.
+- Leave out "secret", "hidden" and "magic": titles with them run 0.82, against 1.00 without [measured, 11 titles].
+
+**Process**
+- Before any Blender time: probe stills, then a low-res preview, then `hh_metrics.py`.
+- Keep look-alike videos at least 5-7 days apart (see Clashes to watch).
+- Lean work: one project file per room, with a switch for the cut, reusing the bedroom and kitchen helpers.
+
