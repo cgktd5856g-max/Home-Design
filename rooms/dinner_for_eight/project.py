@@ -79,7 +79,7 @@ def tumbler_pos(i):
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('screed', tex=3, col=srgb(184, 183, 180), p=(0.12,))
+    mat('screed', tex=3, col=srgb(164, 164, 162), p=(0.12,))
     mat('floor', tex=1, col=srgb(222, 204, 176), col2=srgb(204, 184, 154), rough=0.4, f0=0.04, glossy=True, p=(0.19, 1.8))
     mat('wall', tex=3, col=srgb(242, 241, 238), p=(0.015,))
     mat('ceiling', col=srgb(246, 246, 244))
@@ -190,7 +190,7 @@ def chair_parts(seat_m):
     A.append((box(-0.205, -0.243, 0.62, 0.205, -0.221, 0.84), 'oak_x'))
     A.append((tube([(-0.19, -0.195, 0.16), (0.19, -0.195, 0.16)], 0.009, 8), 'oak_x'))
     B.append((box(-0.20, -0.19, 0.425, 0.20, 0.19, 0.445), seat_m[:-2]))
-    B.append((rbox((0, 0.0, 0.458), (0.38, 0.36, 0.028), 0.012, 3), seat_m))
+    B.append((rbox((0, 0.0, 0.453), (0.37, 0.35, 0.018), 0.008, 3), seat_m))
     for sx in (-0.175, 0.175):
         C.append((tube([(sx, 0.17, 0.0), (sx, 0.17, 0.43)], 0.013, 10), 'oak_z'))
     C.append((tube([(-0.175, 0.17, 0.12), (0.175, 0.17, 0.12)], 0.009, 8), 'oak_x'))
@@ -588,13 +588,13 @@ camera = None
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (11.0, 11.5, 12.4)
-LDOOR = (3.2, 2.9, 2.4)
+LDOOR = (3.0, 2.92, 2.78)
 LBOUNCE = (1.15, 1.13, 1.10)
-LTOP = (0.55, 0.54, 0.52)
+LTOP = (0.55, 0.55, 0.56)
 LPEND = (260.0, 225.0, 170.0)
 LUNDER = (30.0, 27.0, 21.0)
 LSHELF = (22.0, 19.0, 15.0)
-LSPILL = (900.0, 720.0, 470.0)
+LSPILL = (900.0, 760.0, 560.0)
 
 
 def lights(mats4, vis):
@@ -932,7 +932,7 @@ def timeline_short():
     ev, drop, slide, grow = tl.ev, tl.drop, tl.slide, tl.grow
     cen = tl.cen
     # --- S1 (0.0-3.0): the plate ring, planks, base run, columns, island, worktop, oak wall
-    T_PL = [0.15 + 0.105 * k for k in range(8)]                    # plates land on the bare screed (the first is falling in frame 1)
+    T_PL = [0.24 + 0.093 * k for k in range(8)]                    # plates land on the bare screed (the first is falling in frame 1)
     band_t = [0.36 + 0.14 * k for k in range(6)]                   # planks land far (south) to near
     edges = [-0.12, 0.6, 1.2, 1.8, 2.4, 3.0, D + 0.01]
     for k in range(6):
@@ -972,11 +972,11 @@ def timeline_short():
         dr_pos = (0.30, 2.40, 0.512 + 0.016 * i)
         th_in = 3.50 + 0.045 * i
         th_out = 8.30 + 0.06 * i
-        early = tp - 0.02 > T_PL[i] + 0.03             # the plank lands under a plate already on the floor
+        early = tp - 0.09 > T_PL[i] + 0.03             # the plank lands under a plate already on the floor
         keys = [('at', T_PL[i] - 0.17, (px, py, 0.75), None),
                 ('hop', T_PL[i] - 0.13, T_PL[i], floor0 if early else floor1, None, 0.0, 'none')]
         if early:
-            keys.append(('hop', tp - 0.02, tp + 0.12, floor1, None, 0.05, 'none'))
+            keys.append(('hop', tp - 0.09, tp + 0.03, floor1, None, 0.06, 'none'))
         keys += [
                  ('hop', 2.24 + 0.035 * i, 2.40 + 0.035 * i, stack_pos, sF, 0.25, 'tick', 0.3),
                 ('hop', th_in, th_in + 0.16, dr_pos, fD, 0.28, 'clink', 0.4),
@@ -1129,11 +1129,11 @@ def timeline_long():
         tp = plank_t(py)
         th_in = 6.80 + 0.075 * i
         th_out = 28.88 + 0.055 * i
-        early = tp - 0.02 > T_PL[i] + 0.03
+        early = tp - 0.09 > T_PL[i] + 0.03
         keys = [('at', T_PL[i] - 0.17, (px, py, 0.75), None),
                 ('hop', T_PL[i] - 0.13, T_PL[i], (px, py, -0.012 if early else 0.0), None, 0.0, 'none')]
         if early:
-            keys.append(('hop', tp - 0.02, tp + 0.12, (px, py, 0.0), None, 0.05, 'none'))
+            keys.append(('hop', tp - 0.09, tp + 0.03, (px, py, 0.0), None, 0.06, 'none'))
         keys += [('hop', 5.74 + 0.055 * i, 5.92 + 0.055 * i, (TCX, CY - ISL_HALF, TZ + 0.018 * i), sF, 0.25, 'tick', 0.3),
                 ('hop', th_in, th_in + 0.17, (0.30, 2.40, 0.512 + 0.016 * i), fD, 0.28, 'clink', 0.4),
                 ('hop', th_out, th_out + 0.22, (px, py, TZ), None, 0.35, 'clink', 0.45)]
