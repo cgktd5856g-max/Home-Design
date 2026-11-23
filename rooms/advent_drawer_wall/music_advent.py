@@ -71,6 +71,17 @@ def main():
         spans.append((a, b))
     cfg = mu.load_cfg(workdir, BPM)
     cfg.MUSIC = MUSIC
+    # the stair plays an original rising scale: drawer n opens on the n-th note of F major, closes back down it
+    degrees = [0, 2, 4, 5, 7, 9, 11]
+    note = lambda n: 65 + 12 * (n // 7) + degrees[n % 7]
+    for e in cfg.EVENTS:
+        nm = e['name']
+        if nm.startswith('advc') and nm[4:].isdigit():
+            e['sfx'] = dict(kind='tick', gain=0.16, freq=mu.hz(note(int(nm[4:]))))
+        elif nm.startswith('adv') and nm[3:].isdigit():
+            e['sfx'] = dict(kind='tick', gain=0.42, freq=mu.hz(note(int(nm[3:]))))
+        elif nm == 'adv_tease':
+            e['sfx'] = dict(kind='tick', gain=0.5, freq=mu.hz(note(23)))
     base = mu.build(cfg)
     bells = bells_track(cfg.DUR, spans)[: len(base)]
     tt = mu.t_arr(len(base))
