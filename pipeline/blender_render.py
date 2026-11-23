@@ -461,6 +461,11 @@ def main():
     cobj = bpy.data.objects.new('cam', cam); coll.objects.link(cobj); sc.camera = cobj
     cobj.rotation_mode = 'QUATERNION'
     key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
+    vfs = [float(P.camera(f / fps).get('vfov', 85.0)) for f in range(nfr)]
+    if max(vfs) - min(vfs) > 1e-6:                # field of view that changes over the clip: keyframe it every frame
+        for f in range(nfr):
+            cam.angle_y = math.radians(vfs[f])
+            cam.keyframe_insert('lens', frame=f + 1)
 
     # lights (one Blender light per slot)
     fill = set(BL.get('fill_lights', []))
@@ -502,7 +507,7 @@ def main():
     world = bpy.data.worlds.new('world'); sc.world = world
     world.use_nodes = True
     bg = next(n for n in world.node_tree.nodes if n.type == 'BACKGROUND')
-    bg.inputs['Color'].default_value = (0.05, 0.05, 0.05, 1); bg.inputs['Strength'].default_value = 1.0
+    wc = BL.get('world', 0.05); bg.inputs['Color'].default_value = (wc, wc, wc, 1); bg.inputs['Strength'].default_value = 1.0
     sc.render.engine = 'CYCLES'
     cy = sc.cycles
     cy.device = 'CPU'
@@ -561,7 +566,7 @@ def main():
         m4, vis = states[f]
         c = P.camera(f / fps)
         parts = [np.concatenate([m4[k].ravel(), [float(vis[k] > 0)]]) for k in rk.ORDER]
-        parts += [np.array([*c['pos'], c['yaw'], c['pitch']], float)] + [np.asarray(L, float).ravel() for L in lrecs[f]]
+        parts += [np.array([*c['pos'], c['yaw'], c['pitch'], c.get('vfov', 85.0)], float)] + [np.asarray(L, float).ravel() for L in lrecs[f]]
         sigs.append(np.round(np.concatenate(parts), 6))
     dup = [2 <= i < nfr - 1 and all(np.array_equal(sigs[i], sigs[g]) for g in (i - 2, i - 1, i + 1)) for i in range(nfr)]
     todo = [f for f in range(a, b + 1) if not os.path.exists(os.path.join(fdir, f'f_{f:04d}.png'))]
