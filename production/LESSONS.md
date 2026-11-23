@@ -25,6 +25,9 @@ looks better.
   fan-out, run several workflows side by side: 4 batches of 3 ideas ran 8 agents at once.
 - **A stopped workflow resumes from cache.** `resumeFromRunId` with the same script and args reuses every finished
   agent call, even after a usage-limit failure.
+- **Shared pipeline files get conflicts.** Sessions add sound kinds to `pipeline/music.py` (bonk, clack, clunk, pip
+  and more) on their own branches. When merging, keep both sides' additions and test every event kind (23 Nov: 3
+  merges, 20 kinds, all fine).
 - **Talking to sessions.** `send_message` to a child session works, and children reply with `send_message` to
   `@parent`. Send short pointers to files in the repo instead of long pasted text.
 - **Decide the concept before a session starts.** Switching mid-build made the two-kids session rebuild its whole
@@ -81,6 +84,15 @@ looks better.
   big and early.
 - **The grade depends on the room.** The default `--grade 1.35,0.03` left a neutral-white room at brightness 138, the
   edge of the band; a gamma of 1.18 fixed it. Measure after grading.
+- **Overlapping boxes render black dots or seams in Cycles** (three of us, 23 Nov): frame members and rails laid over
+  posts. Build members that butt, never overlap.
+- **Put a white studio box around the set from the start.** Hidden walls leave a black void in swings and odd angles.
+- **Choose each station by which way the moving fronts face.** Drawers facing south need a camera from the south;
+  decide this before modelling.
+- **Hanging garments seen end-on read as one slab.** To read as "sparse", hang a few short garments parallel to the
+  front.
+- **A small, very bright light hidden from most points speckles the code renderer** (a north-window sun under a deck).
+  Mark it always-sampled.
 - **Moving furniture.**
   - Draw the swing arc in a top view at the swing time before modelling.
   - Keep stand-in figures out of moving arcs.
@@ -110,3 +122,4 @@ Fill in the views after posting (7 days).
 | #2 Same Bed, Better Room | 8.8 / 1.2 s / 7.17 / 0.2 s / 173 / 0.19 / 30.2: all in range | 6.5 | | |
 | #4 The Advent Stair | 7.7 / 0.4 s / 5.22 / 0.2 s / 164 / 0.27 / 44: all in range (65 glitched frames re-rendered) | 6-6.5 | | |
 | #5 The Bed on the Ceiling | 12.7 / 0.4 s / 10.88 / 0.2 s / 150 / 0.25 / 36.3: all in range | 6 | | |
+| #3 Three of Us in 3 × 2 m | 8.6 / 0.6 s / 5.72 / 0.6 s / 142 / 0.30 / 42.5: misses clear-change share (0.36) and first move (0.6 s) | – | | |

@@ -113,7 +113,11 @@ def backdrop(P, rec):
     x, z = (P[1] if rec[14] > 0.5 else P[0]), P[2]
     hz = rec[13]
     t = np.clip((z - hz) / 2.2, 0, 1)[..., None]
-    sky = np.array([1.0, 1.0, 1.0]) * (1 - t) + np.array([0.66, 0.78, 1.0]) * t
+    dusk = len(rec) > 15 and rec[15] > 0.5          # p[2] = 1: soft lavender-peach evening sky
+    if dusk:
+        sky = np.array([1.0, 0.78, 0.64]) * (1 - t) + np.array([0.74, 0.70, 0.90]) * t
+    else:
+        sky = np.array([1.0, 1.0, 1.0]) * (1 - t) + np.array([0.66, 0.78, 1.0]) * t
     col = sky.copy()
     bi = np.floor(x / 0.11)
     bh = 0.06 + 0.34 * hashf(bi, 5, 2) ** 2.2 + 0.10 * vnoise(x * 0.8, 1.0, 2.0)
@@ -124,6 +128,8 @@ def backdrop(P, rec):
     th = hz - 0.02 + 0.30 * fbm(x * 2.3, 3.0, 1.0, 3) + 0.05 * vnoise(x * 22, 0.0, 5.0)
     s = (0.75 + 0.5 * vnoise(x * 30, z * 30, 2.0))[..., None]
     col = np.where((z < th)[..., None], np.array([0.20, 0.29, 0.21]) * s * 0.9 + sky * 0.1, col)
+    if dusk:
+        col = np.where((z < hz + bh)[..., None] & ~(z < th)[..., None], col * np.array([0.62, 0.55, 0.70]), col)
     return col
 
 

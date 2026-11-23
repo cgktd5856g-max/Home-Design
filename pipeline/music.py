@@ -9,7 +9,8 @@ Event kinds from the timeline: 'thud' (big pieces; strength sets gain and pitch)
 clack), 'scrape' (furniture sliding; event 'len' = seconds), 'zip' (runner glide + click), 'chime2' (bright two notes),
 'clunk' (a mechanism docking), 'deep' (the heaviest landing), 'tink' (steel), 'riffle' (a shelf of books), 'bip' (a
 button), 'boing' (cartoon bounce) and 'hum' (a motor; the event's 'dur' sets its length, and the music dips about
-4.5 dB under it).
+4.5 dB under it), 'pip' (baby-sized items: higher, softer tick), 'bwomp' (two falling
+notes) and 'roll' (a soft castor roll).
 """
 import os
 import sys
@@ -358,6 +359,14 @@ def build(cfg, sfx_only=False):
             i0, i1 = int(t * SR), min(N, int((t + L) * SR))
             if i1 > i0:
                 dip.__setitem__(slice(i0, i1), np.minimum(dip[i0:i1], 10 ** (-4.5 / 20) + (1 - 10 ** (-4.5 / 20)) * (1 - np.sin(np.pi * np.linspace(0, 1, i1 - i0)) ** 0.5)))
+        elif k == 'pip':                       # baby-sized items: a higher, softer tick
+            add(sfx, tick(s.get('freq', 2400)), t, g)
+        elif k == 'bwomp':                     # two-note falling "bwomp"
+            add(sfx, lp(bass(50, 0.16), 1400), t, g)
+            add(sfx, lp(bass(43, 0.30), 1100), t + 0.15, g)
+        elif k == 'roll':                      # a plain soft roll (castors) ending as the piece parks
+            n = int(0.45 * SR)
+            add(sfx, lp(rng.standard_normal(n), 260) * np.linspace(0.2, 1, n) * np.exp(-np.linspace(0, 1, n) * 0.5), t - 0.45, g)
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -428,6 +437,12 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='boing', gain=0.42)
         elif k == 'hum':
             sfx = dict(kind='hum', gain=0.55, length=e.get('dur', 2.0))
+        elif k == 'pip':
+            sfx = dict(kind='pip', gain=0.16 + 0.16 * a, freq=2200 + 160 * (i % 5))
+        elif k == 'bwomp':
+            sfx = dict(kind='bwomp', gain=0.55)
+        elif k == 'roll':
+            sfx = dict(kind='roll', gain=0.5)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
