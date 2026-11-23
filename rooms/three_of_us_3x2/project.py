@@ -508,12 +508,13 @@ def P(x, y, z, yaw, pitch):
 
 
 P0 = P(1.0, -2.80, 1.40, 0.0, -1.0)
-S1 = (P0, P(1.0, -2.64, 1.86, 0.0, -5.8))                       # hall: crane up + push in, tilting down
+S1 = (P0, P(1.0, -2.15, 2.05, 0.0, -9.0))                       # hall: crane up + push in, tilting down
 S2 = (P(0.58, -1.05, 2.35, 2.0, -36.0), P(0.98, -1.15, 2.30, 11.0, -34.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
 S3 = (P(-1.25, 0.98, 1.92, 90.0, -10.0), P(-1.15, 0.58, 1.90, 92.0, -10.0))   # wardrobe, full height: slide south
-S4 = (P(1.0, -3.00, 1.00, 0.0, 3.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
-HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 15.0, S4)]
-HALL15 = [0, 1, 3]                                                 # hall holds (south wall hidden), others: west wall hidden
+S4 = (P(1.02, -1.50, 0.98, 3.0, -3.0), P(0.50, -1.38, 1.04, -9.0, -4.0))   # low on the crib + stair: truck left
+S5 = (P(1.0, -3.25, 1.08, 0.0, 2.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
+HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (13.25, 15.0, S5)]
+HALL15 = [0, 1, 3, 4]                                                 # hall holds (south wall hidden), others: west wall hidden
 
 HOLDS, HALL = HOLDS15, HALL15
 camera = hold_camera(HOLDS, VFOV, lift=1.0, final_lift=1.5, rest=REST)
@@ -676,7 +677,7 @@ def timeline_15(tl):
     tl.custom('wall_W', lambda t: (I, wall_mode(t) == 'hall'))
 
     # ================= S1 hall (0.0-3.2): crib, planks, posts, DECK SLAM, crib-bay shelf, crib parks, bed
-    crib_land = drop('crib', 0.12, 0.30, 0.55, 0.06, 0.55, 'thud')
+    crib_land = drop('crib', 0.08, 0.30, 1.1, 0.08, 0.6, 'thud')
 
     def crib_y(t):
         if t < 1.75:
@@ -828,9 +829,9 @@ def timeline_15(tl):
     appear('bd_day', -1.0, T_DUSK)
     appear('bd_dusk', T_DUSK)
     ev(T_DUSK, 'dusk', 0.4, 'swish')
-    for i, tt in enumerate((12.5, 12.7, 12.9, 13.1)):
+    for i, tt in enumerate((12.40, 12.55, 12.70, 12.85)):
         appear(f'led{i + 1}', tt); ev(tt, f'led{i + 1}', 0.5 + 0.05 * i, 'chime')
-    appear('cshelf_led', 13.4); ev(13.4, 'shelf_led', 0.6, 'chime')
+    appear('cshelf_led', 13.45); ev(13.45, 'shelf_led', 0.6, 'chime')
     nl = tl.anims['nlight']
     tl.custom('nl_on', lambda t: (nl(t)[0], t >= 13.7)); ev(13.7, 'nightlight', 0.6, 'chime')
     P2.animate(tl, pose=fg.track([(0.0, P2_SIT), (14.0, P2_SIT), (14.6, P2_LIE)]),
