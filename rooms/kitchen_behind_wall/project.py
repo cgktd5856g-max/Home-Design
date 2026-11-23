@@ -62,7 +62,7 @@ def materials():
     mat('white_cab', col=srgb(243, 242, 239), rough=0.42)
     mat('white_in', col=srgb(236, 235, 232))
     mat('plinth', col=srgb(214, 212, 208))
-    wood_mats('oak', srgb(212, 180, 140), seed=3.0)
+    wood_mats('oak', srgb(214, 188, 154), seed=3.0)
     wood_mats('birch', srgb(228, 208, 174), seed=8.0)
     mat('groove', col=srgb(170, 150, 120))
     mat('tile', tex=12, col=srgb(172, 194, 168), col2=srgb(232, 234, 228), rough=0.18, f0=0.04, glossy=True,
@@ -462,6 +462,7 @@ def build_base(rng):
         neck.append((fx, fyy - 0.08 + 0.08 * math.cos(a), CT + 0.24 + 0.08 * math.sin(a)))
     neck.append((fx, fyy - 0.16, CT + 0.20))
     add('tap', tube(neck, 0.011, 12), 'steel')
+    add('soap', lathe([(0, CT), (0.03, CT), (0.03, CT + 0.13), (0.012, CT + 0.15), (0.012, CT + 0.17), (0, CT + 0.17)], 18, (2.84, 3.40)), 'mug_sage')
     add('tap', tube([(fx + 0.04, fyy, CT + 0.12), (fx + 0.09, fyy, CT + 0.13)], 0.006, 8), 'steel')
     # hob (black glass) with rings
     hx0, hx1, hy0, hy1 = XHOB[0] + 0.05, XHOB[1] - 0.05, 2.98, 3.46
@@ -749,13 +750,14 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-P1 = P(1.95, 0.20, 1.32, -4.0, -7.0)                                                  # frame 1 (and the loop end)
-S1 = (P1, P(1.95, 1.10, 1.24, 4.0, -9.0))                                             # doorway push-in on the birch wall
-S2 = (P(1.80, 1.05, 1.45, -6.0, -6.0), P(2.70, 0.95, 1.45, 10.0, -7.0))                # cooking run, slide east
-S3 = (P(1.00, 0.60, 1.55, 48.0, -15.0), P(1.75, 0.15, 1.42, 16.0, -11.0))             # larder + desk, orbit
-S4 = (P(1.85, 1.35, 1.40, -14.0, -6.0), P(2.65, 1.25, 1.40, 4.0, -8.0))               # lit run, slide east
-S5 = (P(1.95, -0.13, 1.3493, -6.93, -6.27), P1)                                       # closing wide, drifts into frame 1
-HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.7, S3), (11.0, 13.6, S4), (13.9, DUR_CUT, S5)]
+P1 = P(1.95, 0.20, 1.45, -4.0, -4.0)                                                  # frame 1 (and the loop end)
+S1 = (P1, P(1.95, 0.85, 1.40, 4.0, -6.0))                                             # doorway push-in on the birch wall
+S2 = (P(1.80, 1.05, 1.45, -6.0, -6.0), P(2.70, 0.95, 1.45, 16.0, -8.0))                # cooking run, slide east
+S3 = (P(1.05, 0.50, 1.55, 46.0, -15.0), P(1.40, 0.30, 1.48, 40.0, -13.0))             # larder, drawers at ~45 deg
+S3B = (P(3.35, 1.35, 1.42, -40.0, -13.0), P(3.22, 1.58, 1.36, -31.0, -11.0))          # the desk, three-quarter
+S4 = (P(1.85, 1.05, 1.45, -14.0, -6.0), P(2.65, 1.25, 1.40, 4.0, -8.0))               # lit run, slide east
+S5 = (P(1.95, -0.038, 1.468, -6.93, -3.27), P1)                                       # closing wide, drifts into frame 1
+HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 8.50, S3), (8.72, 10.75, S3B), (11.0, 13.6, S4), (13.9, DUR_CUT, S5)]
 if LONG:
     A1 = (P1, P(1.95, 0.88, 1.275, 2.5, -8.0))                                         # the wall opens, the run builds
     A2 = (P(2.45, 1.55, 0.95, 6.0, -14.0), P(1.45, 1.50, 0.95, -6.0, -14.0))          # low slide west: U drawer, dishwasher
@@ -945,6 +947,7 @@ def timeline_15(tl):
     drop('hob', 2.16, 2.30, 0.30, 0.03, 0.6, 'thud')
     drop('fruit', 2.38, 2.55, 0.35, 0.05, 0.4)
     drop('tap', 2.60, 2.75, 0.30, 0.04, 0.35)
+    drop('soap', 2.98, 3.12, 0.25, 0.06, 0.3)
 
     # ---- S2: uppers, hood, duct, jars, two-door cupboard, corner shelves
     from_camera('up_narrow', 3.30, 3.52, cam_s2, 0.35, 0.8, 'thud')
@@ -989,13 +992,12 @@ def timeline_15(tl):
     ev(6.80, 'cs_back', 0.4, 'swish')
 
     # ---- S3: the larder cascade, then the kitchen becomes a desk
-    lar = door_oc('lar_door', (TX, LAR[0] + 0.002, 0), math.radians(115), 7.35, 8.80, out=0.22)
+    lar = door_oc('lar_door', (TX, LAR[0] + 0.002, 0), math.radians(115), 7.35, 8.36, out=0.22)
     for k in range(5):
-        f = drawer_fn(7.45 + 0.1 * k, 8.70 - 0.1 * k, (-0.42, 0, 0), out=0.16)
+        f = drawer_fn(7.45 + 0.08 * k, 8.30 - 0.06 * k, (-0.42, 0, 0), out=0.16)
         tl.custom(f'lar_dr{k}', f)
-        ev(7.55 + 0.1 * k, f'lar_dr{k}_out', 0.3, 'tick')
-        drop(f'lar_c{k}', 7.53 + 0.15 * k, 7.65 + 0.15 * k, 0.25, 0.04, 0.4, 'tick', parent=f)
-    ev(8.87, 'lar_dr_shut', 0.6, 'thud')
+        ev(7.55 + 0.08 * k, f'lar_dr{k}_out', 0.3, 'tick')
+        drop(f'lar_c{k}', 7.50 + 0.12 * k, 7.62 + 0.12 * k, 0.25, 0.04, 0.4, 'tick', parent=f)
 
     def lid_path(name, t0, t1, dz=0.10, dy=-0.45):
         def f(t):
@@ -1010,42 +1012,42 @@ def timeline_15(tl):
         tl.custom(name, f)
         ev(t1, name, 0.8, 'thud')
         return f
-    lid_path('lid_hob', 8.40, 8.65)
-    ls0 = lid_path('lid_sink', 8.60, 8.85)
+    lid_path('lid_hob', 8.72, 9.00, dz=0.16)
+    ls0 = lid_path('lid_sink', 8.92, 9.20, dz=0.16)
 
     def lid_sink(t):
         M, v = ls0(t)
-        if t < 8.90:
+        if t < 9.24:
             return M, v
         if t < 11.00:
-            return T(0, -0.245 * eob(c01((t - 8.90) / 0.16), 1.0), 0), True
+            return T(0, -0.245 * eob(c01((t - 9.24) / 0.16), 1.0), 0), True
         return T(0, -0.245 * (1 - smooth(c01((t - 11.00) / 0.15))), 0), True
     tl.custom('lid_sink', lid_sink)
-    ev(9.00, 'ledge', 0.45, 'swish'); ev(11.15, 'ledge_back', 0.5, 'thud')
+    ev(9.36, 'ledge', 0.45, 'swish'); ev(11.15, 'ledge_back', 0.5, 'thud')
     # stool: bed head -> desk -> bed head (the book on it hops off while it is the desk seat)
     d_bed = np.array([STOOL_BED[0] - STOOL_DESK[0], STOOL_BED[1] - STOOL_DESK[1], 0.0])
 
     def stool(t):
-        if t < 9.00:
+        if t < 9.30:
             return T(*d_bed), True
-        if t < 9.45:
-            u = (t - 9.00) / 0.45
+        if t < 9.70:
+            u = (t - 9.30) / 0.40
             return T(*(d_bed * (1 - smooth(u)))) @ about((*STOOL_DESK, 0), R('z', 0.9 * math.sin(math.pi * u))), True
         if t < 11.05:
-            tau = t - 9.45
+            tau = t - 9.70
             return about((*STOOL_DESK, 0), R('z', 0.05 * math.exp(-tau / 0.1) * math.sin(2 * math.pi * tau / 0.25))), True
         u = c01((t - 11.05) / 0.40)
         return T(*(d_bed * smooth(u))) @ about((*STOOL_DESK, 0), R('z', -0.7 * math.sin(math.pi * u))), True
     tl.custom('stool', stool)
-    ev(9.45, 'stool', 0.7, 'thud'); ev(11.45, 'stool_back', 0.6, 'thud')
+    ev(9.70, 'stool', 0.7, 'thud'); ev(11.45, 'stool_back', 0.6, 'thud')
 
     pc = np.array([STOOL_DESK[0], STOOL_DESK[1], SEAT])
 
     def stool_top(t):
-        if t < 8.80:
+        if t < 9.12:
             return T(*d_bed), True
-        if t < 8.95:
-            u = (t - 8.80) / 0.15
+        if t < 9.27:
+            u = (t - 9.12) / 0.15
             return T(*d_bed) @ T(0, 0, 0.12 * u) @ about(pc, S(*([1 - u] * 3))), True
         if t < 11.47:
             return I, False
@@ -1054,15 +1056,27 @@ def timeline_15(tl):
             return T(*d_bed) @ T(0, 0, 0.12 * (1 - u)) @ about(pc, S(*([0.2 + 0.8 * u] * 3))), True
         return T(*d_bed), True
     tl.custom('stool_top', stool_top)
-    ev(8.88, 'book_off', 0.25, 'tick'); ev(11.62, 'book_back', 0.3, 'tick')
+    ev(9.20, 'book_off', 0.25, 'tick'); ev(11.62, 'book_back', 0.3, 'tick')
     on_cover = lambda t: (lid_sink(t)[0] @ T(0, 0.245, 0), True)
-    for nm, t0, t1 in (('laptop', 9.02, 9.15), ('lamp', 9.16, 9.30), ('mug', 9.72, 9.85)):
+    for nm, t0, t1 in (('laptop', 9.38, 9.52), ('lamp', 9.50, 9.64), ('mug', 10.20, 10.33)):
         drop(nm, t0, t1, 0.25, 0.04, 0.45 if nm != 'mug' else 0.3, 'thud' if nm != 'mug' else 'tick',
              parent=(on_cover if nm != 'lamp' else None))
     # the figure pops in seated, turns its head to the window, is hidden during the swing
     sit = COOK.sit_pose(SEAT, base='sit_desk')
-    look = dict(sit, neck_turn=-55, neck=4)
-    COOK.animate(tl, pose=fg.track([(10.05, sit), (10.40, look)]), visible=lambda t: t < 10.75, pop=9.60)
+    look = dict(sit, neck_turn=-60, neck=4, spine_twist=-8)
+    stand = fg.pose_of('stand')
+    at_c = (STOOL_DESK[0], STOOL_DESK[1] + 0.02, 0.0)
+    M_st = COOK.root(stand, (at_c[0], at_c[1] - 0.30, 0.0), 0.0)
+    M_si = COOK.root(sit, at_c, seat=SEAT)
+    T_SIT0, T_SIT1 = 9.86, 10.18                       # pops in standing behind the stool, then lowers onto it
+
+    def cook_M(t):
+        u = smooth(c01((t - T_SIT0) / (T_SIT1 - T_SIT0)))
+        M = M_si.copy(); M[:3, 3] = M_st[:3, 3] * (1 - u) + M_si[:3, 3] * u
+        return M
+    COOK.animate(tl, pose=fg.track([(T_SIT0, stand), (T_SIT1, sit), (10.36, sit), (10.62, look)]), M=cook_M,
+                 floor=0.0, visible=lambda t: t < 10.80, pop=9.66)
+    ev(T_SIT1, 'sit', 0.45, 'thud')
 
     # ---- S4: put back, lights on, then the wall closes and the room returns to frame 1
     drop('herb', 11.18, 11.30, 0.25, 0.06, 0.35)
@@ -1070,7 +1084,7 @@ def timeline_15(tl):
     appear('led_jar', 11.80, 14.55); ev(11.80, 'jar_on', 0.5, 'chime')
     appear('hood_on', 12.00, 14.55); ev(12.00, 'hood_on', 0.5, 'chime')
     appear('lamp_on', 11.90, 14.55); ev(11.90, 'lamp_on', 0.5, 'chime')
-    tl.custom('dimmer', lambda t: (T(0.12 * smooth(c01((t - 11.45) / 0.5)) * (1 - smooth(c01((t - 13.80) / 0.60))), 0, 0), False))
+    tl.custom('dimmer', lambda t: (T(0.18 * smooth(c01((t - 11.15) / 0.5)) * (1 - smooth(c01((t - 13.80) / 0.60))), 0, 0), False))
     drop('board', 12.26, 12.40, 0.25, 0.04, 0.4)
     drop('kettle', 12.64, 12.80, 0.30, 0.04, 0.45, 'thud')
     drop('herb2', 13.06, 13.20, 0.22, 0.05, 0.35)
@@ -1121,6 +1135,7 @@ def timeline_long(tl):
     drop('hob', 2.52, 2.66, 0.30, 0.03, 0.6, 'thud')
     drop('fruit', 2.68, 2.85, 0.35, 0.05, 0.4)
     drop('tap', 2.80, 2.95, 0.30, 0.04, 0.35)
+    drop('soap', 3.10, 3.24, 0.25, 0.06, 0.3)
 
     # ===== Z1 a2 (3.7-7.4): U drawer around the trap, dishwasher racks
     bs = tl.anims['b_sink']
