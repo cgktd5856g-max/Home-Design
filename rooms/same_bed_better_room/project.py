@@ -27,6 +27,20 @@ from roomkit import (srgb, mat, add, box, grid_tris, lathe, rprof, tube, ellipso
 from animkit import Timeline, c01, eoc, eob, smooth
 import figure as fg
 
+# Boxes that overlap and share a face render black in Cycles (the hit lands inside the other solid). Shrink every
+# box by its own 0.2-0.8 mm so no two faces are ever coplanar; far below a pixel at 720x1280.
+_box_exact, _BOXN = rk.box, [0]
+
+
+def box(x0, y0, z0, x1, y1, z1):
+    _BOXN[0] += 1
+    e = 0.0002 + 0.00005 * ((_BOXN[0] * 37) % 13)
+    e = min(e, 0.2 * min(x1 - x0, y1 - y0, z1 - z0))
+    return _box_exact(x0 + e, y0 + e, z0 + e, x1 - e, y1 - e, z1 - e)
+
+
+rk.box = box
+
 FIG = [None]
 
 REST = os.environ.get('ROOM_REST') == '1'
