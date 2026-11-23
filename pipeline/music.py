@@ -148,6 +148,14 @@ def chime():
     return out * 0.35 + hp(rng.standard_normal(n), 3000) * np.exp(-t / 0.003) * 0.5
 
 
+def boing(length=0.55):
+    """Playful spring: a falling-then-wobbling pitch with a soft attack."""
+    n = int(SR * length); t = t_arr(n)
+    f = 180 + 260 * np.exp(-t / 0.08) + 40 * np.sin(2 * np.pi * 14 * t) * np.exp(-t / 0.25)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    return np.sin(ph) * np.exp(-t / 0.18) * np.clip(t / 0.004, 0, 1)
+
+
 def reverb(x, secs=1.6, mix=0.18):
     n = int(secs * SR); t = t_arr(n)
     ir = lp(rng.standard_normal(n) * np.exp(-t / (secs / 5.5)), 6000)
@@ -231,6 +239,8 @@ def build(cfg, sfx_only=False):
             add(sfx, whoosh(1.2, up=False), t, 0.10)
         elif k == 'swish':
             add(sfx, whoosh(0.3, up=True), t - 0.3, g)
+        elif k == 'boing':
+            add(sfx, boing(), t, g)
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -277,6 +287,8 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='chime', gain=0.5)
         elif k == 'none':
             sfx = dict(kind='none')
+        elif k == 'boing':
+            sfx = dict(kind='boing', gain=0.45)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         if 'f0' in e:                                    # per-event pitch override (e.g. wooden clacks)

@@ -311,7 +311,15 @@ def build_shell():
     wood('fr_door', TX, FRI[0] + 0.002, 0.102, TX + 0.022, FRI[1] - 0.002, UZ1 - 0.10, 'birch')
     add('room', box(TX + 0.03, FRI[0], 0.005, TX + 0.05, FRI[1], 0.095), 'grille')            # plinth grille
     add('room', box(TX + 0.004, FRI[0] + 0.004, UZ1 - 0.096, TX + 0.022, FRI[1] - 0.004, UZ1 - 0.004), 'grille')
-    add('room', box(TX + 0.02, FRI[0], 0.10, W, FRI[1], UZ1 - 0.10), 'white_in')               # fridge body (behind door)
+    fx0 = TX + 0.03
+    add('room', box(fx0, FRI[0] + 0.004, 0.10, W, FRI[0] + 0.03, UZ1 - 0.10), 'white_in')      # fridge liner (open to -x)
+    add('room', box(fx0, FRI[1] - 0.03, 0.10, W, FRI[1] - 0.004, UZ1 - 0.10), 'white_in')
+    add('room', box(W - 0.03, FRI[0], 0.10, W, FRI[1], UZ1 - 0.10), 'white_in')
+    add('room', box(fx0, FRI[0], 0.10, W, FRI[1], 0.13), 'white_in')
+    add('room', box(fx0, FRI[0], UZ1 - 0.13, W, FRI[1], UZ1 - 0.10), 'white_in')
+    for z in (0.52, 0.92, 1.32, 1.72):
+        add('room', box(3.56, FRI[0] + 0.03, z, W - 0.03, FRI[1] - 0.03, z + 0.012), 'white_cab')
+    add('room', box(3.60, FRI[0] + 0.05, 1.95, 3.64, FRI[1] - 0.05, 1.97), 'led')
     carcass('room', TX + 0.02, W, LAR[0] + 0.02, LAR[1], 0.10, UZ1, m='white_in', back=False)  # larder box (open to -x)
     add('room', box(W - 0.02, LAR[0] + 0.02, 0.10, W, LAR[1], UZ1), 'white_in')
     add('room', box(TX + 0.02, LAR[1] - 0.009, 0.10, W, LAR[1] + 0.009, UZ1), 'white_in')
@@ -364,8 +372,25 @@ def build_base(rng):
     nm = 'b_dw'
     add(nm, box(XDW[0] + 0.002, FB + 0.04, 0.0, XDW[1] - 0.002, yb, 0.10), 'plinth')
     carcass(nm, XDW[0] + 0.002, XDW[1] - 0.002, FB + 0.02, yb, 0.10, CB, m='white_in')
-    wood(nm, XDW[0] + 0.003, FB, 0.102, XDW[1] - 0.003, FB + 0.02, CB - 0.004, 'oak')
-    add(nm, box(XDW[0] + 0.02, FB - 0.006, CB - 0.05, XDW[1] - 0.02, FB, CB - 0.035), 'groove')
+    add(nm, box(XDW[0] + 0.02, FB + 0.02, 0.12, XDW[1] - 0.02, yb - 0.02, CB - 0.03), 'steel')       # tub
+    wood('dw_door', XDW[0] + 0.003, FB, 0.102, XDW[1] - 0.003, FB + 0.02, CB - 0.004, 'oak')
+    add('dw_door', box(XDW[0] + 0.02, FB - 0.006, CB - 0.05, XDW[1] - 0.02, FB, CB - 0.035), 'groove')
+    add('dw_door', box(XDW[0] + 0.02, FB + 0.02, 0.13, XDW[1] - 0.02, FB + 0.028, CB - 0.03), 'steel')
+    for k, z in enumerate((0.16, 0.50)):
+        nm2 = f'dw_rack{k}'
+        x0r, x1r, y0r, y1r = XDW[0] + 0.035, XDW[1] - 0.035, FB + 0.05, yb - 0.04
+        for b in (box(x0r, y0r, z, x1r, y1r, z + 0.008), box(x0r, y0r, z, x1r, y0r + 0.008, z + 0.07), box(x0r, y1r - 0.008, z, x1r, y1r, z + 0.07),
+                  box(x0r, y0r, z, x0r + 0.008, y1r, z + 0.07), box(x1r - 0.008, y0r, z, x1r, y1r, z + 0.07)):
+            add(nm2, b, 'alu')
+        if k == 0:
+            for i, yy in enumerate(np.linspace(y0r + 0.06, y1r - 0.06, 9)):
+                M = T(XDW[0] + 0.225, yy, z + 0.13) @ R('x', math.pi / 2)
+                add(nm2, xform(lathe([(0, -0.006), (0.10, -0.006), (0.115, 0.004), (0, 0.0)], 28, (0, 0)), M), 'plate' if i % 3 else 'bowl_blue')
+        else:
+            for i, xx in enumerate(np.linspace(x0r + 0.05, x1r - 0.05, 4)):
+                for j, yy in enumerate(np.linspace(y0r + 0.06, y1r - 0.06, 4)):
+                    add(nm2, lathe([(0, z + 0.008), (0.032, z + 0.008), (0.036, z + 0.11), (0, z + 0.11)], 18, (xx, yy)),
+                        ('mug_sage', 'ceramic', 'mug_blue', 'mug_yel')[(i + j) % 4])
     # hob base: three drawers
     nm = 'b_hob'
     add(nm, box(XHOB[0] + 0.002, FB + 0.04, 0.0, XHOB[1] - 0.002, yb, 0.10), 'plinth')
@@ -377,9 +402,26 @@ def build_base(rng):
     nm = 'b_sink'
     add(nm, box(XSINK[0] + 0.002, FB + 0.04, 0.0, XSINK[1] - 0.002, yb, 0.10), 'plinth')
     carcass(nm, XSINK[0] + 0.002, XSINK[1] - 0.002, FB + 0.02, yb, 0.10, CB)
-    for (z0, z1) in ((0.102, 0.66), (0.66, CB - 0.004)):
-        wood(nm, XSINK[0] + 0.003, FB, z0 + 0.0015, XSINK[1] - 0.003, FB + 0.02, z1 - 0.0015, 'oak')
-        add(nm, box(XSINK[0] + 0.06, FB - 0.005, z1 - 0.03, XSINK[1] - 0.06, FB, z1 - 0.018), 'groove')
+    for k, (z0, z1) in enumerate(((0.102, 0.66), (0.66, CB - 0.004))):
+        n2 = 'sink_dr' if k == 0 else nm
+        wood(n2, XSINK[0] + 0.003, FB, z0 + 0.0015, XSINK[1] - 0.003, FB + 0.02, z1 - 0.0015, 'oak')
+        add(n2, box(XSINK[0] + 0.06, FB - 0.005, z1 - 0.03, XSINK[1] - 0.06, FB, z1 - 0.018), 'groove')
+    ux0, ux1, uy0, uy1, uz = XSINK[0] + 0.03, XSINK[1] - 0.03, FB + 0.02, 3.40, 0.13
+    for b in (box(ux0, uy0, uz, 2.36, uy1, uz + 0.012), box(2.58, uy0, uz, ux1, uy1, uz + 0.012), box(2.36, uy0, uz, 2.58, 3.08, uz + 0.012),
+              box(ux0, uy0, uz, ux0 + 0.012, uy1, 0.56), box(ux1 - 0.012, uy0, uz, ux1, uy1, 0.56), box(2.348, 3.08, uz, 2.36, uy1, 0.50),
+              box(2.58, 3.08, uz, 2.592, uy1, 0.50), box(2.36, 3.068, uz, 2.58, 3.08, 0.50), box(ux0, uy1 - 0.012, uz, 2.36, uy1, 0.50),
+              box(2.58, uy1 - 0.012, uz, ux1, uy1, 0.50)):
+        add('sink_dr', b, 'white_in')
+    rngb = np.random.default_rng(9)
+    for (xa, xb) in ((ux0 + 0.05, 2.30), (2.64, ux1 - 0.05)):
+        for i, xx in enumerate(np.linspace(xa, xb, 2)):
+            for j, yy in enumerate(np.linspace(uy0 + 0.07, uy1 - 0.07, 4)):
+                h = rngb.uniform(0.20, 0.28)
+                m = ('bot_b', 'bot_g', 'bot_y')[(i + j + (xa > 2.5)) % 3]
+                add('sink_bot', lathe([(0, uz + 0.012), (0.036, uz + 0.012), (0.038, uz + h * 0.7), (0.016, uz + h * 0.85),
+                                       (0.014, uz + h), (0, uz + h)], 18, (xx, yy)), m)
+                add('sink_bot', lathe(rprof(0.016, uz + h, uz + h + 0.03, 0.004, 2), 14, (xx, yy)), 'ceramic')
+    add('sink', tube([(2.47, 3.19, 0.70), (2.47, 3.19, 0.52), (2.47, 3.27, 0.46), (2.47, 3.34, 0.52), (2.47, 3.48, 0.52)], 0.022, 12), 'ceramic')
     # corner: blind-corner carcass x 2.84-4.0 behind the corner door
     nm = 'b_corner'
     add(nm, box(XCOR[0] + 0.002, FB + 0.04, 0.0, W, yb, 0.10), 'plinth')
@@ -472,8 +514,18 @@ def build_uppers(rng):
     x0, x1 = XCOR
     nm = 'up_pull'
     carcass(nm, x0 + 0.002, x1 - 0.002, UY + 0.02, D - 0.012, UZ0, UZ1, m='white_cab')
-    add(nm, box(x0 + 0.003, UY, UZ0 + 0.002, x1 - 0.003, UY + 0.02, UZ1 - 0.002), 'white_cab')
-    add(nm, box(x0 + 0.06, UY - 0.006, UZ0 + 0.01, x1 - 0.06, UY, UZ0 + 0.025), 'groove')
+    add('pull_flap', box(x0 + 0.003, UY, UZ0 + 0.002, x1 - 0.003, UY + 0.02, UZ1 - 0.002), 'white_cab')
+    add('pull_flap', box(x0 + 0.06, UY - 0.006, UZ0 + 0.01, x1 - 0.06, UY, UZ0 + 0.025), 'groove')
+    bx0, bx1, by0, by1 = x0 + 0.04, x1 - 0.04, UY + 0.05, D - 0.04
+    for z in (UZ0 + 0.03, 1.84):
+        add('pull_bk', box(bx0, by0, z, bx1, by1, z + 0.012), 'white_in')
+        add('pull_bk', box(bx0, by0, z, bx1, by0 + 0.01, z + 0.05), 'alu')
+    for xx in (bx0, bx1 - 0.012):
+        add('pull_bk', box(xx, by0, UZ0 + 0.03, xx + 0.012, by1, 2.30), 'alu')
+    for k in range(3):
+        bowl('pull_bk', bx0 + 0.08 + k * 0.155, 3.32, UZ0 + 0.042, 0.065, 0.055, ('bowl_blue', 'plate', 'bowl_blue')[k])
+        bowl('pull_bk', bx0 + 0.08 + k * 0.155, 3.32, UZ0 + 0.072, 0.065, 0.055, ('plate', 'bowl_blue', 'plate')[k])
+        mug('pull_bk', bx0 + 0.08 + k * 0.155, 3.32, 1.852, ('mug_yel', 'mug_sage', 'mug_blue')[k], ang=-math.pi / 2)
     # open corner shelves over the blind corner (x 3.40-4.0)
     for k, z in enumerate((1.50, 1.86, 2.22)):
         wood('oshelf', TX + 0.01, 3.02, z, W - 0.002, D - 0.012, z + 0.025, 'oak')
@@ -503,6 +555,78 @@ def build_uppers(rng):
                          (0.02, CT + 0.22), (0, CT + 0.22)], 28, (kx, ky)), 'enamel')
     add('kettle', tube([(kx - 0.06, ky, CT + 0.17), (kx - 0.02, ky, CT + 0.26), (kx + 0.04, ky, CT + 0.25), (kx + 0.07, ky, CT + 0.17)], 0.008, 8), 'oak_x')
     add('kettle', tube([(kx + 0.07, ky, CT + 0.10), (kx + 0.13, ky, CT + 0.17)], 0.011, 8), 'enamel')
+
+
+def build_fridge_contents():
+    y0, y1 = FRI
+    yy = np.linspace(y0 + 0.08, y1 - 0.08, 4)
+    for i, y in enumerate(yy):                                   # fruit on the bottom shelf
+        for j, x in enumerate((3.66, 3.80)):
+            add('fr_c0', ellipsoid((x, y, 0.572), (0.038, 0.038, 0.036), 12), ('apple', 'lemon')[(i + j) % 2])
+    for i, y in enumerate(np.linspace(y0 + 0.07, y1 - 0.07, 5)):  # blue yoghurt pots
+        for j, x in enumerate((3.64, 3.76)):
+            add('fr_c1', lathe([(0, 0.932), (0.036, 0.932), (0.04, 1.02), (0, 1.02)], 18, (x, y)), 'pot_blue' if (i + j) % 2 else 'ceramic')
+    for i, y in enumerate(yy):                                   # peppers
+        add('fr_c2', ellipsoid((3.70, y, 1.375), (0.045, 0.045, 0.05), 12), ('tin_red', 'apple', 'tin_yel', 'tin_red')[i])
+    for i, y in enumerate(np.linspace(y0 + 0.09, y1 - 0.09, 3)):  # milk bottles
+        add('fr_c3', lathe([(0, 1.732), (0.04, 1.732), (0.04, 1.90), (0.02, 1.95), (0.02, 1.98), (0, 1.98)], 20, (3.72, y)), 'ceramic')
+        add('fr_c3', lathe(rprof(0.022, 1.975, 1.995, 0.004, 2), 14, (3.72, y)), 'bot_b')
+    for z in (0.60, 1.10, 1.60):                                 # door bins (ride the door) and their bottles
+        add('fr_door', box(3.425, FRI[0] + 0.05, z, 3.53, FRI[1] - 0.05, z + 0.01), 'white_cab')
+        add('fr_door', box(3.52, FRI[0] + 0.05, z, 3.53, FRI[1] - 0.05, z + 0.08), 'white_cab')
+        for i, y in enumerate(np.linspace(FRI[0] + 0.10, FRI[1] - 0.10, 5)):
+            m = ('bot_g', 'bot_y', 'bot_b', 'ceramic', 'bot_g')[(i + int(z * 10)) % 5]
+            add('fr_bins', lathe([(0, z + 0.01), (0.03, z + 0.01), (0.03, z + 0.16), (0.014, z + 0.21), (0, z + 0.21)], 16, (3.475, y)), m)
+
+
+def build_long_extras(rng):
+    # utensil rail on the tile over the sink (x 2.12-2.80; gap at the tap)
+    add('rail', tube([(2.14, 3.46, 1.30), (2.80, 3.46, 1.30)], 0.008, 10), 'oak_x')
+    for xx in (2.14, 2.80):
+        add('rail', box(xx - 0.01, 3.46, 1.29, xx + 0.01, 3.488, 1.31), 'oak_x')
+    for i, xx in enumerate((2.20, 2.27, 2.34, 2.60, 2.67, 2.74)):
+        add('utens', tube([(xx, 3.455, 1.31), (xx, 3.455, 1.12)], 0.005, 6), 'oak_z' if i % 2 else 'ceramic')
+        add('utens', ellipsoid((xx, 3.455, 1.10), (0.022, 0.008, 0.04), 10), 'oak_z' if i % 2 == 0 else 'mug_sage')
+    # oils and a plant on the open corner shelves, tea tin by the fruit
+    for i, xx in enumerate((3.66, 3.74, 3.82)):
+        add('oils', lathe([(0, 1.525), (0.03, 1.525), (0.03, 1.70), (0.012, 1.75), (0.012, 1.78), (0, 1.78)], 18, (xx, 3.22)),
+            ('bot_g', 'bot_y', 'bot_b')[i])
+    plant('cplant', 3.62, 3.26, 2.245, 0.05, 0.08, rng, 9)
+    tin('tea', 1.44, 3.36, CT, 0.045, 0.13, 'teal')
+    add('vase', lathe([(0, CT), (0.035, CT), (0.045, CT + 0.08), (0.025, CT + 0.15), (0.02, CT + 0.17), (0, CT + 0.17)], 22, (1.12, 3.40)), 'ceramic')
+    for k in range(5):
+        a = k * 1.3
+        tip = (1.12 + 0.06 * math.cos(a), 3.40 + 0.05 * math.sin(a), CT + 0.30 + 0.02 * k)
+        add('vase', tube([(1.12, 3.40, CT + 0.15), tip], 0.003, 5), 'leaf')
+        add('vase', ellipsoid(tip, (0.02, 0.012, 0.035), 7), 'leaf2')
+    # over-bed cupboard on the west wall: two lift-up flaps + an open book bay
+    oz0, oz1, ox1 = 1.85, 2.45, 0.32
+    carcass_y = (0.15, 1.95)
+    add('ob_cab', box(0.0, carcass_y[0], oz0, ox1, carcass_y[0] + 0.018, oz1), 'white_cab')
+    add('ob_cab', box(0.0, carcass_y[1] - 0.018, oz0, ox1, carcass_y[1], oz1), 'white_cab')
+    add('ob_cab', box(0.0, carcass_y[0], oz0, ox1, carcass_y[1], oz0 + 0.018), 'white_cab')
+    add('ob_cab', box(0.0, carcass_y[0], oz1 - 0.018, ox1, carcass_y[1], oz1), 'white_cab')
+    add('ob_cab', box(0.0, 1.341, oz0, ox1, 1.359, oz1), 'white_cab')
+    add('ob_cab', box(0.0, 0.741, oz0, ox1, 0.759, oz1), 'white_in')
+    add('ob_cab', box(0.0, carcass_y[0], oz0, 0.012, carcass_y[1], oz1), 'white_in')
+    add('ob_cab', box(0.03, carcass_y[0] + 0.03, oz0 - 0.004, 0.06, 1.33, oz0), 'led_off')
+    for nm, (ya, yb_) in (('ob_flapA', (carcass_y[0], 0.75)), ('ob_flapB', (0.75, 1.35))):
+        add(nm, box(ox1, ya + 0.002, oz0 + 0.002, ox1 + 0.02, yb_ - 0.002, oz1 - 0.002), 'white_cab')
+        add(nm, box(ox1 + 0.02, ya + 0.08, oz0 + 0.01, ox1 + 0.026, yb_ - 0.08, oz0 + 0.025), 'groove')
+    for (yc, mats_) in ((0.45, ('cl_white', 'cl_sage', 'cl_white', 'cl_blue')), (1.05, ('cl_grey', 'cl_white', 'cl_yel', 'cl_white'))):
+        stack('ob_bedding', 0.16, yc - 0.13, oz0 + 0.018, (0.26, 0.24, 0.10), mats_, 4, rng)
+        stack('ob_bedding', 0.16, yc + 0.13, oz0 + 0.018, (0.26, 0.24, 0.12), mats_[::-1], 3, rng)
+    y = 1.37
+    for i, (m, th, h) in enumerate((('bk_sage', 0.03, 0.24), ('bk_white', 0.025, 0.22), ('bk_blue', 0.035, 0.26), ('bk_yel', 0.03, 0.21),
+                                    ('bk_teal', 0.028, 0.25), ('bk_grey', 0.03, 0.23), ('bk_white', 0.025, 0.2), ('bk_blue', 0.03, 0.24),
+                                    ('bk_sage', 0.035, 0.22), ('bk_yel', 0.03, 0.26))):
+        add('ob_books', box(0.03, y, oz0 + 0.018, 0.25, y + th, oz0 + 0.018 + h), m); y += th + 0.003
+    add('ob_books', box(0.03, y + 0.02, oz0 + 0.018, 0.25, 1.93, oz0 + 0.05), 'bk_sage')
+    plant('ob_plant', 0.16, 1.85, oz0 + 0.05, 0.045, 0.07, rng, 8)
+    # wall light over the bed (switches on in the final)
+    add('bedlight', box(0.0, 0.93, 1.48, 0.02, 1.07, 1.62), 'white_cab')
+    add('bedlight', ellipsoid((0.06, 1.0, 1.55), (0.06, 0.06, 0.06), 14), 'lamp_sh')
+    add('bedlight_on', ellipsoid((0.06, 1.0, 1.55), (0.061, 0.061, 0.061), 14), 'shade_glow')
 
 
 def build_larder():
@@ -541,6 +665,13 @@ def build_bed(rng):
         y0 = 0.02 + k * 0.66
         nm = f'bed_dr{k}'
         wood(nm, bx1, y0 + 0.003, 0.065, bx1 + 0.02, y0 + 0.65, 0.37, 'birch')
+        for b in (box(0.82, y0 + 0.03, 0.08, bx1, y0 + 0.62, 0.092), box(0.82, y0 + 0.03, 0.08, 0.832, y0 + 0.62, 0.34),
+                  box(0.82, y0 + 0.03, 0.08, bx1, y0 + 0.042, 0.34), box(0.82, y0 + 0.608, 0.08, bx1, y0 + 0.62, 0.34)):
+            add(nm, b, 'white_in')
+        cm = [('cl_blue', 'cl_white', 'cl_sage'), ('cl_yel', 'cl_grey', 'cl_white'), ('cl_sage', 'cl_navy', 'cl_blue')][k]
+        stack(f'bed_c{k}', 0.98, y0 + 0.19, 0.092, (0.26, 0.24, 0.05), cm, 4, rng)
+        stack(f'bed_c{k}', 1.25, y0 + 0.19, 0.092, (0.24, 0.24, 0.05), cm[::-1], 3, rng)
+        stack(f'bed_c{k}', 1.10, y0 + 0.46, 0.092, (0.40, 0.22, 0.06), cm[1:] + cm[:1], 3, rng)
         add(nm, box(bx1 + 0.02, y0 + 0.28, 0.33, bx1 + 0.026, y0 + 0.38, 0.345), 'groove')
     wood('bed', -0.0, by1 - 0.04, 0.38, bx1, by1, 1.05, 'oak')                       # headboard
     add('bed', rbox((0.69, 1.0, 0.50), (1.36, 1.92, 0.20), 0.05, 5), 'mattress')
@@ -599,6 +730,9 @@ def build():
     build_bed(rng)
     build_stool()
     build_desk_props(rng)
+    build_fridge_contents()
+    if LONG:
+        build_long_extras(rng)
     add('dimmer', box(-5.0, -5.0, -5.0, -4.99, -4.99, -4.99), 'white_in')        # hidden; its x offset = daylight dip
     global COOK
     COOK = fg.Figure('cook', 'adult')
@@ -621,6 +755,23 @@ S2 = (P(1.80, 1.05, 1.45, -6.0, -6.0), P(2.70, 0.95, 1.45, 10.0, -7.0))         
 S3 = (P(1.15, 0.45, 1.50, 42.0, -14.0), P(1.45, 0.25, 1.46, 22.0, -12.0))             # larder + desk, orbit
 S4 = (P(1.95, -0.60, 1.373, -7.33, -5.67), P1)                                         # wide, drifts into frame 1
 HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.7, S3), (11.0, DUR_CUT, S4)]
+if LONG:
+    A1 = (P1, P(1.95, 0.88, 1.275, 2.5, -8.0))                                         # the wall opens, the run builds
+    A2 = (P(2.45, 1.55, 0.95, 6.0, -14.0), P(1.45, 1.50, 0.95, -6.0, -14.0))          # low slide west: U drawer, dishwasher
+    A3 = (P(1.60, 1.15, 1.50, -6.0, 4.0), P(1.75, 1.55, 1.50, -2.0, 6.0))             # push-in on the hob end: uppers, hood, duct
+    A4 = (P(2.05, 1.40, 1.55, -4.0, -2.0), P(2.60, 1.55, 1.55, 16.0, -2.0))           # slide east: cupboard, rail, corner shelf
+    A5 = (P(2.30, 1.25, 1.30, 26.0, -24.0), P(2.80, 1.35, 1.25, 12.0, -26.0))         # corner shelves, orbit
+    A6 = (P(2.10, 2.62, 1.45, 104.0, -10.0), P(2.55, 2.50, 0.85, 104.0, -24.0))       # the fridge, push-in ending low
+    A7 = (P(1.55, 0.55, 0.75, 52.0, 6.0), P(1.70, 0.70, 1.30, 50.0, -8.0))            # larder, low angle rising
+    A8 = (P(2.05, 0.55, 2.05, 48.0, -32.0), P(2.30, 0.80, 2.05, 56.0, -34.0))         # larder, high slide
+    A9 = (P(1.20, 0.85, 1.55, 34.0, -17.0), P(1.85, 0.90, 1.55, 6.0, -17.0))          # orbit around the new desk
+    A10 = (P(1.80, 1.70, 1.45, 32.0, 6.0), P(1.95, 1.85, 1.45, 36.0, 9.0))            # pull-down over the figure
+    A11 = (P(3.10, 1.05, 1.40, -104.0, -16.0), P(2.70, 1.00, 1.32, -104.0, -16.0))    # beside the larder, the bed drawers
+    A12 = (P(2.00, 1.85, 1.55, -100.0, 5.0), P(2.00, 1.05, 1.55, -88.0, 5.0))         # over-bed cupboard, slide south
+    A13 = (P(1.95, -0.73, 1.382, -8.2, -5.45), P1)                                     # the lit wide, drifts into frame 1
+    HOLDS = [(0.0, 3.4, A1), (3.7, 7.4, A2), (7.7, 10.9, A3), (11.2, 14.6, A4), (14.9, 18.2, A5), (18.5, 21.9, A6),
+             (22.2, 25.3, A7), (25.6, 28.2, A8), (28.5, 31.9, A9), (32.2, 34.95, A10), (34.95, 38.2, A11),
+             (38.5, 41.35, A12), (41.35, DUR_CUT, A13)]
 DUR = float(len(HOLDS)) if REST else DUR_CUT
 
 camera = hold_camera(HOLDS, VFOV, rest=REST)
@@ -635,6 +786,8 @@ LUP = (60.0, 53.0, 41.0)
 LJAR = (52.0, 46.0, 35.0)
 LHOOD = (520.0, 470.0, 370.0)
 LLAMP = (110.0, 88.0, 58.0)
+LBED = (160.0, 130.0, 90.0)
+LOB = (40.0, 35.0, 27.0)
 
 
 def lights(mats4, vis):
@@ -657,6 +810,8 @@ def lights(mats4, vis):
     Ls.append(rect_light((XSINK[0] + 0.04, UY + 0.03, 1.743), (0, 0.03, 0), (XSINK[1] - XSINK[0] - 0.08, 0, 0), k(LJAR, vis.get('led_jar'))))  # 8
     Ls.append(spot_rect(((XHOB[0] + XHOB[1]) / 2, 3.23, 1.545), (0, 0, -1), 0.08, k(LHOOD, vis.get('hood_on')), 3.0))  # 9 hood
     Ls.append(sphere_light((1.66, 3.30, CT + 0.345), 0.022, k(LLAMP, vis.get('lamp_on'))))                    # 10 desk lamp
+    Ls.append(sphere_light((0.07, 1.0, 1.55), 0.05, k(LBED, vis.get('bedlight_on'))))                          # 11 bed wall light
+    Ls.append(rect_light((0.03, 0.18, 1.845), (0, 1.15, 0), (0.03, 0, 0), k(LOB, vis.get('bedlight_on'))))     # 12 under-cupboard
     return Ls
 
 
@@ -780,6 +935,10 @@ def timeline_15(tl):
     for i, nm in enumerate(('b_dw', 'b_hob', 'b_sink', 'b_corner')):
         grow(nm, 0.92 + 0.15 * i, 1.08 + 0.15 * i, 'y', (0, D, 0), 0.75)
     base_cor = tl.anims['b_corner']
+    for nm in ('dw_door', 'dw_rack0', 'dw_rack1'):
+        ride(nm, tl.anims['b_dw'])
+    for nm in ('sink_dr', 'sink_bot'):
+        ride(nm, tl.anims['b_sink'])
     drop('worktop', 1.68, 1.85, 0.40, 0.02, 0.9, 'thud')
     drop('sink', 2.02, 2.15, 0.30, 0.03, 0.5, 'thud')
     drop('hob', 2.16, 2.30, 0.30, 0.03, 0.6, 'thud')
@@ -791,6 +950,8 @@ def timeline_15(tl):
     from_camera('up_two', 3.40, 3.64, cam_s2, 0.35, 0.8, 'thud')
     from_camera('up_pull', 3.52, 3.76, cam_s2, 0.35, 0.8, 'thud')
     up2 = tl.anims['up_two']
+    for nm in ('pull_flap', 'pull_bk'):
+        ride(nm, tl.anims['up_pull'])
     fly('oshelf', 3.66, 3.86, (0.5, 0, 0.1), 0.05, 0.5, 'thud')
     drop('hood', 3.80, 3.95, 0.35, 0.02, 0.7, 'thud')
     grow('duct', 4.10, 4.35, 'z', (0, 0, 1.72), 0.4, 'swish')
@@ -918,7 +1079,7 @@ def timeline_rest(tl):
     I = np.eye(4)
     for k, M in enumerate(panel_mats(math.pi / 2, SLIDE_IN)):
         tl.custom(f'pan{k}', lambda t, M=M: (M, True))
-    for nm in ('led_up', 'led_jar', 'hood_on', 'lamp_on'):
+    for nm in ('led_up', 'led_jar', 'hood_on', 'lamp_on', 'bedlight_on'):
         tl.custom(nm, lambda t: (I, False))
     tl.custom('lid_sink', lambda t: (T(0, -0.245, 0), True))
     tl.custom('stool_top', lambda t: (I, False))
@@ -937,7 +1098,277 @@ def timeline():
 
 
 def timeline_long(tl):
-    raise NotImplementedError('long cut: built after the 15 s cut')
+    """46.0 s = 23 bars at 120 BPM. 7 zones, 13 angles (A1..A13), the wow at 29.1-30.9 s."""
+    I = np.eye(4)
+    cen, ev = tl.cen, tl.ev
+    drop, fly, slide, grow, from_camera = tl.drop, tl.fly, tl.slide, tl.grow, tl.from_camera
+    appear, door_oc, drawer_fn, ride = tl.appear, tl.door_oc, tl.drawer_fn, tl.ride
+    cam1, cam3 = np.array(A1[0]['pos']), np.array(A3[0]['pos'])
+
+    # ===== Z1 a1 (0.0-3.4): the wall opens and the run builds
+    panels_anim(tl, [(0.10, 0.0, 0.0), (0.42, 90.0, 0.0), (0.46, 90.0, 0.0), (0.64, 90.0, SLIDE_IN)],
+                clacks=[(0.16, 0.55, 140), (0.24, 0.6, 160), (0.32, 0.65, 180), (0.40, 0.7, 200)])
+    ev(0.64, 'pocket', 0.35, 'swish')
+    for i, k in enumerate(range(9, -1, -1)):
+        t1 = 0.30 + 0.11 * i
+        from_camera(f'tile{k}', t1 - 0.15, t1, cam1, 0.22, 0.25, 'tick')
+    for i, nm in enumerate(('b_dw', 'b_hob', 'b_sink', 'b_corner')):
+        grow(nm, 1.22 + 0.22 * i, 1.38 + 0.22 * i, 'y', (0, D, 0), 0.75)
+    base_cor = tl.anims['b_corner']
+    drop('worktop', 2.07, 2.24, 0.40, 0.02, 0.9, 'thud')
+    drop('sink', 2.34, 2.47, 0.30, 0.03, 0.5, 'thud')
+    drop('hob', 2.52, 2.66, 0.30, 0.03, 0.6, 'thud')
+    drop('fruit', 2.68, 2.85, 0.35, 0.05, 0.4)
+    drop('tap', 2.80, 2.95, 0.30, 0.04, 0.35)
+
+    # ===== Z1 a2 (3.7-7.4): U drawer around the trap, dishwasher racks
+    bs = tl.anims['b_sink']
+    fU = drawer_fn(3.85, 4.70, (0, -0.42, 0), base=bs, out=0.18)
+    tl.custom('sink_dr', fU)
+    ev(3.95, 'u_open', 0.5, 'swish'); ev(4.87, 'u_shut', 0.75, 'thud')
+    def bottles(t):
+        if t < 4.02:
+            return I, False
+        u = c01((t - 4.02) / 0.40)
+        z = 0.30 * (1 - u * u) if u < 1 else 0.012 * math.exp(-(t - 4.42) / 0.06) * abs(math.sin(math.pi * (t - 4.42) / 0.1))
+        return fU(t)[0] @ T(0, 0, z), True
+    tl.custom('sink_bot', bottles)
+    for k in range(4):
+        ev(4.12 + 0.1 * k, 'bottle', 0.3, 'tick')
+    bdw = tl.anims['b_dw']
+    hinge_dw = np.array([0.0, FB, 0.102])
+
+    def dw_door(t):
+        B, v = bdw(t)
+        if t < 5.30:
+            return B, v
+        if t < 6.70:
+            return about(hinge_dw, R('x', math.radians(88) * eob(c01((t - 5.30) / 0.25), 0.6))), True
+        u = c01((t - 6.70) / 0.22)
+        return about(hinge_dw, R('x', math.radians(88) * (1 - u * u))), True
+    tl.custom('dw_door', dw_door)
+    ev(5.50, 'dw_open', 0.6, 'thud'); ev(6.92, 'dw_shut', 0.8, 'thud')
+    for k in range(2):
+        f = drawer_fn(5.62 + 0.12 * k, 6.35 + 0.10 * (1 - k), (0, -0.50, 0), base=bdw, out=0.18)
+        tl.custom(f'dw_rack{k}', f)
+        ev(5.75 + 0.12 * k, f'dw_rack{k}', 0.35, 'tick')
+    ev(6.58, 'racks_in', 0.4, 'swish')
+
+    # ===== Z2 a3 (7.7-10.9): uppers, hood, duct, jars, kettle, tea
+    from_camera('up_narrow', 7.55, 7.75, cam3, 0.35, 0.8, 'thud')
+    from_camera('up_two', 7.75, 7.95, cam3, 0.35, 0.8, 'thud')
+    from_camera('up_pull', 7.95, 8.15, cam3, 0.35, 0.8, 'thud')
+    up2 = tl.anims['up_two']
+    for nm in ('pull_flap', 'pull_bk'):
+        ride(nm, tl.anims['up_pull'])
+    fly('oshelf', 8.05, 8.24, (0.5, 0, 0.1), 0.05, 0.5, 'thud')
+    drop('hood', 8.20, 8.35, 0.35, 0.02, 0.7, 'thud')
+    grow('duct', 8.55, 8.85, 'z', (0, 0, 1.72), 0.4, 'swish')
+    slide('jshelf', 8.80, 8.96, (0, -0.5, 0), 1.0, 0.4)
+    for k in range(6):
+        drop(f'jar{k}', 8.98 + 0.14 * k, 9.10 + 0.14 * k, 0.22, 0.06, 0.32)
+    drop('kettle', 9.94, 10.10, 0.30, 0.04, 0.5, 'thud')
+    drop('tea', 10.26, 10.40, 0.25, 0.05, 0.35)
+    drop('herb', 10.58, 10.70, 0.25, 0.06, 0.3)
+
+    # ===== Z2 a4 (11.2-14.6): two-door cupboard, utensil rail, oils + plant
+    door_oc('ud_L', (XSINK[0] + 0.003, UY + 0.02, 0), math.radians(-100), 11.35, 12.05, base=up2)
+    door_oc('ud_R', (XSINK[1] - 0.003, UY + 0.02, 0), math.radians(100), 11.38, 12.08, base=up2, snd=False)
+    drop('up_plates', 11.50, 11.64, 0.22, 0.03, 0.45)
+    drop('up_bowls', 11.72, 11.86, 0.22, 0.04, 0.4)
+    slide('rail', 12.36, 12.50, (0, -0.4, 0), 1.0, 0.4)
+    def utens(t):
+        if t < 12.55:
+            return I, False
+        u = c01((t - 12.55) / 0.5)
+        return T(0, 0, 0.25 * (1 - eob(u, 1.1))), True
+    tl.custom('utens', utens)
+    for k in range(4):
+        ev(12.65 + 0.14 * k, 'utensil', 0.3, 'tick')
+    drop('oils', 13.30, 13.44, 0.25, 0.05, 0.35)
+    drop('herb2', 13.62, 13.76, 0.22, 0.05, 0.35)
+    drop('cplant', 13.96, 14.10, 0.22, 0.06, 0.35)
+    drop('board', 14.24, 14.38, 0.25, 0.04, 0.35)
+
+    # ===== Z3 a5 (14.9-18.2): corner shelves
+    door_oc('cor_door', (XCOR[0] + 0.003, FB, 0), math.radians(-105), 15.05, 17.62, base=base_cor)
+
+    def kidney(t_out, t_back):
+        out = np.array([-0.28, -0.58, 0.0])
+
+        def f(t):
+            if t < t_out:
+                return I, False
+            if t < t_back:
+                u = c01((t - t_out) / 0.45)
+                a = eoc(min(1.0, u * 2)); b = eob(max(0.0, u * 2 - 1), 1.2)
+                return T(out[0] * a, out[1] * b, 0), True
+            u = c01((t - t_back) / 0.32)
+            a = 1 - smooth(max(0.0, u * 2 - 1)); b = 1 - smooth(min(1.0, u * 2))
+            return T(out[0] * a, out[1] * b, 0), t < t_back + 0.32
+        return f
+    for k in range(2):
+        f = kidney(15.20 + 0.10 * k, 17.12 + 0.08 * k)
+        tl.custom(f'cs{k}', f)
+        ev(15.65 + 0.10 * k, f'cs{k}_out', 0.45, 'swish')
+        g = drop(f'pots{k}', 15.95 + 0.35 * k, 16.10 + 0.35 * k, 0.30, 0.04, 0.5, 'thud', parent=f)
+        tl.anims[f'pots{k}'] = (lambda g, f: (lambda t: (g(t)[0], g(t)[1] and f(t)[1])))(g, f)
+    ev(17.45, 'cs_back', 0.4, 'swish')
+
+    # ===== Z3 a6 (18.5-21.9): the fridge
+    hinge_fr = np.array([TX, FRI[0] + 0.002, 0])
+
+    def frd(t):
+        if t < 18.60:
+            return I, True
+        if t < 20.90:
+            return about(hinge_fr, R('z', math.radians(110) * eob(c01((t - 18.60) / 0.35), 0.8))), True
+        u = c01((t - 20.90) / 0.20)
+        if u < 1:
+            return about(hinge_fr, R('z', math.radians(110) * (1 - u * u))), True
+        tau = t - 21.10
+        return about(hinge_fr, R('z', math.radians(1.2) * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08)))), True
+    tl.custom('fr_door', frd)
+    ev(18.70, 'fr_open', 0.5, 'swish'); ev(21.10, 'fr_shut', 0.8, 'thud')
+    for k in range(4):
+        fly(f'fr_c{k}', 19.00 + 0.33 * k, 19.20 + 0.33 * k, (-0.45, 0, 0.05), 0.05, 0.4, 'tick')
+    g = drop('fr_bins', 20.30, 20.50, 0.25, 0.04, 0.4, 'tick', parent=frd)
+    for k in range(2):
+        ev(20.62 + 0.14 * k, 'bin_fill', 0.3, 'tick')
+
+    # ===== Z4 a7 + a8 (22.2-28.2): the larder
+    door_oc('lar_door', (TX, LAR[0] + 0.002, 0), math.radians(115), 22.35, 27.55, out=0.22)
+    for k in range(5):
+        f = drawer_fn(22.50 + 0.15 * k, 27.30 - 0.12 * k, (-0.42, 0, 0), out=0.16)
+        tl.custom(f'lar_dr{k}', f)
+        ev(22.62 + 0.15 * k, f'lar_dr{k}_out', 0.3, 'tick')
+        t_fill = (23.30 + 0.32 * k) if k < 4 else 25.80
+        drop(f'lar_c{k}', t_fill - 0.14, t_fill, 0.28, 0.04, 0.45, 'tick', parent=f)
+    ev(26.05, 'oats', 0.3, 'tick')
+    ev(27.72, 'lar_shut2', 0.6, 'thud')
+
+    # ===== Z5 a9 (28.5-31.9): wow, the kitchen becomes a desk
+    def lid_path(name, t0, t1, dz=0.10, dy=-0.45):
+        def f(t):
+            if t < t0:
+                return I, False
+            u = (t - t0) / (t1 - t0)
+            if u < 1:
+                a = eoc(min(1.0, u / 0.6)); b = smooth(max(0.0, (u - 0.5) / 0.5))
+                return T(0, dy * (1 - a), dz * (1 - b)), True
+            tau = t - t1
+            return T(0, 0, 0.006 * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08))), True
+        tl.custom(name, f)
+        ev(t1, name, 0.8, 'thud')
+        return f
+    lid_path('lid_hob', 28.85, 29.10)
+    ls0 = lid_path('lid_sink', 29.10, 29.35)
+
+    def lid_sink(t):
+        M, v = ls0(t)
+        if t < 29.40:
+            return M, v
+        return T(0, -0.245 * eob(c01((t - 29.40) / 0.16), 1.0), 0), True
+    tl.custom('lid_sink', lid_sink)
+    ev(29.55, 'ledge', 0.45, 'swish')
+    d_bed = np.array([STOOL_BED[0] - STOOL_DESK[0], STOOL_BED[1] - STOOL_DESK[1], 0.0])
+
+    def stool(t):
+        if t < 29.60:
+            return T(*d_bed), True
+        if t < 30.05:
+            u = (t - 29.60) / 0.45
+            return T(*(d_bed * (1 - smooth(u)))) @ about((*STOOL_DESK, 0), R('z', 0.9 * math.sin(math.pi * u))), True
+        tau = t - 30.05
+        return about((*STOOL_DESK, 0), R('z', 0.05 * math.exp(-tau / 0.1) * math.sin(2 * math.pi * tau / 0.25))), True
+    tl.custom('stool', stool)
+    ev(30.05, 'stool', 0.7, 'thud')
+    pc = np.array([STOOL_DESK[0], STOOL_DESK[1], SEAT])
+
+    def stool_top(t):
+        if t < 29.45:
+            return T(*d_bed), True
+        if t < 29.60:
+            u = (t - 29.45) / 0.15
+            return T(*d_bed) @ T(0, 0, 0.12 * u) @ about(pc, S(*([1 - u] * 3))), True
+        return I, False
+    tl.custom('stool_top', stool_top)
+    on_cover = lambda t: (lid_sink(t)[0] @ T(0, 0.245, 0), True)
+    for nm, t0, t1 in (('laptop', 29.66, 29.80), ('lamp', 29.86, 30.00), ('mug', 30.76, 30.90)):
+        drop(nm, t0, t1, 0.25, 0.04, 0.45 if nm != 'mug' else 0.3, 'thud' if nm != 'mug' else 'tick',
+             parent=(on_cover if nm != 'lamp' else None))
+    sit = COOK.sit_pose(SEAT, base='sit_desk')
+    look_up = dict(sit, neck=-30, neck_turn=-18, spine=4)
+    stretch = dict(sit, sh_l=160, sh_r=160, sh_l_out=14, sh_r_out=14, elbow_l=30, elbow_r=30, spine=-4, neck=-14)
+    look_win = dict(sit, neck_turn=-50, neck=4)
+    COOK.animate(tl, pose=fg.track([(32.45, sit), (32.85, look_up), (34.10, look_up), (34.50, sit),
+                                    (43.85, sit), (44.30, stretch), (44.90, stretch), (45.35, look_win)]), pop=30.30)
+
+    # ===== Z5 a10 (32.2-34.95): the pull-down
+    pu = tl.anims['up_pull']
+    hinge_pf = np.array([0.0, UY, UZ1])
+
+    def flap(t):
+        B, v = pu(t)
+        if t < 32.25:
+            return B, v
+        if t < 34.15:
+            return about(hinge_pf, R('x', math.radians(-84) * eob(c01((t - 32.25) / 0.22), 0.5))), True
+        u = c01((t - 34.15) / 0.18)
+        return about(hinge_pf, R('x', math.radians(-84) * (1 - u * u))), True
+    tl.custom('pull_flap', flap)
+    ev(32.30, 'flap_up', 0.35, 'swish'); ev(34.33, 'flap_shut', 0.6, 'thud')
+
+    def basket(t):
+        B, v = pu(t)
+        if t < 32.35:
+            return B, v
+        if t < 33.60:
+            k = smooth(c01((t - 32.35) / 0.45))
+            tau = t - 32.80
+            if tau > 0:
+                k += 0.03 * math.exp(-tau / 0.08) * math.sin(2 * math.pi * tau / 0.18)
+        else:
+            u = c01((t - 33.60) / 0.40)
+            k = 1 - eob(u, 1.6)
+        return T(0, -0.12 * k, -0.42 * k), True
+    tl.custom('pull_bk', basket)
+    ev(32.80, 'pull_down', 0.6, 'swish')
+    tl.events.append(dict(t=34.0, name='boing', strength=0.6, kind='boing'))
+
+    # ===== Z6 a11 + a12 (34.95-41.35): bed drawers, over-bed cupboard
+    for k in range(3):
+        f = drawer_fn(35.25 + 0.12 * k, 36.80 + 0.18 * k, (0.45, 0, 0), out=0.18)
+        tl.custom(f'bed_dr{k}', f)
+        ev(35.35 + 0.12 * k, f'bed_dr{k}_out', 0.4, 'swish' if k == 0 else 'tick')
+        drop(f'bed_c{k}', 35.56 + 0.30 * k, 35.70 + 0.30 * k, 0.30, 0.05, 0.45, 'tick', parent=f)
+        ev(37.00 + 0.18 * k, f'bed_dr{k}_shut', 0.55, 'thud')
+    drop('ob_cab', 37.42, 37.60, 0.45, 0.02, 0.8, 'thud')
+    obc = tl.anims['ob_cab']
+    for i, nm in enumerate(('ob_flapA', 'ob_flapB')):
+        door_oc(nm, (0.34, 0, UZ1), math.radians(-100), 38.60 + 0.08 * i, 39.22 + 0.08 * i, base=obc, axis='y', out=0.2,
+                snd=(i == 0))
+    ride('ob_bedding', obc)
+    def books(t):
+        if t < 39.50:
+            return I, False
+        u = c01((t - 39.50) / 0.55)
+        return about((0, 1.37, 1.87), S(1, 0.05 + 0.95 * eob(u, 0.6), 1)), True
+    tl.custom('ob_books', books)
+    for k in range(5):
+        ev(39.62 + 0.15 * k, 'book', 0.3, 'tick')
+    drop('ob_plant', 40.46, 40.60, 0.25, 0.06, 0.4)
+    drop('bedlight', 40.86, 41.00, 0.20, 0.04, 0.35)
+
+    # ===== Z7 a13 (41.35-46.0): lights on, late beats
+    appear('led_up', 41.90); ev(41.90, 'led_on', 0.7, 'chime')
+    appear('led_jar', 42.10); ev(42.10, 'jar_on', 0.45, 'chime')
+    appear('hood_on', 42.40); ev(42.40, 'hood_on', 0.5, 'chime')
+    appear('lamp_on', 42.60); ev(42.60, 'lamp_on', 0.45, 'chime')
+    appear('bedlight_on', 42.80); ev(42.80, 'bed_on', 0.55, 'chime')
+    tl.custom('dimmer', lambda t: (T(0.12 * smooth(c01((t - 41.60) / 0.6)), 0, 0), False))
+    ev(44.30, 'stretch', 0.3, 'swish')
+    drop('vase', 44.64, 44.80, 0.25, 0.06, 0.4)
 
 
 if __name__ == '__main__':
