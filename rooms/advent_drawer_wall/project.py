@@ -54,7 +54,7 @@ KID = [None]
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('subfloor', tex=3, col=srgb(150, 148, 146), p=(0.12,))
+    mat('subfloor', tex=3, col=srgb(208, 206, 202), p=(0.06,))
     mat('floor', tex=1, col=srgb(214, 188, 152), col2=srgb(198, 170, 134), rough=0.40, f0=0.04, glossy=True, p=(0.18, 1.5))
     mat('wall', tex=3, col=srgb(240, 239, 236), p=(0.015,))
     mat('ceiling', col=srgb(247, 247, 246))
@@ -79,7 +79,7 @@ def materials():
     mat('gold', col=srgb(222, 184, 112), rough=0.25, metal=1)
     mat('wire', col=srgb(60, 70, 60), rough=0.5)
     mat('bulb_off', col=srgb(246, 242, 228), rough=0.15, f0=0.05, glossy=True)
-    mat('bulb_on', col=(0, 0, 0), emis=(9.0, 7.2, 4.6))
+    mat('bulb_on', col=(0, 0, 0), emis=(30.0, 24.0, 15.0))
     mat('led', col=(0, 0, 0), emis=(7.5, 6.6, 5.0))
     mat('led_off', col=srgb(232, 230, 226))
     mat('dl_emis', col=(0, 0, 0), emis=(8.5, 7.6, 6.2))
@@ -623,7 +623,8 @@ def build_stair():
         y0, y1 = SY0 + TD * i, SY0 + TD * (i + 1)
         zt = RZ * (i + 1)
         st = f'stc{i}'
-        add(st, box(SX0 + 0.02, y0, 0.0, SX1, y1, zt - 0.025), 'white_in')
+        add(st, box(SX0 + 0.02, y0 + 0.02, 0.0, SX1, y1, zt - 0.025), 'white_in')
+        add(st, box(SX0 + 0.02, y0, 0.0, SX0 + SDEP, y0 + 0.02, zt - 0.025), 'white_in')
         add(st, box(SX0, y0, 0.0, SX0 + 0.02, y1, 0.012), 'white_in')
         add(st, box(SX0 - 0.014, y0 - 0.02, zt - 0.025, SX1, y1, zt), 'oak_y' if False else 'oak_x')   # tread with a nosing
         add(st, box(SX0, y1 - 0.004, 0.0, SX0 + 0.004, y1, zt - 0.025), 'white_cab')                   # thin divider lines
@@ -687,10 +688,10 @@ def P(x, y, z, yaw, pitch):
 
 
 SA = (P(0.20, 0.15, 2.30, 37.0, -26.0), P(0.55, 0.70, 1.55, 28.0, -8.0))       # high doorway corner, craning down fast
-SB = (P(0.55, 1.05, 1.00, -12.0, 2.0), P(1.55, 1.35, 0.90, 10.0, 4.0))         # the den under the loft
+SB = (P(0.70, 1.00, 1.00, -10.0, 2.0), P(1.40, 1.25, 0.92, 8.0, 4.0))         # the den under the loft
 SC = (P(1.32, 0.66, 0.46, 52.0, 6.0), P(1.05, 1.56, 1.02, 82.0, -8.0))        # low, looking up the stair, rising with the ripple
 SC2 = (P(0.80, 1.46, 0.96, 85.0, -6.0), P(0.96, 1.58, 0.98, 90.0, -6.0))       # all 24 open: keep pushing in
-SD = (P(0.95, 0.60, 1.40, 48.0, 6.0), P(1.20, 0.90, 1.66, 36.0, 13.0))        # the child, the top drawer, the star, lights on
+SD = (P(0.78, 0.48, 1.42, 46.0, 1.0), P(0.98, 0.74, 1.52, 38.0, 4.0))         # the child, the top drawer, the star, lights on
 SE = (P(0.64, 0.72, 1.82, 30.0, -13.0), SA[0])                                  # final: drift back into the frame-1 pose
 HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.75, SD), (13.02, DUR_SHORT, SE)]
 HOLDS = HOLDS_SHORT
@@ -703,8 +704,8 @@ LSKY = (12.4, 12.4, 12.4)
 LSUN = (42000.0, 38500.0, 33000.0)
 LFILL = (3.4, 3.35, 3.25)
 LCEIL = (1.0, 0.99, 0.97)
-LTREE = (40.0, 30.0, 17.0)
-LGARL = (26.0, 21.0, 13.0)
+LTREE = (90.0, 68.0, 38.0)
+LGARL = (60.0, 48.0, 30.0)
 LDEN = (30.0, 25.0, 18.0)
 LDOWN = (380.0, 335.0, 265.0)
 LLAMP = (70.0, 55.0, 35.0)
@@ -718,7 +719,7 @@ def lights(mats4, vis):
     Ls = []
     Ls.append(rect_light((WX0, D + 0.16, WZ0), (WX1 - WX0, 0, 0), (0, 0, WZ1 - WZ0), LSKY, always=1))                  # 0 sky (-y)
     sc = np.array([(WX0 + WX1) / 2, D, (WZ0 + WZ1) / 2]) - SUN_DIR * 0.8
-    Ls.append(spot_rect(tuple(sc), tuple(SUN_DIR), 0.04, LSUN, 0.0))                                                     # 1 sun
+    Ls.append(spot_rect(tuple(sc), tuple(SUN_DIR), 0.12, tuple(v / 9.0 for v in LSUN), 0.0))                                                     # 1 sun
     Ls.append(rect_light((0.4, 0.005, 0.3), (0, 0, 1.9), (1.8, 0, 0), LFILL, always=1))                                 # 2 fill +y
     Ls.append(rect_light((0.4, 0.4, H - 0.004), (0, 1.6, 0), (1.6, 0, 0), LCEIL))                                       # 3 ceiling fill
     tc = mats4['tree'] @ np.array([TREE[0], TREE[1] - 0.25, TREE[2] + 0.5, 1.0])
