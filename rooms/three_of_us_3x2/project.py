@@ -513,7 +513,7 @@ def P(x, y, z, yaw, pitch):
 
 
 P0 = P(1.0, -2.05, 1.36, 0.0, -2.0)
-S1 = (P0, P(0.74, -1.35, 1.95, 4.0, -13.0))                       # hall: crane up + push in, tilting down
+S1 = (P0, P(0.66, -0.95, 2.05, 6.0, -18.0))                       # hall: crane up + push in, tilting down
 S2 = (P(0.62, -0.95, 2.15, -3.0, -37.0), P(0.98, -1.02, 2.10, 9.0, -35.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
 S3 = (P(-1.08, 0.80, 1.62, 89.0, -8.0), P(-0.96, 0.70, 1.60, 91.0, -8.0))   # wardrobe, full height: slide south
 S4 = (P(1.05, -1.75, 1.15, 3.0, -5.0), P(0.62, -1.62, 1.18, -7.0, -6.0))   # low on the crib + stair: truck left
@@ -684,7 +684,7 @@ def timeline_15(tl):
     tl.custom('wall_W', lambda t: (I, wall_mode(t) == 'hall'))
 
     # ================= S1 hall (0.0-3.2): crib, planks, posts, DECK SLAM, crib-bay shelf, crib parks, bed
-    OFF0 = np.array([0.10, -1.9, 0.75])                              # starts big, near the lens, and lands at 0.26 s
+    OFF0 = np.array([0.12, -2.3, 0.95])                              # starts big, near the lens, and lands at 0.26 s
 
     def crib_land(t, t0=-0.16, t1=0.26):
         u = (t - t0) / (t1 - t0)
@@ -707,8 +707,8 @@ def timeline_15(tl):
 
     def crib_extra(t):
         M = I
-        if 0.32 < t < 0.56:                                          # hops as its plank row lands
-            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.32) / 0.24))
+        if 0.14 < t < 0.38:                                          # hops as its plank row lands
+            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.14) / 0.24))
         if 13.90 < t < 14.40:                                        # rocks ~1 cm under parent 1's hand
             M = M @ T(0.010 * math.sin(2 * math.pi * (t - 13.9) / 0.25) * (1 - (t - 13.9) / 0.5), 0, 0)
         return M
@@ -719,8 +719,8 @@ def timeline_15(tl):
     tl.custom('crib', crib)
     tl.custom('crib_mat', crib)                                      # the sky sheet rides in with the crib
     ev(1.75, 'crib_park', 0.5, 'roll'); ev(11.90, 'crib_night', 0.5, 'roll')
-    for k in range(6):                                               # far to near (band 5 is the north end)
-        t1 = 0.16 + 0.06 * (5 - k)
+    for k in range(6):                                               # near to far (band 0 is by the door)
+        t1 = 0.12 + 0.05 * k
         drop(f'floor{k}', t1 - 0.14, t1, 0.22, 0.05, 0.3 + 0.03 * (5 - k), 'tick')
     drop('posts', 0.50, 0.62, 0.6, 0.04, 0.6, 'thud')
     drop('deck', 0.66, 0.82, 1.2, 0.035, 1.0, 'thud')
