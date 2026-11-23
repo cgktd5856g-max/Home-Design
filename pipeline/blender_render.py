@@ -461,6 +461,11 @@ def main():
     cobj = bpy.data.objects.new('cam', cam); coll.objects.link(cobj); sc.camera = cobj
     cobj.rotation_mode = 'QUATERNION'
     key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
+    vfs = [P.camera(f / fps).get('vfov', 85.0) for f in range(nfr)]
+    if max(vfs) - min(vfs) > 1e-6:                 # the lens changes during the clip (e.g. widening for an overhead)
+        for f, v in enumerate(vfs):
+            cam.angle_y = math.radians(v)
+            cam.keyframe_insert('lens', frame=f + 1)
 
     # lights (one Blender light per slot)
     fill = set(BL.get('fill_lights', []))
