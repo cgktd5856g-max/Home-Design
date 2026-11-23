@@ -940,8 +940,8 @@ def timeline_short():
     for k, (y, nm, t) in enumerate(((Y_SINK, 'base_sink', 1.30), (Y_DW, 'base_dw', 1.42), (Y_DIN, 'base_din', 1.54),
                                     (Y_OV, 'base_ov', 1.66), (Y_SP, 'base_sp', 1.78))):
         slide(nm, t - 0.16, t, (-0.62, 0, 0), 0.8, 0.7)
-    sP = grow('pantry', 1.70, 1.92, 'z', (0, 0, 0), 0.8)
-    grow('fridge', 1.82, 2.02, 'z', (0, 0, 0), 0.9)
+    sP = slide('pantry', 1.70, 1.92, (0.9, 0, 0), 0.8, 0.8)
+    slide('fridge', 1.82, 2.02, (0.9, 0, 0), 0.8, 0.9)
     slide('grille', 6.86, 6.98, (0.25, 0, 0), 0.8, 0.5, 'clack')
     slide_din = tl.anims['base_din']
     sF, nF = stage_island(kit, 2.00, 7.32, 7.62, 7.98)
@@ -984,7 +984,7 @@ def timeline_short():
         kit.track(f'plate{i}', ref, keys)
         ev(T_PL[i], f'plate_ring{i}', 0.5, 'clink')
     # --- S2 (3.3-7.0): plate drawer, uppers, hob / hood / sink, pantry pull-out fills, splashback
-    sU = drop('uppers', 4.10, 4.28, 0.45, 0.02, 0.9, 'thud')
+    sU = slide('uppers', 4.10, 4.28, (-0.40, 0, 0), 0.8, 0.9)
     tl.custom('up_bowls', lambda t: (sU(t)[0], t >= 4.10))
     tl.custom('topdoor', lambda t: (sU(t)[0], t >= 4.10))
     tl.custom('dlift', lambda t: (sU(t)[0], t >= 4.10)); tl.custom('dlift_arms', lambda t: (sU(t)[0], t >= 4.10))
@@ -995,7 +995,7 @@ def timeline_short():
     tl.custom('sp_pull', lambda t: (tl.anims['base_sp'](t)[0], t >= 1.62))
     tl.custom('oven', lambda t: (tl.anims['base_ov'](t)[0], t >= 1.50))
     fL = kit.flap('liftup', (UX, 0.0, 1.868), 'y', math.radians(-95), lambda t: (sU(t)[0], t >= 4.10), 11.22, 12.05)
-    drop('hood', 4.30, 4.46, 0.35, 0.02, 0.6, 'thud')
+    slide('hood', 4.30, 4.46, (-0.40, 0, 0), 0.8, 0.6)
     drop('hob', 4.40, 4.54, 0.25, 0.02, 0.5, 'thud')
     drop('sink', 4.52, 4.66, 0.30, 0.02, 0.5, 'thud')
     PO, PB = 5.12, 6.75
@@ -1022,7 +1022,7 @@ def timeline_short():
         tl.custom(name, fill)
         ev(t0 + 0.18, name, 0.4, 'tick')
     for g in range(6):
-        grow(f'splash{g}', 4.66 + 0.04 * g, 4.78 + 0.04 * g, 'z', (0, 0, WZ), 0.35, 'tick')
+        tl.fly(f'splash{g}', 4.66 + 0.04 * g, 4.78 + 0.04 * g, (0.25, 0, 0), 0.03, 0.35, 'tick')
     drop('pots', 4.84, 4.98, 0.30, 0.04, 0.5, 'thud')
     # bins, spice jars live inside closed units: ride their carcass
     for k in range(3):
@@ -1112,7 +1112,7 @@ def timeline_long():
         slide(nm, t1 - 0.16, t1, (-0.62, 0, 0), 0.8, 0.7)
     slide_sink, slide_din, slide_ov, slide_sp = (tl.anims[n] for n in ('base_sink', 'base_din', 'base_ov', 'base_sp'))
     drop('worktop', 4.26, 4.42, 0.35, 0.02, 0.8, 'thud')
-    sU = drop('uppers', 4.50, 4.66, 0.45, 0.02, 0.9, 'thud')
+    sU = slide('uppers', 4.50, 4.66, (-0.40, 0, 0), 0.8, 0.9)
     for nm in ('up_bowls', 'dlift', 'dlift_arms'):
         tl.custom(nm, rides(sU, 4.50))
     kit.flap('updoor0', (UX, Y_SINK, 0), 'z', math.radians(-100), rides(sU, 4.50), 4.82, 5.30)
@@ -1121,8 +1121,8 @@ def timeline_long():
     # ===== A3 (6.6-9.6): plate drawer swallows the stack; pantry + fridge columns; fridge grille
     fD = kit.drawer(3.76, [6.62, 28.82], [7.58, 29.42], (0.45, 0, 0), base=slide_din, events='plate_dr')
     tl.custom('plate_dr', fD)
-    sP = grow('pantry', 7.80, 8.04, 'z', (0, 0, 0), 0.8)
-    grow('fridge', 8.10, 8.34, 'z', (0, 0, 0), 0.9)
+    sP = slide('pantry', 7.80, 8.04, (0.9, 0, 0), 0.8, 0.8)
+    slide('fridge', 8.10, 8.34, (0.9, 0, 0), 0.8, 0.9)
     slide('grille', 8.70, 8.86, (0.25, 0, 0), 0.8, 0.5, 'clack')
     for i in range(8):
         px, py = PLACES[i][0], PLACES[i][1]
@@ -1170,12 +1170,12 @@ def timeline_long():
     drop('sink', 14.90, 15.06, 0.30, 0.02, 0.6, 'thud')
     ev(15.20, 'tap', 0.3, 'tick')
     for g in range(6):
-        grow(f'splash{g}', 15.30 + 0.13 * g, 15.44 + 0.13 * g, 'z', (0, 0, WZ), 0.35, 'tick')
+        tl.fly(f'splash{g}', 15.30 + 0.13 * g, 15.44 + 0.13 * g, (0.25, 0, 0), 0.03, 0.35, 'tick')
     # ===== A6 (16.5-19.5): oven + hob, hood, spice pull-out, pan drawer, lift-up on the tumblers
     slide('oven', 16.44, 16.60, (0.35, 0, 0), 0.8, 0.8)
     drop('hob', 16.62, 16.76, 0.25, 0.02, 0.5, 'thud')
     drop('pots', 16.74, 16.90, 0.30, 0.04, 0.45, 'thud')
-    sH = drop('hood', 16.86, 17.04, 0.40, 0.02, 0.6, 'thud')
+    sH = slide('hood', 16.86, 17.04, (-0.40, 0, 0), 0.8, 0.6)
     fSp = kit.drawer(3.98, 17.20, 18.00, (0.40, 0, 0), base=slide_sp, out=0.18, events='spice')
     tl.custom('sp_pull', fSp)
     for k in range(3):
