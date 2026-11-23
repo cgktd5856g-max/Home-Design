@@ -14,7 +14,7 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-F1 = P(0.05, 0.47, 1.30, 50.0, -9.0)
+F1 = P(0.05, 0.47, 1.30, 42.0, -9.0)
 A1 = (F1, P(0.55, 0.42, 1.30, 66.0, -8.0))                                        # doorway dolly
 A2 = (P(1.40, 0.80, 1.05, 66.0, 10.0), P(1.45, 1.45, 1.05, 52.0, 8.0))            # low slide north along the podium face
 B1 = (P(1.10, 0.38, 1.05, 90.0, -2.0), P(1.50, 0.40, 1.00, 84.0, -6.0))          # push in on the stair
@@ -23,11 +23,11 @@ C1 = (P(1.90, 0.30, 1.72, -78.0, 6.0), P(1.85, 0.70, 1.68, -60.0, 3.0))         
 C2 = (P(1.75, 1.10, 1.62, -62.0, 6.0), P(1.30, 1.50, 1.66, -56.0, 9.0))          # push in on the desk + guest cabinet
 D1 = (P(2.45, 0.30, 2.10, -52.0, -6.0), P(2.35, 0.36, 2.10, -40.0, -10.0))      # high over the stair, looking NW
 D2 = (P(1.15, 1.25, 1.28, 102.0, -22.0), P(1.05, 1.75, 1.22, 92.0, -18.0))       # cutaway + futon from the open floor
-E1 = (P(0.25, 0.16, 1.00, 62.0, -7.0), P(0.46, 0.34, 0.95, 44.0, -8.0))          # the double rolls at the lens
+E1 = (P(0.18, 0.14, 0.66, 60.0, 2.0), P(0.60, 0.48, 0.62, 40.0, 0.0))          # the double rolls at the lens
 E2 = (P(1.25, 2.75, 2.35, 166.0, -36.0), P(0.85, 2.70, 2.35, 182.0, -33.0))      # high orbit from above the window
 F1s = (P(0.30, 0.68, 1.00, 100.0, -6.0), P(0.34, 0.92, 1.00, 106.0, -6.0))       # side view along the double's foot
 F2 = (P(0.55, 0.14, 2.08, 50.0, -30.0), P(0.62, 0.22, 2.05, 60.0, -30.0))        # high from the doorway corner
-G1 = (P(0.40, 0.30, 1.30, 64.0, -10.0), P(0.14, 0.24, 1.55, 48.0, -16.0))          # rising orbit, ends near the door
+G1 = (P(0.40, 0.30, 1.50, 62.0, -16.0), P(0.10, 0.18, 1.78, 50.0, -21.0))          # rising orbit, ends near the door
 G2 = (P(-0.36, 0.47, 1.34, 60.0, -9.0), F1)                                       # through the door, back to frame 1 (loop)
 EASE = {0: lambda u: 1 - (1 - u) ** 1.6}
 HOLDS = [(0.0, 3.3, A1), (3.6, 6.5, A2), (6.8, 9.9, B1), (10.2, 13.5, B2), (13.8, 17.0, C1), (17.3, 20.5, C2),
@@ -210,11 +210,11 @@ def timeline(tl, kit, M):
         if t < 1.10:
             return I4, False
         B = st_S(t)[0]
-        k = eob(c01((t - 36.85) / 0.22), 1.2)
+        k = eob(c01((t - 33.70) / 0.22), 1.2)
         return B @ T(0.37 * (1 - k), 0, 0), True
     tl.custom('nstep', nstep)
     tl.custom('slippers', nstep)
-    ev(37.07, 'nstep', 0.6, 'thud')
+    ev(33.92, 'nstep', 0.6, 'thud')
     LH = np.array([1.90, 0, 0.22])
 
     def nlid(t):
