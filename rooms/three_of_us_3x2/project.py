@@ -515,7 +515,7 @@ def P(x, y, z, yaw, pitch):
 P0 = P(1.0, -2.05, 1.36, 0.0, -2.0)
 S1 = (P0, P(0.66, -0.95, 2.05, 6.0, -18.0))                       # hall: crane up + push in, tilting down
 S2 = (P(0.62, -0.95, 2.15, -3.0, -37.0), P(0.98, -1.02, 2.10, 9.0, -35.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
-S3 = (P(-1.08, 0.80, 1.62, 89.0, -8.0), P(-0.96, 0.70, 1.60, 91.0, -8.0))   # wardrobe, full height: slide south
+S3 = (P(-1.15, 0.78, 1.38, 89.0, -3.0), P(-0.92, 0.73, 1.82, 90.0, -13.0))   # crane up 0.44 m + push in   # wardrobe, full height: slide south
 S4 = (P(1.05, -1.75, 1.15, 3.0, -5.0), P(0.62, -1.62, 1.18, -7.0, -6.0))   # low on the crib + stair: truck left
 S5 = (P(1.0, -2.55, 0.98, 0.0, 3.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
 HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (13.25, 15.0, S5)]
