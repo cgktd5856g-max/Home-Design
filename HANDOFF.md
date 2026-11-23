@@ -298,11 +298,28 @@ with a loft and walk-in closet.
 |---|---|
 | Kitchen v1 (code renderer) | done: `out/kitchen_build.mp4` (+ `_sfx_only`) |
 | Kitchen v2 (Blender, pull-out pantry finale) | done: `out/kitchen_build_v2.mp4` (+ `_sfx_only`), 15.5 s |
-| Bedroom (Blender, 32.7 s, 818 frames) | **rendering**: frames in `.render/bed/bl_final/frames`, log in `.render/bed/bl_final.log` |
-| Bedroom encode | to do when the frames finish: section 5, step 6, then QA (step 7) |
+| Bedroom (Blender, 32.7 s, 818 frames) | done: `out/bedroom_build.mp4` (+ `_sfx_only`), 1080x1920, 25 fps, graded `--grade 1.35,0.03`. Render took about 4.5 h on 4 CPU cores, plus one resume after a container restart |
 | Research | done (see `research/`) |
 
-**To resume a stopped bedroom render,** run section 5 step 5 again. It skips finished frames.
+**Bedroom QA (`research/hh_metrics.py`)**
+
+| Metric | Bedroom | Hits | |
+|---|---|---|---|
+| brightness / saturation / warmth | 148 / 0.27 / 37.5 | 138-178 / 0.17-0.38 / 22-57 | in range |
+| camera movement | 2.95 | 2.9 (flops 1.0) | in range |
+| median motion per 0.2 s | 4.0 | 8.4 (flops 5.1) | **low** |
+| longest still stretch | 2.8 s (the night hold at the end) | 1.4 s (flops 2.6) | **long** |
+| first clear movement | 1.0 s | 0.4 s or less | **late** |
+
+- Sound sync is exact by construction: music.py places each sound at the event's landing time, and frame f is
+  rendered and encoded at t = f/25. `qa.py` flags 18 of 90 thuds and ticks as more than 50 ms off. Those are
+  detector misses, not timing errors: the detector merges sounds closer than about 80 ms (the flute run, the shelves
+  and books) and skips quiet lone ticks below its 97th-percentile threshold.
+- **Lesson for the next video:** pace it faster. Aim for more pieces per second, hard movement in the first 0.4 s
+  (a big piece landing close to the camera, not floor planks at the bottom edge), and holds no longer than about
+  1.5 s, including the payoff at the end. The kitchen v2 measured low on motion too.
+
+**To re-render a room,** run section 5 step 5. It skips frames already on disk, so a stopped render resumes.
 
 **Bedroom shot list (32.7 s)**
 
