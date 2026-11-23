@@ -252,7 +252,8 @@ def build(cfg, sfx_only=False):
         elif k == 'swish':
             add(sfx, whoosh(0.3, up=True), t - 0.3, g)
         elif k == 'pluck':
-            add(sfx, pluck(s.get('note', 72), 0.9) + 0.5 * pluck(s.get('note', 72) + 12, 0.5), t, g)
+            add(sfx, pluck(s.get('note', 72), 0.9), t, g)
+            add(sfx, pluck(s.get('note', 72) + 12, 0.5), t, 0.5 * g)
         elif k == 'bell':
             add(sfx, bell(), t, g)
         elif k == 'rumble':

@@ -22,11 +22,11 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', '..', 'pipeline'))
+sys.path.insert(0, HERE)
 import roomkit as rk
 from roomkit import (srgb, mat, add, box, grid_tris, lathe, rprof, tube, ellipsoid, rbox, T, S, R, about, xform, wood,
                      wood_mats, rect_light, spot_rect)
 from animkit import Timeline, c01, eoc, eob, smooth
-from camkit import hold_camera
 import figure as fg
 
 REST = os.environ.get('ROOM_REST') == '1'
@@ -70,15 +70,15 @@ def materials():
     wood_mats('oak', srgb(216, 186, 146), seed=3.0)
     wood_mats('birch', srgb(228, 210, 178), seed=8.0)
     mat('steel', col=srgb(208, 210, 212), rough=0.42, f0=0.04, glossy=True)
-    mat('slate', tex=3, col=srgb(86, 108, 132), rough=0.6, p=(0.03,))
+    mat('slate', tex=3, col=srgb(78, 108, 146), rough=0.6, p=(0.03,))
     mat('oat', tex=3, col=srgb(216, 200, 172), rough=0.85, p=(0.04,))
     mat('sill', col=srgb(244, 243, 240), rough=0.25, f0=0.04, glossy=True)
     mat('mattress', tex=5, col=srgb(246, 246, 244), p=(0, 0.02))
     mat('sheet', tex=3, col=srgb(246, 246, 245), rough=0.9, p=(0.03,))
-    mat('duv_slate', tex=3, col=srgb(96, 120, 146), rough=0.9, p=(0.05,))
-    mat('duv_oat', tex=3, col=srgb(222, 206, 178), rough=0.9, p=(0.05,))
+    mat('duv_slate', tex=3, col=srgb(84, 116, 158), rough=0.9, p=(0.05,))
+    mat('duv_oat', tex=3, col=srgb(224, 202, 166), rough=0.9, p=(0.05,))
     mat('pil_white', tex=3, col=srgb(246, 245, 242), rough=0.9, p=(0.04,))
-    mat('pil_slate', tex=6, col=srgb(98, 122, 148))
+    mat('pil_slate', tex=6, col=srgb(86, 118, 160))
     mat('pil_oat', tex=6, col=srgb(220, 204, 176))
     mat('throw_oat', tex=5, col=srgb(214, 196, 164), p=(0, 0.012))
     mat('futon', tex=5, col=srgb(244, 244, 242), p=(1, 0.03))
@@ -91,6 +91,7 @@ def materials():
     mat('dl_emis', col=(0, 0, 0), emis=(8.0, 7.6, 6.8))
     mat('suit_slate', col=srgb(58, 98, 148), rough=0.32, f0=0.05, glossy=True)
     mat('suit_oat', col=srgb(214, 194, 158), rough=0.32, f0=0.05, glossy=True)
+    mat('rug', tex=7, col=srgb(96, 120, 146), col2=srgb(226, 214, 190), p=(1, 0.16))
     mat('pack', tex=3, col=srgb(190, 194, 198), rough=0.8, p=(0.05,))
     mat('sleepbag', tex=5, col=srgb(206, 186, 150), p=(0, 0.02))
     # window views (camera-only emitters)
@@ -296,11 +297,20 @@ def build_podium():
     t = 0.022
     # three sections: N (y 2.0-3.0) and M (y 1.05-2.0) are decks over the hollow; S (y 0-1.05) is solid with the
     # landing lid, the futon box and the night step drawer.
+    PNL = (1.93, 2.585, 1.09, 2.91)                                                 # deck panel over the futon place
     for nm, (y0, y1) in (('pod_N', (2.0, D)), ('pod_M', (1.05, 2.0))):
-        wood(nm, PX, y0, PZ - 0.04, W, y1, PZ, 'oak')
+        ya, yb = max(y0, PNL[2]), min(y1, PNL[3])
+        add(nm, box(PX, ya, PZ - 0.04, PNL[0], yb, PZ), 'oak_y')
+        add(nm, box(PNL[1], ya, PZ - 0.04, W, yb, PZ), 'oak_y')
+        if y0 < PNL[2]:
+            add(nm, box(PX, y0, PZ - 0.04, W, PNL[2], PZ), 'oak_x')
+        if y1 > PNL[3]:
+            add(nm, box(PX, PNL[3], PZ - 0.04, W, y1, PZ), 'oak_x')
         add(nm, box(3.15, y0, 0.0, W, y1, PZ - 0.04), 'white_in')                  # solid east strip
-        for yb in np.arange(y0 + 0.18, y1 - 0.05, 0.45):                            # steel sub-frame (cutaway)
-            add(nm, box(PX + 0.02, yb, PZ - 0.10, 3.15, yb + 0.05, PZ - 0.04), 'steel')
+        for yb_ in np.arange(y0 + 0.18, y1 - 0.05, 0.45):                           # steel sub-frame (cutaway)
+            add(nm, box(PX + 0.02, yb_, PZ - 0.10, 3.15, yb_ + 0.05, PZ - 0.04), 'steel')
+    add('deck_pnl', box(PNL[0] + 0.002, PNL[2] + 0.002, PZ - 0.035, PNL[1] - 0.002, PNL[3] - 0.002, PZ), 'oak_y')
+    add('deck_pnl', box(PNL[0] + 0.02, PNL[2] + 0.02, PZ - 0.045, PNL[1] - 0.02, PNL[3] - 0.02, PZ - 0.035), 'steel')
     add('pod_N', box(PX, 2.95, 0.0, 3.15, D, PZ - 0.04), 'oak_x')
     add('pod_N', box(PX, 2.95, 0.0, 3.15, 2.97, PZ - 0.04), 'white_in')
     s = 'pod_S'
@@ -308,23 +318,38 @@ def build_podium():
     lx0, lx1, ly0, ly1 = bx0 - 0.03, bx1 + 0.03, 0.55, 1.05
     for b in (box(PX, 0.0, PZ - 0.04, W, ly0, PZ), box(PX, ly0, PZ - 0.04, lx0, ly1, PZ), box(lx1, ly0, PZ - 0.04, W, ly1, PZ)):
         add(s, b, 'oak_x')
-    add(s, box(PX, 0.0, 0.0, PX + t, 0.62, PZ - 0.04), 'oak_y')                    # front face south of the step
+    # front face south of the step, with the stool cubby (y 0.08-0.50, z 0-0.40)
+    add(s, box(PX, 0.0, 0.0, PX + t, 0.08, PZ - 0.04), 'oak_y')
+    add(s, box(PX, 0.50, 0.0, PX + t, 0.62, PZ - 0.04), 'oak_y')
+    add(s, box(PX, 0.08, 0.40, PX + t, 0.50, PZ - 0.04), 'oak_y')
     add(s, box(PX, 0.62, 0.215, PX + t, 1.05, PZ - 0.04), 'oak_y')                 # front face above the step
     add(s, box(PX, 1.03, 0.0, PX + t, 1.05, 0.215), 'oak_z')
-    add(s, box(PX + t, 0.0, 0.0, W, 0.55, PZ - 0.04), 'white_in')                  # solid south block
-    add(s, box(2.30, 0.55, 0.0, lx0, 1.05, PZ - 0.04), 'white_in')
+    add(s, box(2.30, 0.0, 0.0, W, 0.55, PZ - 0.04), 'white_in')                    # solid south block
+    for b in (box(PX + t, 0.0, 0.0, 2.30, 0.08, PZ - 0.04), box(PX + t, 0.50, 0.0, 2.30, 0.55, PZ - 0.04),
+              box(PX + t, 0.08, 0.40, 2.30, 0.50, PZ - 0.04)):
+        add(s, b, 'white_in')
+    add(s, box(2.20, 0.55, 0.0, lx0, 1.05, PZ - 0.04), 'white_in')
     frame_box(s, bx0 - 0.015, by0 - 0.015, bz - 0.015, bx1 + 0.015, by1 + 0.0, PZ - 0.04, 0.015, 'white_in', '+z')
-    add(s, box(PX + t, 0.60, 0.0, 2.30, 0.62, PZ - 0.04), 'white_in')
-    # landing lid (hinged on its north edge)
-    add('lid', box(lx0 + 0.003, ly0 + 0.003, PZ - 0.03, lx1 - 0.003, ly1 - 0.003, PZ - 0.001), 'oak_x')
-    add('lid', box((lx0 + lx1) / 2 - 0.06, ly0 + 0.05, PZ - 0.0015, (lx0 + lx1) / 2 + 0.06, ly0 + 0.07, PZ), 'shadow_in')
-    # night step drawer (built pulled out: x 1.53-1.90)
+    add(s, box(PX + t, 0.60, 0.0, 2.20, 0.62, PZ - 0.04), 'white_in')
+    add(s, box(PX + t, 0.62, 0.22, 2.20, 1.03, 0.23), 'white_in')
+    # two nesting stools, built in the cubby (A over B)
+    for nm, (y0, y1, h, m) in (('stoolA', (0.105, 0.475, 0.37, 'birch')), ('stoolB', (0.14, 0.44, 0.31, 'oak'))):
+        x0, x1 = 1.935, 2.215
+        add(nm, box(x0, y0, h - 0.025, x1, y1, h), f'{m}_x')
+        add(nm, box(x0, y0, 0.0, x1, y0 + 0.02, h - 0.025), f'{m}_z')
+        add(nm, box(x0, y1 - 0.02, 0.0, x1, y1, h - 0.025), f'{m}_z')
+        add(nm, box(x0 + 0.10, y0 + 0.004, h - 0.06, x1 - 0.10, y0 + 0.016, h - 0.04), 'shadow_in')
+    # night step drawer (built pulled out: x 1.53-1.90); its tread is a lid hinged at the back
     n = 'nstep'
-    add(n, box(1.53, 0.625, 0.20, 1.90, 1.025, 0.22), 'oak_x')
+    add('nstep_lid', box(1.53, 0.625, 0.20, 1.90, 1.025, 0.22), 'oak_x')
+    add('nstep_lid', box(1.525, 0.78, 0.15 + 0.05, 1.53, 0.87, 0.215), 'shadow_in')
     add(n, box(1.53, 0.625, 0.02, 1.552, 1.025, 0.20), 'oak_y')
-    for b in (box(1.552, 0.625, 0.02, 1.90, 0.64, 0.20), box(1.552, 1.01, 0.02, 1.90, 1.025, 0.20), box(1.88, 0.64, 0.02, 1.90, 1.01, 0.20)):
+    for b in (box(1.552, 0.625, 0.02, 1.90, 0.64, 0.20), box(1.552, 1.01, 0.02, 1.90, 1.025, 0.20), box(1.88, 0.64, 0.02, 1.90, 1.01, 0.20),
+              box(1.552, 0.64, 0.02, 1.88, 1.01, 0.03)):
         add(n, b, 'white_in')
-    add(n, box(1.525, 0.78, 0.15, 1.53, 0.87, 0.165), 'shadow_in')
+    for k, y in enumerate((0.70, 0.86)):
+        for dy in (0.0, 0.075):
+            add('slippers', rbox((1.72, y + dy, 0.055), (0.24, 0.07, 0.05), 0.022, 3), ('cl_slate', 'cl_oat')[k])
     # LED strip in the hollow (long cut)
     add('hol_led', box(PX + 0.05, 1.08, PZ - 0.105, PX + 0.07, 2.92, PZ - 0.10), 'led')
     # castors under the stored double sit on the floor; the hollow floor
@@ -408,6 +433,32 @@ def build_beds(rng):
         cols = ('cl_mustard', 'cl_teal', 'cl_coral', 'cl_cobalt')
         add(f'toys{k}', rbox((x0 + 0.12, 0.17, zlo + 0.08), (0.18, 0.16, 0.10), 0.02, 3), cols[k])
         add(f'toys{k}', rbox((x0 + 0.12, 0.33, zlo + 0.08), (0.18, 0.14, 0.10), 0.02, 3), cols[(k + 2) % 4])
+    # book ledge on the inside of the guard rail, slim shelf under the deck at the low bed's head (long cut)
+    add('ledge', box(2.60, 1.30, 1.785, 2.70, 2.10, 1.80), 'oak_y')
+    add('ledge', box(2.695, 1.30, 1.80, 2.70, 2.10, 1.83), 'oak_y')
+    y = 1.32
+    j = 0
+    bk = ('bk_coral', 'bk_teal', 'bk_mustard', 'bk_cobalt', 'bk_white', 'bk_grass', 'bk_sky', 'bk_coral', 'bk_mustard')
+    while y < 2.02:
+        th = rng.uniform(0.022, 0.036)
+        add(f'ledge_bk{min(2, int((y - 1.32) / 0.24))}', box(2.615, y, 1.80, 2.69, y + th, 1.80 + rng.uniform(0.15, 0.21)), bk[j % len(bk)])
+        y += th + 0.004; j += 1
+    add('uds', box(2.68, 2.86, 1.00, 3.30, D, 1.018), 'oak_x')
+    add('porch_cush', rbox((3.05, 0.78, 1.645), (0.42, 0.42, 0.07), 0.03, 5), 'pil_oat')
+    add('uds_items', tube([(2.76, 2.93, 1.035), (2.90, 2.93, 1.035)], 0.017, 12), 'bk_mustard')
+    add('uds_items', lathe([(0, 1.018), (0.032, 1.018), (0.034, 1.17), (0.02, 1.20), (0.0, 1.20)], 18, (3.00, 2.93)), 'bk_teal')
+    add('uds_items', ellipsoid((3.17, 2.93, 1.075), (0.07, 0.055, 0.06), 12), 'oat')
+    add('uds_items', ellipsoid((3.17, 2.93, 1.16), (0.05, 0.045, 0.045), 12), 'oat')
+    for dx in (-0.032, 0.032):
+        add('uds_items', ellipsoid((3.17 + dx, 2.93, 1.20), (0.016, 0.012, 0.02), 8), 'oat')
+    # folded duvets that open on a two-panel hinge (long cut): futon (oat) and double (slate)
+    add('fut_duvA', rbox(((FUT_X0 + FUT_X1) / 2, 1.80, PZ + FUT_TH + 0.016), (0.66, 0.44, 0.03), 0.012, 3), 'duv_oat')
+    add('fut_duvB', rbox(((FUT_X0 + FUT_X1) / 2, 2.245, PZ + FUT_TH + 0.016), (0.66, 0.44, 0.03), 0.012, 3), 'duv_oat')
+    add('dbl_duvA', rbox((1.30, 1.875, 0.516), (1.20, 0.50, 0.03), 0.012, 3), 'duv_slate')
+    add('dbl_duvB', rbox((1.30, 2.375, 0.516), (1.20, 0.50, 0.03), 0.012, 3), 'duv_slate')
+    # grandpa's mug on the stool once it slides out (long cut)
+    add('mug', lathe([(0, 0.37), (0.036, 0.37), (0.04, 0.46), (0.035, 0.46), (0.032, 0.382), (0, 0.382)], 22, (1.66, 0.34)), 'ceramic')
+    add('mug', tube([(1.66, 0.38, 0.44), (1.66, 0.405, 0.425), (1.66, 0.38, 0.395)], 0.006, 8), 'ceramic')
     # futon (four rigid flaps, built flat in place) + its pillow
     for k in range(4):
         y0 = FUT_Y0 + k * FUT_L
@@ -455,6 +506,8 @@ def build_west(rng):
         garment('wd_rail', rail_x, 1.06 + k * 0.092, rail_z, rng.uniform(0.28, 0.34), 0.30, m)
     for nm, y in (('wd_armS', 1.005), ('wd_armN', 1.955)):
         add(nm, tube([(0.03, y, 2.66), (rail_x, y, rail_z)], 0.008, 8), 'steel')
+    # striped rug in the entry zone (unrolls from the door side)
+    add('rug', box(0.20, 0.12, 0.0, 1.45, 0.98, 0.012), 'rug')
     # coat hooks on the bare wall between the door and the niche: two kids' jackets and a tote
     wood('hooks', 0.0, 0.92, 1.43, 0.022, 1.64, 1.50, 'oak')
     for y in (1.02, 1.28, 1.54):
@@ -466,7 +519,6 @@ def build_west(rng):
     add('coats', tube([(0.04, 1.47, 1.42), (0.08, 1.54, 1.49), (0.04, 1.61, 1.42)], 0.008, 8), 'cl_mustard')
     # guest cabinet stays empty until the bags fly in (bags are built in it, see build_bags)
     # desk niche: back, pigeonholes, the flap (built folded up)
-    add('niche', box(-0.121, DY0, DZ, -0.12, D, 1.45), 'white_in')
     add('niche', box(-0.12, DY0 + 0.01, 1.07, -0.005, D - 0.01, 1.085), 'oak_x')
     for y in np.linspace(DY0 + 0.01, D - 0.03, 7):
         add('niche', box(-0.12, y, 1.085, -0.005, y + 0.016, 1.45), 'oak_z')
@@ -561,26 +613,62 @@ def P(x, y, z, yaw, pitch):
 
 
 F1 = P(0.05, 0.47, 1.30, 50.0, -9.0)                                              # frame 1: in the doorway
-S1 = (F1, P(0.62, 0.40, 1.30, 68.0, -8.0))                                         # doorway dolly in, turning right
-S2 = (P(1.90, 0.30, 1.72, -76.0, 6.0), P(1.80, 0.58, 1.66, -52.0, 2.0))         # west storage wall, pan right
-S3 = (P(0.25, 0.16, 1.00, 64.0, -7.0), P(0.46, 0.34, 0.95, 44.0, -8.0))           # podium at night: the double rolls at us
-S4 = (P(-0.22, 0.47, 1.32, 42.0, -8.0), F1)                                        # final: glide back in to frame 1
-HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.75, S3), (11.05, DUR, S4)]
+S1 = (F1, P(0.78, 0.38, 1.30, 72.0, -8.0))                                         # doorway dolly in, turning right
+S2 = (P(1.88, 0.30, 1.70, -84.0, 8.0), P(1.72, 0.62, 1.62, -68.0, 6.0))          # west wall: linen + wardrobe
+S3 = (P(1.60, 1.00, 1.55, -64.0, 6.0), P(1.32, 1.45, 1.60, -50.0, 9.0))          # desk + guest cabinet
+S4 = (P(0.80, 0.30, 1.15, 64.0, -14.0), P(1.05, 0.45, 1.10, 48.0, -14.0))        # the futon comes out of the landing
+S5 = (P(0.25, 0.16, 1.00, 60.0, -7.0), P(0.50, 0.36, 0.95, 40.0, -8.0))          # the double rolls at the lens
+S6 = (P(0.12, 0.22, 1.55, 58.0, -16.0), P(0.30, 0.34, 1.58, 44.0, -16.0))         # final wide: the payoff
+S7 = (P(-0.36, 0.47, 1.34, 60.0, -9.0), F1)                                        # swing out, glide back in to frame 1
+EASE = {0: lambda u: 1 - (1 - u) ** 1.6}                                           # fast start = the last glide's speed
+HOLDS = [(0.0, 2.9, S1), (3.2, 5.05, S2), (5.35, 7.0, S3), (7.3, 8.6, S4), (8.85, 10.75, S5), (11.05, 13.55, S6),
+         (13.85, DUR, S7)]
 TOPCAM = [(0.0, DUR, (P(1.70, 1.50, 5.6, 0.0, -89.9), P(1.70, 1.50, 5.6, 0.0, -89.9)))]
 
 if LONG:
     import long_cut as LC
     HOLDS = LC.HOLDS
-camera = hold_camera(TOPCAM if TOP else HOLDS, 60.0 if TOP else VFOV, rest=REST)
+    EASE = getattr(LC, 'EASE', {})
+
+
+def hold_camera(holds, vfov, rest=False, ease=None, lift=2.0, final_lift=4.0):
+    """camkit.hold_camera with an optional easing per hold (index -> f(u)), so the last glide can end at the speed
+    the first one starts with (a seamless loop)."""
+    import camkit as ck
+    ease = ease or {}
+    stations = [h[2] for h in holds]
+
+    def g(i, u):
+        u = c01(u)
+        return ck.glide(holds[i][2], ease.get(i, lambda v: v)(u), vfov)
+
+    def camera(t):
+        if rest:
+            return dict(stations[min(len(stations) - 1, int(t))][0], vfov=vfov)
+        for i, (t0, t1, st) in enumerate(holds):
+            if t < t1 or i == len(holds) - 1:
+                return g(i, (t - t0) / (t1 - t0))
+            n0 = holds[i + 1][0]
+            if t < n0:
+                u = (t - t1) / (n0 - t1)
+                a, b = g(i, 1.0), g(i + 1, 0.0)
+                if i + 1 == len(holds) - 1:
+                    return ck.lerp_cam(a, b, 1 - (1 - c01(u)) ** 3, lift=final_lift, vfov=vfov)
+                return ck.lerp_cam(a, b, smooth(u), lift=lift, vfov=vfov)
+        return g(len(holds) - 1, 1.0)
+    return camera
+
+
+camera = hold_camera(TOPCAM if TOP else HOLDS, 60.0 if TOP else VFOV, rest=REST, ease=None if TOP else EASE)
 
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (13.0, 13.6, 14.6)
 LSKY_DUSK = (9.0, 6.0, 4.4)
-LFILL = (1.15, 1.13, 1.10)
-LDOOR = (1.6, 1.58, 1.55)
-LEAST = (0.9, 0.9, 0.88)
-LDOWN = (420.0, 395.0, 350.0)
+LFILL = (1.20, 1.14, 1.04)
+LDOOR = (1.62, 1.54, 1.42)
+LEAST = (0.94, 0.90, 0.82)
+LDOWN = (430.0, 390.0, 325.0)
 LREAD = (700.0, 560.0, 380.0)
 LHOL = (30.0, 27.0, 22.0)
 LHALL = (2.2, 2.1, 2.0)
@@ -599,7 +687,7 @@ def lights(mats4, vis):
     sky = tuple(a * (1 - dusk) + b * dusk for a, b in zip(LSKY, LSKY_DUSK))
     Ls = []
     Ls.append(rect_light((WX0, D + 0.16, WZ0), (WX1 - WX0, 0, 0), (0, 0, WZ1 - WZ0), sky, always=1))                   # 0 sky (-y)
-    Ls.append(rect_light((0.35, 0.35, H - 0.03), (0, 2.3, 0), (1.95, 0, 0), k(LFILL, 1 - 0.35 * dusk)))                    # 1 ceiling fill (down)
+    Ls.append(rect_light((0.35, 0.35, H - 0.03), (0, 2.3, 0), (1.95, 0, 0), k(LFILL, 1 - 0.15 * dusk)))                    # 1 ceiling fill (down)
     Ls.append(rect_light((-0.6, 0.12, 0.2), (0, 0.70, 0), (0, 0, 1.85), k(LDOOR, 1 - 0.3 * dusk), always=1))               # 2 door fill (+x)
     Ls.append(rect_light((W - 0.03, 0.30, 1.98), (0, 0, 0.6), (0, 2.4, 0), k(LEAST, 1 - 0.25 * dusk)))                     # 3 east fill (-x)
     for (x, y) in DL:                                                                                                       # 4-8 downlights
@@ -615,7 +703,7 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
-    exposure=-0.30,
+    exposure=-0.22,
     look='AgX - Medium High Contrast',
     separate=['sky_day', 'sky_dusk', 'roof_snow', 'roof_tile', 'house_day', 'house_day2', 'roof_snow_dusk', 'roof_tile_dusk',
               'house_dusk', 'house_dusk2', 'win_glow'],
@@ -691,29 +779,59 @@ class Kit:
     def appear(self, name, t_on, t_off=None):
         self.tl.custom(name, lambda t: (I4, t >= t_on and (t_off is None or t < t_off)))
 
-    def door(self, name, hinge, a_open, t_appear, t_open, t_close, axis='z', base=None, dur_o=0.20, dur_c=0.18, snd=True):
-        """Cabinet door: closed from t_appear, swings open at t_open (overshoot), slams at t_close (bounce)."""
+    def door(self, name, hinge, a_open, t_appear, t_open, t_close, axis='z', base=None, dur_o=0.20, dur_c=0.18, snd=True,
+             more=()):
+        """Cabinet door: closed from t_appear, swings open at t_open (overshoot), slams at t_close (bounce).
+        more = extra (t_open, t_close) cycles later on."""
         hinge = np.array(hinge, float)
+        cycles = [(t_open, t_close)] + list(more)
 
         def f(t):
             if t < t_appear:
                 return I4, False
             B = base(t)[0] if base is not None else I4
-            if t < t_open:
+            cyc = None
+            for c in cycles:
+                if t >= c[0]:
+                    cyc = c
+            if cyc is None:
                 return B, True
-            if t < t_close:
-                return B @ about(hinge, R(axis, a_open * eob((t - t_open) / dur_o, 1.2))), True
-            u = (t - t_close) / dur_c
+            to, tc = cyc
+            if t < tc:
+                return B @ about(hinge, R(axis, a_open * eob((t - to) / dur_o, 1.2))), True
+            u = (t - tc) / dur_c
             if u < 1:
                 return B @ about(hinge, R(axis, a_open * (1 - u * u))), True
-            tau = t - t_close - dur_c
+            tau = t - tc - dur_c
             a = math.copysign(math.radians(2.0), a_open) * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08))
             return B @ about(hinge, R(axis, a)), True
         self.tl.custom(name, f)
         if snd:
-            self.tl.ev(t_open + 0.06, name + '_open', 0.4, 'swish')
-            self.tl.ev(t_close + dur_c, name + '_shut', 0.7, 'thud')
+            for to, tc in cycles:
+                self.tl.ev(to + 0.06, name + '_open', 0.4, 'swish')
+                self.tl.ev(tc + dur_c, name + '_shut', 0.7, 'thud')
         return f
+
+    def two_panel(self, nA, nB, hinge_yz, t_fly, t_land, t_open, off=(-0.9, -0.9, 0.55), base=None):
+        """Folded rigid two-panel piece (duvet, throw): flies in folded, lands, panel B opens over its hinge."""
+        hinge = np.array([0, hinge_yz[0], hinge_yz[1]])
+        off = np.array(off, float)
+
+        def A(t):
+            if t < t_fly:
+                return I4, False
+            u = c01((t - t_fly) / (t_land - t_fly))
+            o = (1 - eoc(u)) * off + np.array([0, 0, 0.15 * math.sin(math.pi * u)])
+            Bm = base(t) if base is not None else I4
+            return T(*o) @ Bm @ T(0, 0, settle_z(t - t_land, 0.02)), True
+
+        def Bf(t):
+            M, v = A(t)
+            a = math.pi * (1 - eob(c01((t - t_open) / 0.22), 0.4))
+            return M @ about(hinge, R('x', a)), v
+        self.tl.custom(nA, A)
+        self.tl.custom(nB, Bf)
+        self.tl.ev(t_land, nA, 0.5, 'thud'); self.tl.ev(t_open + 0.22, nB + '_open', 0.35, 'tick')
 
     def drawer(self, t_appear, t_open, t_close, off, base=None, out=0.12, shut=0.17):
         off = np.array(off, float)
@@ -787,9 +905,9 @@ def timeline():
 
 def bag_floor_poses():
     """Where the guests' bags stand on the floor (entry zone), as poses of the local upright bag."""
-    return {'bag_slate': T(1.02, 0.78, 0.0) @ R('z', math.radians(-28)),
-            'bag_oat': T(1.42, 0.36, 0.0) @ R('z', math.radians(12)),
-            'bag_pack': T(0.66, 1.02, 0.0) @ R('z', math.radians(-60))}
+    return {'bag_slate': T(1.02, 0.74, 0.012) @ R('z', math.radians(-28)),
+            'bag_oat': T(1.30, 0.34, 0.012) @ R('z', math.radians(12)),
+            'bag_pack': T(0.62, 0.86, 0.012) @ R('z', math.radians(-60))}
 
 
 def bags(kit, t_land, t_fly, cam_pos):
@@ -807,12 +925,14 @@ def bags(kit, t_land, t_fly, cam_pos):
         kit.tl.ev(tf, nm + '_in', 0.4, 'thud')
 
 
-def futon(kit, t_lid, t_rise, t_slide, t_shut, t_unfold, step=0.17):
+def futon(kit, t_lid, t_rise, t_slide, t_shut, t_unfold, step=0.17, lid_more=()):
     """Landing lid lifts, the folded futon rises, slides onto its place, the lid shuts, three clacks unfold it north."""
     tl = kit.tl
     bx0, bx1, by0, by1, bz = BOX
     lid_h = np.array([0, 1.05, PZ])
-    kit.door('lid', lid_h, math.radians(-100), 0.0, t_lid, t_shut, axis='x', dur_o=0.22, snd=False)
+    kit.door('lid', lid_h, math.radians(-100), 0.0, t_lid, t_shut, axis='x', dur_o=0.22, snd=False, more=lid_more)
+    for to, tc in lid_more:
+        tl.ev(to + 0.08, 'lid_open', 0.45, 'swish'); tl.ev(tc + 0.18, 'lid_shut', 0.6, 'thud')
     tl.ev(t_lid + 0.08, 'lid_open', 0.45, 'swish'); tl.ev(t_shut + 0.18, 'lid_shut', 0.6, 'thud')
     zb, zt, th, L, y0 = PZ, PZ + FUT_TH, FUT_TH, FUT_L, FUT_Y0
     hinges = [(y0 + L, zt + th), (y0 + 2 * L, zt + th / 2), (y0 + 3 * L, zt)]
@@ -932,7 +1052,8 @@ def short_timeline(tl, kit):
 
     # ================= S1 (0.0-3.0) doorway dolly: bags, podium, both kids' beds, stair, two lights
     tl.events.append(dict(t=0.02, name='doorbell', strength=0.45, kind='bell'))
-    bags(kit, (0.30, 0.50, 0.70), (6.45, 6.60, 6.75), S1[0]['pos'])
+    grow('rug', 0.10, 0.34, 'x', (0.20, 0, 0), 0.5, 'swish')
+    bags(kit, (0.34, 0.52, 0.70), (6.45, 6.60, 6.75), S1[0]['pos'])
     st_N = drop('pod_N', 0.80, 0.95, 0.45, 0.03, 0.85, 'thud')
     st_M = drop('pod_M', 0.95, 1.10, 0.45, 0.03, 0.85, 'thud')
     st_S = drop('pod_S', 1.10, 1.25, 0.45, 0.03, 0.9, 'thud')
@@ -946,6 +1067,12 @@ def short_timeline(tl, kit):
         drop(f'st{k}', 1.88 + 0.12 * k, 2.00 + 0.12 * k, 0.40, 0.04, 0.55 + 0.05 * k, 'thud')
         tl.custom(f'sd{k}', (lambda k: lambda t: (tl.anims[f'st{k}'](t)[0], tl.anims[f'st{k}'](t)[1]))(k))
         kit.appear(f'toys{k}', 99.0)
+    slide('ledge', 1.92, 2.04, (0, 0, 0.3), 1.0, 0.3, 'none')
+    for j in range(3):
+        drop(f'ledge_bk{j}', 2.12 + 0.06 * j, 2.24 + 0.06 * j, 0.25, 0.05, 0.25, 'tick')
+    slide('uds', 1.50, 1.62, (0, 0, 0.3), 1.0, 0.3, 'none')
+    drop('uds_items', 1.62, 1.76, 0.2, 0.05, 0.25, 'tick')
+    drop('porch_cush', 2.58, 2.72, 0.3, 0.06, 0.3, 'tick')
     drop('rb_duvet', 2.34, 2.50, 0.35, 0.03, 0.5, 'thud')
     drop('lb_duvet', 2.34, 2.50, 0.30, 0.03, 0.5, 'none')
     for i, (t_on, pil) in enumerate(((2.65, 'rb_pil'), (2.82, 'lb_pil'))):
@@ -1000,7 +1127,7 @@ def short_timeline(tl, kit):
     ev(t_dn + 0.28, 'rail_down', 0.45, 'swish'); ev(t_up + 0.22, 'rail_up', 0.5, 'thud')
     # desk flap drops, pigeonholes fill
     hinge = np.array([0.0, 0, DZ])
-    T_FLAP, T_FOLD = 4.90, 6.90
+    T_FLAP, T_FOLD = 5.40, 6.92
 
     def flap(t):
         down = about(hinge, R('y', math.pi / 2))
@@ -1015,10 +1142,10 @@ def short_timeline(tl, kit):
     tl.custom('desk_flap', flap)
     ev(T_FLAP + 0.24, 'flap_down', 0.7, 'thud'); ev(T_FOLD + 0.24, 'flap_up', 0.7, 'thud')
     for c in range(6):
-        tl.from_camera(f'pig{c}', 5.10 + 0.13 * c, 5.26 + 0.13 * c, np.array(S2[0]['pos']), 0.35, 0.35, 'tick')
-    drop('pots', 5.78, 5.92, 0.25, 0.06, 0.35, 'tick')
+        tl.from_camera(f'pig{c}', 5.62 + 0.11 * c, 5.78 + 0.11 * c, np.array(S3[0]['pos']), 0.35, 0.35, 'tick')
+    drop('pots', 6.20, 6.34, 0.25, 0.06, 0.35, 'tick')
     # guest cabinet opens, bags fly in, it shuts
-    kit.door('tc_guest', (0.418, 0, 2.69), math.radians(-100), 3.18, 6.08, 6.86, axis='y', base=base_tc)
+    kit.door('tc_guest', (0.418, 0, 2.69), math.radians(-100), 3.18, 6.10, 6.86, axis='y', base=base_tc)
 
     # ================= S3 (7.3-10.7) podium at night: futon, the double rolls out
     futon(kit, 7.30, 7.48, 7.66, 7.90, 7.98)
@@ -1058,6 +1185,13 @@ def short_timeline(tl, kit):
     dbl0, legs0 = tl.anims['dbl'], tl.anims['dbl_legs']
     tl.custom('dbl', lambda t: ((st_M(t)[0] @ dbl0(t)[0]) if t < 7.0 else dbl0(t)[0], st_M(t)[1]))
     tl.custom('dbl_legs', lambda t: (legs0(t)[0], legs0(t)[1] and t > 9.0))
+    tl.custom('deck_pnl', st_M)
+    for nm in ('stoolA', 'stoolB'):
+        tl.custom(nm, st_S)
+    ns0 = tl.anims['nstep']
+    tl.custom('nstep_lid', ns0); tl.custom('slippers', ns0)
+    for nm in ('fut_duvA', 'fut_duvB', 'dbl_duvA', 'dbl_duvB', 'mug'):
+        kit.appear(nm, 99.0)
     return tl
 
 
