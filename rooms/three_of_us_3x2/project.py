@@ -552,21 +552,21 @@ HALL15 = [0, 1, 3, 4]                                                 # hall hol
 
 # long cut: 12 holds in 6 zones, joined by 0.3 s swings
 L1 = S1                                                                        # hall crane (as the 15 s cut)
-L2 = (P(1.18, 0.42, 2.18, -6.0, -15.0), P(0.86, 0.78, 2.12, 6.0, -15.0))      # inside, high from the south: bed + niche
+L2 = (P(1.25, -0.70, 2.30, -5.0, -21.0), P(0.70, -0.35, 2.12, 8.0, -18.0))     # high from the hall: bed + niche
 L3 = S2                                                                        # high over the stair (hall side)
-L4 = (P(1.55, -1.25, 1.05, -12.0, -14.0), P(1.12, -1.15, 1.05, -2.0, -14.0))   # low on the pull-out: slide west, turn right
-L5 = (P(1.30, 2.72, 2.15, 188.0, -6.0), P(0.80, 2.72, 2.12, 176.0, -6.0))      # from the bed looking south through the bars
-L6 = (P(-1.05, 0.76, 2.30, 89.0, -14.0), P(-0.95, 0.72, 1.95, 90.0, -9.0))     # high west, craning down
+L4 = (P(1.65, -1.30, 1.15, -15.0, -15.0), P(0.95, -1.05, 0.95, 0.0, -13.0))   # low on the pull-out: slide west, turn right
+L5 = (P(1.10, 2.45, 1.92, 189.0, 8.0), P(0.66, 2.30, 2.05, 173.0, 5.0))       # over the bed, looking south at the bridge
+L6 = (P(-1.10, 0.80, 2.40, 88.0, -16.0), P(-0.90, 0.70, 1.85, 91.0, -8.0))     # high west, craning down
 L7 = (P(-0.62, 0.32, 0.95, 86.0, 2.0), P(-0.55, 0.34, 1.55, 88.0, 7.0))       # low on bay A, craning up with the reach
-L8 = (P(-1.12, 0.80, 1.60, 89.0, -8.0), P(-0.95, 0.70, 1.72, 91.0, -9.0))      # full-height wardrobe: the wow
-L9 = (P(-0.58, 0.48, 1.45, 92.0, -12.0), P(-0.46, 0.32, 1.40, 95.0, -14.0))    # closer on bay A: changing top
-L10 = (P(1.35, 2.62, 2.20, 190.0, -28.0), P(0.85, 2.62, 2.18, 176.0, -28.0))   # from the deck, south and down over the rail
-L11 = (P(1.15, -1.35, 1.00, -6.0, -8.0), P(0.75, -1.25, 1.05, -12.0, -10.0))   # low on the crib
+L8 = (P(-1.15, 0.78, 1.38, 89.0, -3.0), P(-0.92, 0.73, 1.85, 90.0, -13.0))      # full-height wardrobe: the wow
+L9 = (P(-0.70, 0.62, 1.55, 90.0, -12.0), P(-0.40, 0.28, 1.35, 97.0, -15.0))    # closer on bay A: changing top
+L10 = (P(0.45, -1.40, 2.15, 12.0, -30.0), P(0.92, -1.25, 2.02, 2.0, -27.0))    # high from the hall: crib rolls out, parent 1 walks in
+L11 = (P(1.20, -1.45, 1.00, -5.0, -8.0), P(0.62, -1.25, 1.12, -12.0, -10.0))   # low on the crib
 L12 = S5                                                                       # hall wide: crane up into P0
 HOLDSL = [(0.0, 3.4, L1), (3.7, 7.0, L2), (7.3, 10.8, L3), (11.1, 14.5, L4), (14.8, 18.3, L5), (18.6, 22.0, L6),
           (22.3, 25.6, L7), (25.9, 29.4, L8), (29.7, 33.2, L9), (33.5, 37.0, L10), (37.3, 40.6, L11), (40.9, 44.0, L12)]
-HALLL = [0, 2, 3, 10, 11]
-INL = [1, 4, 9]                                                                   # camera inside the room: no wall hidden
+HALLL = [0, 1, 2, 3, 9, 10, 11]
+INL = [4]                                                                   # camera inside the room: no wall hidden
 
 HOLDS, HALL, INSIDE = (HOLDSL, HALLL, INL) if LONG else (HOLDS15, HALL15, [])
 camera = hold_camera(HOLDS, VFOV, lift=1.0, final_lift=1.5, rest=REST)
@@ -928,10 +928,10 @@ def timeline_long(tl):
     ev(0.26, 'crib', 0.6, 'thud')
 
     def crib_y(t):
-        if t < 2.60:
+        if t < 2.15:
             return 0.0
-        if t < 3.00:
-            return CRIB_PARK * smooth((t - 2.60) / 0.40)
+        if t < 2.55:
+            return CRIB_PARK * smooth((t - 2.15) / 0.40)
         if t < 34.10:
             return CRIB_PARK
         if t < 34.80:
@@ -951,22 +951,22 @@ def timeline_long(tl):
         return T(0, crib_y(t), 0) @ crib_extra(t) @ M, v
     tl.custom('crib', crib)
     tl.custom('crib_mat', crib)
-    ev(3.00, 'crib_park', 0.5, 'roll'); ev(34.80, 'crib_night', 0.5, 'roll')
+    ev(2.55, 'crib_park', 0.5, 'roll'); ev(34.80, 'crib_night', 0.5, 'roll')
     for k in range(6):
-        t1 = 0.40 + 0.10 * (5 - k)
+        t1 = 0.10 + 0.05 * (5 - k)
         drop(f'floor{k}', t1 - 0.14, t1, 0.22, 0.05, 0.3 + 0.03 * (5 - k), 'tick')
-    cd = drawer_fn(-1.0, 1.05, 1.62, (0, -0.32, 0), base=crib)
+    cd = drawer_fn(-1.0, 0.55, 1.05, (0, -0.32, 0), base=crib)
     tl.custom('crib_dr', cd)
-    ev(1.10, 'crib_dr_open', 0.4, 'swish'); ev(1.79, 'crib_dr_shut', 0.55, 'thud')
-    drop('crib_dr_c', 1.18, 1.32, 0.2, 0.05, 0.3, 'pip', parent=cd)
-    drop('posts', 1.60, 1.75, 0.6, 0.04, 0.6, 'thud')
-    drop('deck', 1.78, 1.95, 1.2, 0.035, 1.0, 'thud')
-    drop('cshelf', 1.96, 2.05, 0.5, 0.03, 0.55, 'thud')
+    ev(0.60, 'crib_dr_open', 0.4, 'swish'); ev(1.22, 'crib_dr_shut', 0.55, 'thud')
+    drop('crib_dr_c', 0.66, 0.80, 0.2, 0.05, 0.3, 'pip', parent=cd)
+    drop('posts', 1.12, 1.25, 0.6, 0.04, 0.6, 'thud')
+    drop('deck', 1.30, 1.45, 1.2, 0.035, 1.0, 'thud')
+    drop('cshelf', 1.48, 1.58, 0.5, 0.03, 0.55, 'thud')
     for i, nm in enumerate(['cs_f00', 'cs_f01', 'cs_f02', 'cs_f10', 'cs_f11', 'cs_f12', 'cs_f20', 'cs_f21', 'cs_f22']):
-        t1 = 2.10 + 0.055 * i
+        t1 = 1.64 + 0.05 * i
         drop(nm, t1 - 0.10, t1, 0.18, 0.06, 0.3, 'pip' if i % 2 == 0 else 'none')
-    drop('grail', 3.00, 3.10, 0.40, 0.03, 0.5, 'thud')
-    drop('mattress', 3.18, 3.30, 0.45, 0.04, 0.6, 'thud')
+    drop('grail', 2.62, 2.74, 0.40, 0.03, 0.5, 'thud')
+    drop('mattress', 2.86, 2.98, 0.45, 0.04, 0.6, 'thud')
 
     # ================= Zone 1b, west at deck height (3.7-7.0): bedding, niche fill, reading light
     duv = drop('duvet', 3.68, 3.80, 0.40, 0.03, 0.45, 'tick')
@@ -1152,7 +1152,7 @@ def timeline_long(tl):
     # parent 1: one path (x, y, yaw) and one pose track for the whole cut, feet on the floor (or the step drawer)
     w_in, a_in = fg.walk([(22.40, (1.00, -0.55, 0.0)), (23.15, (1.05, 0.25, 90.0))], P1)
     w_out, a_out = fg.walk([(29.40, (0.85, 0.10, 80.0)), (30.30, (1.00, -0.90, 180.0))], P1)
-    w_back, a_back = fg.walk([(35.00, (1.00, -0.90, 0.0)), (35.90, (1.00, 0.18, 0.0)), (36.60, (0.28, 0.40, 180.0))], P1)
+    w_back, a_back = fg.walk([(35.00, (1.00, -0.55, 0.0)), (35.90, (1.00, 0.18, 0.0)), (36.60, (0.28, 0.40, 180.0))], P1)
     w_lay, a_lay = fg.walk([(38.90, (0.40, 0.30, 90.0)), (39.25, (1.38, 0.30, 90.0)), (39.55, (1.40, 0.95, -90.0))], P1)
     sit = P1_POSE()
     stand = fg.pose_of('stand')
@@ -1176,7 +1176,7 @@ def timeline_long(tl):
         if t < 29.40:
             return (0.85, 0.10, 80.0)
         if t < 35.00:
-            return a_out(t) if t < 30.30 else (1.00, -0.90, 180.0)
+            return a_out(t) if t < 30.30 else (1.00, -0.55, 0.0)
         if t < 37.40:
             return a_back(t)
         if t < 37.90:
