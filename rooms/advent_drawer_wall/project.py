@@ -76,7 +76,11 @@ def materials():
     mat('basket', tex=5, col=srgb(206, 186, 150), p=(2, 0.01))
     mat('pine', tex=3, col=srgb(40, 78, 54), rough=0.8, p=(0.12,))
     mat('pine2', tex=3, col=srgb(54, 96, 66), rough=0.8, p=(0.12,))
-    mat('gold', col=srgb(222, 184, 112), rough=0.25, metal=1)
+    mat('star_gold', col=srgb(222, 184, 112), rough=0.25, metal=1)
+    if CUT == 'long':                     # top-10 rule: gold only on the star; other trim goes muted mustard
+        mat('gold', col=srgb(214, 176, 96), rough=0.45, f0=0.04, glossy=True)
+    else:
+        mat('gold', col=srgb(222, 184, 112), rough=0.25, metal=1)
     mat('wire', col=srgb(60, 70, 60), rough=0.5)
     mat('bulb_off', col=srgb(246, 242, 228), rough=0.15, f0=0.05, glossy=True)
     mat('bulb_on', col=(0, 0, 0), emis=(30.0, 24.0, 15.0))
@@ -86,7 +90,7 @@ def materials():
     mat('lamp_bulb', col=(0, 0, 0), emis=(9.0, 7.6, 5.6))
     mat('lampshade', col=srgb(244, 242, 236), rough=0.6, emis=(0.0, 0.0, 0.0))
     mat('glint_glow', col=(0, 0, 0), emis=(16.0, 14.5, 11.0))
-    mat('duvet_gold', tex=3, col=srgb(208, 188, 146), rough=0.9, p=(0.04,))
+    mat('duvet_gold', tex=3, col=srgb(200, 166, 100) if CUT == 'long' else srgb(208, 188, 146), rough=0.95, p=(0.04,))
     mat('star_glow', col=(0, 0, 0), emis=(9.0, 7.4, 4.0))
     mat('blackm', col=srgb(34, 34, 36), rough=0.4, f0=0.04, glossy=True)
     # outside (camera-only emitters: they never light the room)
@@ -270,7 +274,7 @@ def toy(kind):
             a((ellipsoid((sg * 0.012, -0.034, 0.122), (0.004, 0.003, 0.004), 5), 'toy_black'))
         a((ellipsoid((0, -0.036, 0.104), (0.013, 0.010, 0.010), 6), 'plush_light' if kind == 'teddy' else 'toy_sky'))
     elif kind == 'star':
-        a((star_prism((0, 0, 0.075), 0.075, 0.032, 0.026), 'gold'))
+        a((star_prism((0, 0, 0.075), 0.075, 0.032, 0.026), 'star_gold'))
     elif kind == 'star_wood':
         a((star_prism((0, 0, 0.075), 0.075, 0.034, 0.03), 'toy_wood'))
         a((tube([(0, 0, 0.15), (0, 0, 0.17)], 0.002, 5), 'toy_red'))
