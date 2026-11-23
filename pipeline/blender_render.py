@@ -460,7 +460,25 @@ def main():
     cam.clip_start, cam.clip_end = 0.02, 80.0
     cobj = bpy.data.objects.new('cam', cam); coll.objects.link(cobj); sc.camera = cobj
     cobj.rotation_mode = 'QUATERNION'
-    key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
+    cams = [P.camera(f / fps) for f in range(nfr)]
+    key_transform(cobj, np.array([camera_matrix(c) for c in cams]), np.ones(nfr, bool), nfr, insert_vis=False)
+    # hard cuts (a jump between two frames): hold the pose up to the cut so motion blur never smears across it
+    # (with the shutter opening at the frame, see motion_blur_position below)
+    cuts = [f for f in range(1, nfr) if np.linalg.norm(np.subtract(cams[f]['pos'], cams[f - 1]['pos'])) > 0.25
+            or abs((cams[f]['yaw'] - cams[f - 1]['yaw'] + 180) % 360 - 180) > 20 or abs(cams[f]['pitch'] - cams[f - 1]['pitch']) > 20]
+    if cuts and cobj.animation_data and cobj.animation_data.action:
+        act = cobj.animation_data.action
+        fcs = list(getattr(act, 'fcurves', []) or [])
+        if not fcs:
+            for layer in getattr(act, 'layers', []):
+                for strip in layer.strips:
+                    for cb in strip.channelbags:
+                        fcs += list(cb.fcurves)
+        for fc in fcs:
+            for kp in fc.keyframe_points:
+                if int(round(kp.co[0])) in cuts:          # keyframe at Blender frame f = index f - 1, just before the cut
+                    kp.interpolation = 'CONSTANT'
+        print(f'camera cuts at frames {[c + 1 for c in cuts]}', flush=True)
 
     # lights (one Blender light per slot)
     fill = set(BL.get('fill_lights', []))
@@ -520,6 +538,10 @@ def main():
     sc.render.use_persistent_data = True
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
     sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5
+    try:
+        sc.render.motion_blur_position = 'START'
+    except Exception:
+        pass
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_depth = '8'
     vs = sc.view_settings
     vs.view_transform = 'AgX'

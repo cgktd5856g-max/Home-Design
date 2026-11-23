@@ -45,6 +45,7 @@ BX0, BX1, BY0, BY1, BZ = 1.8, 3.0, 1.0, 3.0, 0.45  # bed platform
 SU0, SUY = 1.75, 0.22         # south wall unit x0 and depth (front face at y = SUY)
 DK0, DK1, DKZ, DKD = 1.79, 2.96, 0.76, 0.42       # desk panel x range, hinge height, depth (folds down)
 BN = (1.8, 3.0, 0.66, 1.0, 0.45)                  # bench x0, x1, y0, y1, top
+RACK_PZ, RACK_R, RACK_A = 1.66, 0.45, math.radians(105)
 SUN_DIR = np.array([-0.85, -0.25, -0.42]) / np.linalg.norm([-0.85, -0.25, -0.42])
 CAPTIONS = []
 
@@ -74,6 +75,7 @@ def materials():
     mat('olive', tex=3, col=srgb(128, 134, 98), rough=0.9, p=(0.05,))
     mat('olive_knit', tex=5, col=srgb(146, 150, 114), p=(0, 0.012))
     mat('linen_w', tex=3, col=srgb(240, 240, 236), rough=0.9, p=(0.04,))
+    mat('throw_w', tex=5, col=srgb(238, 236, 230), p=(0, 0.012))
     mat('mattress', tex=5, col=srgb(246, 246, 243), p=(0, 0.02))
     mat('jute', tex=5, col=srgb(200, 178, 140), p=(0, 0.016))
     mat('alu', col=srgb(200, 202, 206), rough=0.3, metal=1)
@@ -364,7 +366,7 @@ def build_closet(rng):
     for z in (0.40, 0.80, 1.20, 1.60, 2.00):
         add('cl_shelves', box(SH[0], SH[2], z, SH[1], SH[3], z + t), 'birch_y')
     # pre-filled: the top rail (the teaser), folded stacks
-    tops = ('cl_teal', 'cl_white', 'cl_mustard', 'cl_sky', 'cl_plum', 'cl_charcoal', 'cl_teal', 'cl_rose', 'cl_white', 'cl_olive')
+    tops = ('cl_olive', 'cl_white', 'cl_mustard', 'cl_sky', 'cl_plum', 'cl_charcoal', 'cl_teal', 'cl_rose', 'cl_white', 'cl_teal')
     for k, m in enumerate(tops):
         garment('cl_top_g', 0.08 + k * 0.078, RAIL_Y, RAIL_TOP, rng.uniform(0.70, 0.84), 0.42, m, along='x')
     folds = [('cl_white', 'cl_sky', 'cl_charcoal', 'cl_white'), ('cl_mustard', 'cl_teal', 'cl_white'),
@@ -417,7 +419,7 @@ def build_bed(rng):
     pillow('pil1', (2.10, 2.86, 0.82), (0.56, 0.15, 0.40), -0.36, 'linen_w')
     pillow('pil2', (2.70, 2.86, 0.82), (0.56, 0.15, 0.40), -0.36, 'linen_w')
     pillow('pil3', (2.40, 2.70, 0.78), (0.42, 0.13, 0.38), -0.28, 'olive_knit')
-    cloth('throw', BX0 + 0.02, BX1 - 0.02, 1.15, 1.55, 0.690, 0.52, 0.04, 'cl_mustard', 7, sides=('w',), puff=0.006)
+    cloth('throw', BX0 + 0.02, BX1 - 0.02, 1.15, 1.55, 0.690, 0.52, 0.04, 'throw_w', 7, sides=('w',), puff=0.006)
     # headboard shelf (0.2 m deep) and the oak ledge above with books, a plant and an abstract print
     add('hb', box(BX0 - 0.0, BY1, 0.0, BX1, D, 0.98), 'panel')
     add('hb', box(BX0, BY1 - 0.004, 0.98, BX1, D, 1.0), 'oak_x')
@@ -443,14 +445,14 @@ def build_south(rng):
     add('su_rec', box(DK0 + 0.02, 0.0, DKZ, DK1 - 0.02, 0.012, DKZ + 0.45), 'oak_z')
     add('su_rec', box(DK0 + 0.05, d - 0.06, DKZ + 0.444, DK1 - 0.05, d - 0.04, DKZ + 0.45), 'led')
     # recess contents: laptop (in a slot), notebooks, pen pot, small plant
-    add('su_rec_c', box(2.05, 0.03, DKZ, 2.07, 0.06, DKZ + 0.16), 'oak_x')
-    add('su_rec_c', box(2.08, 0.035, DKZ + 0.002, 2.095, 0.20, DKZ + 0.23), 'alu')
-    books_row('su_rec_c', DK0 + 0.04, DK0 + 0.22, 0.17, DKZ, 0.15, rng, ('bk_sky', 'bk_mustard', 'bk_white', 'bk_teal'))
-    add('su_rec_c', lathe([(0, DKZ), (0.035, DKZ), (0.035, DKZ + 0.10), (0.03, DKZ + 0.10), (0.03, DKZ + 0.006), (0, DKZ + 0.006)], 18, (2.55, 0.10)), 'ceramic')
+    add('rec_lap', box(2.05, 0.03, DKZ, 2.07, 0.06, DKZ + 0.16), 'oak_x')
+    add('rec_lap', box(2.08, 0.035, DKZ + 0.002, 2.095, 0.20, DKZ + 0.23), 'alu')
+    books_row('rec_bk', DK0 + 0.04, DK0 + 0.22, 0.17, DKZ, 0.15, rng, ('bk_sky', 'bk_mustard', 'bk_white', 'bk_teal'))
+    add('rec_pot', lathe([(0, DKZ), (0.035, DKZ), (0.035, DKZ + 0.10), (0.03, DKZ + 0.10), (0.03, DKZ + 0.006), (0, DKZ + 0.006)], 18, (2.55, 0.10)), 'ceramic')
     for k in range(3):
-        add('su_rec_c', tube([(2.55 + 0.01 * (k - 1), 0.10, DKZ + 0.02), (2.55 + 0.02 * (k - 1), 0.10 + 0.005 * k, DKZ + 0.16)], 0.004, 5),
+        add('rec_pot', tube([(2.55 + 0.01 * (k - 1), 0.10, DKZ + 0.02), (2.55 + 0.02 * (k - 1), 0.10 + 0.005 * k, DKZ + 0.16)], 0.004, 5),
             ('bk_teal', 'bk_mustard', 'bk_plum')[k])
-    plant('su_rec_c', 2.80, 0.10, DKZ, 0.045, 0.06, rng, 9)
+    plant('rec_pl', 2.80, 0.10, DKZ, 0.045, 0.06, rng, 9)
     # front panels (flush, front plane y = d): lower, desk (folds down), mid, upper rack front
     panel_box('su_lo', x0 + g, d - PNT, 0.055, x1 - g, d, DKZ - 0.02)
     panel_box('desk', DK0, d - PNT, DKZ, DK1, d, DKZ + 0.45)
@@ -464,7 +466,8 @@ def build_south(rng):
     add('rack', box(DK0 + 0.02, d - 0.26, 1.64, DK1 - 0.02, d - PNT, 1.655), 'birch_x')
     add('rack', box(DK0 + 0.02, d - 0.26, 1.655, DK1 - 0.02, d - 0.245, 1.72), 'birch_x')
     for xs in (DK0 + 0.03, DK1 - 0.03):
-        add('rack_arm', tube([(xs, 0.05, 2.12), (xs, 0.05, 1.70)], 0.008, 8), 'steel')
+        add('rack_arm', tube([(xs, 0.06, RACK_PZ), (xs, 0.06, RACK_PZ + RACK_R)], 0.008, 8), 'steel')
+    books_row('rack_bk', 2.86 - 0.0, 2.93, d - 0.03, 1.655, 0.2, rng, ('bk_sky', 'bk_plum'), axis='x')
     for k, (xc, m) in enumerate(((2.05, 'box_blue'), (2.38, 'box_linen'), (2.70, 'bin_white'))):
         add(f'rack_box{k}', rbox((xc, d - 0.13, 1.655 + 0.10), (0.26, 0.22, 0.20), 0.015, 3), m)
     # bench: oak box with a lid hinged on the desk side
@@ -480,7 +483,7 @@ def build_south(rng):
     stack('bench_c2', 2.55, 0.83, 0.055, (0.40, 0.26, 0.06), ('cl_olive', 'cl_sky'), 2, rng)
     # runner and tall plant
     add('runner', rbox((1.40, 1.75, 0.006), (0.62, 2.3, 0.012), 0.005, 3), 'jute')
-    tall_plant('tplant', 1.36, 0.36, rng)
+    tall_plant('tplant', 1.24, 0.28, rng)
 
 
 def build():
@@ -523,19 +526,34 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-F1 = P(2.85, 0.40, 2.10, -31.0, -21.0)                                   # frame 1 = the loop pose
-S1 = (F1, P(2.50, 0.85, 1.95, -34.0, -20.0))                               # corner push-in
-S2 = (P(1.45, 0.45, 1.95, -12.0, -24.0), P(1.38, 1.05, 1.85, 22.0, -44.0))    # aisle: ledge -> bed drawers
-S3a = (P(1.85, 2.20, 1.60, -90.0, -6.0), P(1.68, 2.20, 1.60, -90.0, -6.0))    # facing door A
-S3b = (P(1.68, 2.20, 1.60, -90.0, -6.0), P(0.72, 2.20, 1.58, -90.0, -8.0))    # through the doorway
+F1 = P(2.85, 0.40, 2.10, -38.0, -21.0)                                   # frame 1 = the loop pose
+S1 = (F1, P(2.50, 0.85, 1.95, -37.0, -20.0))                               # corner push-in
+S2 = (P(1.50, 1.80, 1.40, -28.0, -26.0), P(1.62, 1.25, 1.88, 14.0, -50.0))    # aisle: ledge -> bed drawers
+S3a = (P(2.30, 0.95, 1.75, -45.0, -12.0), P(1.75, 1.45, 1.62, -58.0, -8.0))     # door A from the south-east: it swings away
+S3b0 = (S3a[1], P(1.30, 2.20, 1.60, -90.0, -7.0))
+S3b = (S3b0[1], P(0.72, 2.20, 1.58, -90.0, -8.0))                             # through the doorway
 S3c = (P(0.72, 2.20, 1.58, -90.0, -8.0), P(0.66, 1.78, 1.50, -6.0, -9.0))   # turn to the rails
-S3d = (P(1.62, 2.08, 2.12, -80.0, -28.0), P(1.98, 2.04, 2.42, -80.0, -37.0))  # dollhouse
-OVH = (P(1.55, 1.55, 2.62, 0.0, -88.5), P(1.55, 1.55, 2.62, 16.0, -88.5))     # overhead
+S3d = (P(2.08, 1.42, 2.38, -62.0, -34.0), P(2.58, 1.22, 2.62, -50.0, -39.0))  # dollhouse
+OVH = (P(1.48, 1.80, 2.08, 6.0, -88.5), P(1.48, 1.68, 2.24, -26.0, -88.5))     # overhead
 
+L1 = (P(1.45, 0.55, 0.85, -22.0, -24.0), P(1.42, 1.40, 0.80, -42.0, -30.0))     # aisle, low: toe-kicks
+L2 = (P(1.62, 1.85, 1.30, -28.0, -24.0), P(1.48, 2.12, 1.22, -34.0, -22.0))     # bed head: the ledge
+L3 = (P(2.20, 0.70, 2.05, -30.0, -45.0), P(2.55, 0.85, 2.05, -40.0, -47.0))     # high over the bed foot: drawers
+L4 = (P(2.05, 1.75, 1.40, 165.0, -40.0), P(2.55, 1.75, 1.40, 180.0, -40.0))     # bench
+L5 = (P(2.40, 1.55, 1.35, 180.0, -22.0), P(2.38, 1.15, 1.10, 180.0, -14.0))     # desk
+L6 = (P(2.38, 1.40, 1.00, 180.0, 20.0), P(2.50, 1.30, 1.05, 186.0, 14.0))       # rack, from the bench
+L7 = (P(1.70, 0.95, 1.50, -42.0, -10.0), P(1.75, 1.62, 1.55, -68.0, -8.0))      # aisle, push in on door A
+LS3c = (S3c[0], P(0.66, 1.78, 1.50, -6.0, -9.0))
+LS3e = (LS3c[1], P(0.70, 1.72, 1.45, -55.0, 12.0))                               # back to the top shelf
+LS3d = (P(1.85, 2.05, 2.34, -78.0, -32.0), P(2.25, 1.90, 2.56, -72.0, -40.0))   # dollhouse
+L9 = (P(1.65, 0.15, 1.55, -10.0, -14.0), P(1.70, 0.60, 1.50, -22.0, -14.0))     # aisle: she walks in
+L10 = (P(1.65, 0.30, 1.55, -55.0, -12.0), P(1.45, 0.45, 1.50, -48.0, -10.0))    # entry: out through the mirror
 if LONG:
-    HOLDS = [(0.0, 3.0, S1)]
+    HOLDS = [(0.0, 3.0, S1), (3.3, 6.2, L1), (6.5, 9.2, L2), (9.5, 13.2, L3), (13.5, 16.2, L4), (16.5, 19.6, L5),
+             (19.9, 22.6, L6), (22.9, 26.6, L7), (26.9, 27.45, S3a), (27.45, 27.75, S3b0), (27.75, 28.1, S3b), (28.1, 29.1, LS3c), (29.1, 30.2, LS3e),
+             (30.2, 33.3, LS3d), (33.3, 35.6, L9), (35.9, 39.7, L10), (40.0, 42.0, OVH)]
 else:
-    HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 7.9, S3a), (7.9, 8.5, S3b), (8.5, 9.4, S3c), (9.4, 11.0, S3d),
+    HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 7.85, S3a), (7.85, 8.15, S3b0), (8.15, 8.5, S3b), (8.5, 9.2, S3c), (9.2, 11.0, S3d),
              (11.0, 13.0, OVH)]
 _hold = hold_camera(HOLDS, VFOV, rest=REST)
 T_DESC = 13.0 if not LONG else 42.0
@@ -547,7 +565,7 @@ def camera(t):
         return dict(st[1] if os.environ.get('ROOM_END') == '1' else st[0], vfov=VFOV)
     if t >= T_DESC:
         u = c01((t - T_DESC) / (DUR - T_DESC))
-        e = 0.85 * smooth(u) + 0.15 * u
+        e = 1 - (1 - u) ** 2.6
         a = dict(OVH[1]); b = dict(F1)
         return lerp_cam(a, b, e, lift=0.0, vfov=VFOV)
     return _hold(t)
@@ -558,12 +576,12 @@ LSKY = (10.0, 10.6, 11.6)
 LSUN = (64000.0, 58000.0, 47000.0)
 LFILL = (2.0, 1.97, 1.92)
 LCEIL = (0.55, 0.55, 0.54)
-LCLOSET = (34.0, 31.0, 25.0)
+LCLOSET = (60.0, 55.0, 44.0)
 LREC = (40.0, 33.0, 24.0)
 LCOVE = (30.0, 25.0, 17.0)
 LLAMP = (80.0, 64.0, 42.0)
 
-T_LIGHTS = 12.2 if not LONG else 41.2
+T_LIGHTS = 12.55 if not LONG else 41.2
 
 
 def lights(mats4, vis):
@@ -739,25 +757,41 @@ def shell_opening(tl, appear, hinge, drawer, ride):
     ev = tl.ev
     drop, slide, grow = tl.drop, tl.slide, tl.grow
     for k in range(5):
-        t1 = 0.20 + 0.06 * k
-        drop(f'floor{k}', t1 - 0.14, t1, 0.22, 0.05, 0.3 + 0.04 * k, 'tick')
-    slide('cl_plat', 0.16, 0.34, (-1.05, 0, 0), 1.0, 0.8)
-    slide('cl_top', 0.22, 0.40, (-1.05, 0, 0), 1.0, 0.5)
-    appear('cl_gaps', 0.34)
-    order = [('pn_s1', 0.42), ('mirror', 0.52), ('pn_a1', 0.64), ('doorA', 0.80), ('pn_bed', 0.95), ('su_lo', 1.08),
-             ('desk', 1.18), ('su_side', 1.27), ('su_mid', 1.34), ('rack', 1.40)]
+        t1 = 0.16 + 0.05 * k
+        drop(f'floor{k}', t1 - 0.16, t1, 0.30, 0.05, 0.3 + 0.04 * k, 'tick')
+    slide('cl_plat', 0.04, 0.20, (-1.05, 0, 0), 1.0, 0.8)
+    slide('cl_top', 0.06, 0.22, (-1.05, 0, 0), 1.0, 0.5)
+    appear('cl_gaps', 0.20)
+    order = [('pn_a1', 0.30), ('doorA', 0.44), ('pn_bed', 0.58), ('pn_s1', 0.70), ('mirror', 0.80), ('su_lo', 0.92),
+             ('desk', 1.04), ('su_side', 1.14), ('su_mid', 1.24), ('rack', 1.34)]
     T_IN = {}
     for nm, t1 in order:
         T_IN[nm] = t1
     for nm in ('pn_s1', 'pn_a1', 'pn_bed', 'su_lo', 'su_side', 'su_mid'):
         grow(nm, T_IN[nm] - 0.14, T_IN[nm], 'z', (0, 0, 0.0), 0.55 if nm != 'pn_bed' else 0.6, 'thud')
     appear('ledge', T_IN['pn_bed'] - 0.14 + 0.07)
-    appear('cl_recess', 0.9)
-    appear('su_body', 0.95)
-    appear('su_rec', 1.0); appear('su_rec_c', 1.0)
+    appear('cl_recess', 0.62)
+    appear('su_body', 0.80)
+    appear('su_rec', 0.92)
     for nm in ('cl_rails', 'cl_shelves', 'cl_top_g', 'cl_fold', 'cl_fold2', 'tk1', 'tk2', 'tk1_c', 'tk2_c', 'mirror_c'):
-        appear(nm, 0.30 if nm in ('tk1', 'tk2') else 0.98)
+        appear(nm, 0.16 if nm in ('tk1', 'tk2') else 0.70)
     return T_IN
+
+
+def s1_bed(tl):
+    drop, slide, grow = tl.drop, tl.slide, tl.grow
+    # bed, bench, runner, ledge decor (S1)
+    drop('bed_plat', 1.30, 1.45, 0.45, 0.02, 0.85, 'thud')
+    drop('mattress', 1.52, 1.65, 0.35, 0.03, 0.6, 'thud')
+    drop('duvet', 1.66, 1.80, 0.35, 0.03, 0.55, 'thud')
+    drop('pil1', 1.78, 1.92, 0.30, 0.08, 0.35); drop('pil2', 1.84, 1.98, 0.30, 0.08, 0.35); drop('pil3', 1.92, 2.06, 0.30, 0.08, 0.3)
+    drop('hb', 1.22, 1.36, 0.45, 0.02, 0.5, 'thud')
+    drop('bench', 1.92, 2.05, 0.40, 0.03, 0.75, 'thud')
+    grow('runner', 2.05, 2.22, 'y', (0, 0.6, 0), 0.4, 'swish')
+    slide('oak_ledge', 2.00, 2.12, (0.0, 0.25, 0.0), 1.0, 0.45)
+    drop('ledge_bk', 2.18, 2.32, 0.25, 0.05, 0.35)
+    drop('ledge_pr', 2.40, 2.54, 0.25, 0.04, 0.35)
+    drop('ledge_pl', 2.62, 2.76, 0.25, 0.06, 0.35)
 
 
 def timeline_15(tl):
@@ -772,18 +806,21 @@ def timeline_15(tl):
     tl.custom('rack_arm', lambda t: (I, False))
     for k in range(3):
         appear(f'rack_box{k}', 1.4)
+    for nm in ('rec_lap', 'rec_bk', 'rec_pot', 'rec_pl'):
+        appear(nm, 1.0)
+    appear('rack_bk', 1.4)
     # door A: grows in, teaser open on the packed top rail (1.40-1.75), S3 open (7.40), the wave (11.0 / ripple)
     WAVE_T = {}
     hA = (CX, AISLE['doorA'][1], 0)
     # ripple order: anticlockwise around the room starting at the toe-kicks
     ripple = ['tk1', 'doorA', 'tk2', 'bd2', 'bd1', 'bench_lid']
     for i, nm in enumerate(ripple):
-        WAVE_T[nm] = 11.45 + 0.15 * i
-    hinge('doorA', hA, 'z', math.radians(92), [(1.40, 1.75), (7.40, 9.38), (11.0 + 0.05 * 1, WAVE_T['doorA'])],
+        WAVE_T[nm] = 11.75 + 0.15 * i
+    hinge('doorA', hA, 'z', math.radians(92), [(0.78, 1.30), (7.15, 9.18), (11.0 + 0.05 * 1, WAVE_T['doorA'])],
           land=(T_IN['doorA'] - 0.14, T_IN['doorA'], 'z', (0, 0, 0)))
     ev(T_IN['doorA'], 'doorA_land', 0.55, 'thud')
-    tl.custom('cl_light', lambda t: (I, 1.40 <= t < 1.92 or 7.45 <= t < 11.0))
-    ev(7.45, 'closet_light', 0.5, 'chime')
+    tl.custom('cl_light', lambda t: (I, 0.80 <= t < 1.47 or 7.35 <= t < 11.0))
+    ev(7.35, 'closet_light', 0.5, 'chime')
     # desk: lands closed, folds down in the open wave and stays open
     dpiv = (0, SUY, DKZ)
 
@@ -799,37 +836,26 @@ def timeline_15(tl):
         return about(dpiv, R('x', a)), True
     tl.custom('desk', desk)
     ev(T_IN['desk'], 'desk_land', 0.5, 'thud'); ev(11.47, 'desk_open', 0.6, 'thud')
-    # bed, bench, runner, ledge decor (S1)
-    drop('bed_plat', 1.30, 1.45, 0.45, 0.02, 0.85, 'thud')
-    drop('mattress', 1.52, 1.65, 0.35, 0.03, 0.6, 'thud')
-    drop('duvet', 1.66, 1.80, 0.35, 0.03, 0.55, 'thud')
-    drop('pil1', 1.78, 1.92, 0.30, 0.08, 0.35); drop('pil2', 1.84, 1.98, 0.30, 0.08, 0.35); drop('pil3', 1.92, 2.06, 0.30, 0.08, 0.3)
-    drop('hb', 1.22, 1.36, 0.45, 0.02, 0.5, 'thud')
-    drop('bench', 1.92, 2.05, 0.40, 0.03, 0.75, 'thud')
-    grow('runner', 2.05, 2.22, 'y', (0, 0.6, 0), 0.4, 'swish')
-    slide('oak_ledge', 2.30, 2.42, (0.0, 0.25, 0.0), 1.0, 0.45)
-    drop('ledge_bk', 2.48, 2.62, 0.25, 0.05, 0.35)
-    drop('ledge_pr', 2.62, 2.76, 0.25, 0.04, 0.35)
-    drop('ledge_pl', 2.76, 2.90, 0.25, 0.06, 0.35)
-    appear('tplant', 5.0)
+    s1_bed(tl)
+    tl.custom('tplant', lambda t: (np.eye(4), False))
     # S2: bedside flap flips down (3.5); lamp, books, phone (3.8-4.4); bed drawers (4.7 / 4.85); contents; shut (6.3 / 6.45)
     lp = (CX, 0, LEDGE[2])
 
     def ledge(t):
         if t < T_IN['pn_bed'] - 0.07:
             return I, False
-        if t < 3.45:
+        if t < 3.28:
             # rides the bedside panel's grow
             u = c01((t - (T_IN['pn_bed'] - 0.14)) / 0.14)
             return about((0, 0, 0), S(1, 1, 0.02 + 0.98 * eob(u, 1.0))) if t < T_IN['pn_bed'] else I, True
-        a = math.radians(90) * eob(c01((t - 3.45) / 0.30), 0.5)
+        a = math.radians(90) * eob(c01((t - 3.28) / 0.30), 0.5)
         return about(lp, R('y', a)), True
     tl.custom('ledge', ledge)
-    ev(3.55, 'ledge_open', 0.55, 'swish'); ev(3.75, 'ledge_land', 0.5, 'thud')
-    drop('lamp', 3.80, 3.98, 0.35, 0.05, 0.45)
-    appear('lamp_on', 4.05); ev(4.05, 'lamp_on', 0.45, 'chime')
-    drop('ledge_books', 4.08, 4.24, 0.30, 0.05, 0.4)
-    drop('ledge_phone', 4.26, 4.40, 0.25, 0.05, 0.35)
+    ev(3.38, 'ledge_open', 0.55, 'swish'); ev(3.58, 'ledge_land', 0.5, 'thud')
+    drop('lamp', 3.62, 3.80, 0.35, 0.05, 0.45)
+    appear('lamp_on', 3.88); ev(3.88, 'lamp_on', 0.45, 'chime')
+    drop('ledge_books', 3.95, 4.11, 0.30, 0.05, 0.4)
+    drop('ledge_phone', 4.20, 4.34, 0.25, 0.05, 0.35)
     off = (-0.58, 0, 0)
     f1 = drawer('bd1', off, [(4.85, 6.45), (11.08, WAVE_T['bd1'])], t_in=1.30)
     f2 = drawer('bd2', off, [(4.70, 6.30), (11.06, WAVE_T['bd2'])], t_in=1.30)
@@ -853,7 +879,7 @@ def timeline_15(tl):
         t0 = 8.45 + 0.09 * k
         tl.fly(f'cl_bot{k}', t0, t0 + 0.16, (0, -0.18, 0.08), 0.04, 0.3, 'tick')
     # dollhouse (9.4-11.0): the aisle face is hidden; boxes slide in, shoes drop; she reaches for a jacket
-    DH = (9.4, 11.0)
+    DH = (9.2, 11.0)
     dh = lambda t: not (DH[0] <= t < DH[1])
     for nm in ('pn_a1', 'pn_bed', 'cl_gaps', 'cl_top', 'cl_recess', 'lamp', 'lamp_on', 'ledge_books', 'ledge_phone', 'ledge'):
         base = tl.anims.get(nm, lambda t: (I, True))
@@ -865,18 +891,18 @@ def timeline_15(tl):
     for k in range(4):
         drop(f'cl_shoe{k}', 10.10 + 0.13 * k, 10.24 + 0.13 * k, 0.30, 0.05, 0.35)
     for k in range(3):
-        appear(f'cl_shoeF{k}', 0.98)
-    FIG_D.animate(tl, pose=fg.track([(9.4, 'stand'), (9.75, 'reach_up'), (10.9, 'reach_up')]), at=(0.60, 2.44, 0), floor=PZ,
+        appear(f'cl_shoeF{k}', 0.70)
+    FIG_D.animate(tl, pose=fg.track([(9.2, 'stand'), (9.6, 'reach_up'), (10.9, 'reach_up')]), at=(0.58, 2.30, -15), floor=PZ,
                   visible=lambda t: DH[0] <= t < DH[1])
     FIG_T.animate(tl, visible=False)
     # S4: open wave (11.0-11.3), ripple shut (11.45-12.2), lights on round the room (12.2), drawer pops (12.5), throw (13.2)
-    drawer('tk1', (0.34, 0, 0), [(11.02, WAVE_T['tk1']), (12.50, 14.0)], t_in=0.16)
+    drawer('tk1', (0.34, 0, 0), [(11.02, WAVE_T['tk1']), (12.85, 14.0)], t_in=0.16)
     drawer('tk2', (0.34, 0, 0), [(11.10, WAVE_T['tk2'])], t_in=0.16)
     for nm, f in (('tk1', tl.anims['tk1']), ('tk2', tl.anims['tk2'])):
         base = tl.anims['cl_plat']
-        tl.custom(nm, lambda t, f=f, base=base: (base(t)[0] @ f(t)[0], f(t)[1]) if t < 0.34 else f(t))
-    ride('tk1_c', tl.anims['tk1'], t_in=0.98)
-    ride('tk2_c', tl.anims['tk2'], t_in=0.98)
+        tl.custom(nm, lambda t, f=f, base=base: (base(t)[0] @ f(t)[0], f(t)[1]) if t < 0.20 else f(t))
+    ride('tk1_c', tl.anims['tk1'], t_in=0.70)
+    ride('tk2_c', tl.anims['tk2'], t_in=0.70)
     bpiv = (0, BN[2], BN[4] - 0.012)
 
     def blid(t):
@@ -901,14 +927,235 @@ def timeline_15(tl):
     for i, nm in enumerate(('led3', 'led0', 'led1', 'led2')):
         appear(nm, T_LIGHTS + 0.12 * i)
     ev(T_LIGHTS, 'lights_on', 0.65, 'chime')
-    ev(12.52, 'boing', 0.5, 'swish')
+    ev(12.87, 'boing', 0.5, 'swish')
     drop('throw', 13.10, 13.30, 0.45, 0.04, 0.5, 'thud')
     return tl
 
 
 def timeline_long(tl):
-    raise NotImplementedError('long cut: built after the 15 s cut')
+    """44.0 s: the same opening, a new zone every 6-7 s, the walk-in wow at 30.2 s, the person, the overhead finale."""
+    I = np.eye(4)
+    ev = tl.ev
+    drop, slide, grow, fly = tl.drop, tl.slide, tl.grow, tl.fly
+    appear, hinge, drawer, ride = helpers(tl)
+    T_IN = shell_opening(tl, appear, hinge, drawer, ride)
+    s1_bed(tl)
+    ripple = ['tk1', 'doorA', 'tk2', 'bd2', 'bd1', 'bench_lid']
+    WT = {nm: 40.45 + 0.15 * i for i, nm in enumerate(ripple)}
+    TW = 40.0                                                    # open wave
+    DH = (30.2, 33.3)
+    dh = lambda t: not (DH[0] <= t < DH[1])
+    # ---- zone 1b (3.3-6.2): toe-kick drawers open, fill, shut
+    tk1 = drawer('tk1', (0.34, 0, 0), [(4.00, 5.20), (TW + 0.02, WT['tk1']), (41.50, 43.0)], t_in=0.16)
+    tk2 = drawer('tk2', (0.34, 0, 0), [(4.45, 5.40), (TW + 0.10, WT['tk2'])], t_in=0.16)
+    for nm, f in (('tk1', tk1), ('tk2', tk2)):
+        base = tl.anims['cl_plat']
+        tl.custom(nm, lambda t, f=f, base=base: (base(t)[0] @ f(t)[0], f(t)[1]) if t < 0.20 else f(t))
+    ride('tk1_c', tl.anims['tk1'], drop=(4.30, 4.48, 0.30))
+    ride('tk2_c', tl.anims['tk2'], drop=(4.72, 4.90, 0.30))
+    appear('tplant', 23.15)
+    # ---- zone 2a (6.5-9.2): bedside flap, lamp, books, phone
+    lp = (CX, 0, LEDGE[2])
 
+    def ledge(t):
+        if t < T_IN['pn_bed'] - 0.07:
+            return I, False
+        if t < 6.75:
+            if t < T_IN['pn_bed']:
+                u = c01((t - (T_IN['pn_bed'] - 0.14)) / 0.14)
+                return about((0, 0, 0), S(1, 1, 0.02 + 0.98 * eob(u, 1.0))), dh(t)
+            return I, dh(t)
+        a = math.radians(90) * eob(c01((t - 6.75) / 0.30), 0.5)
+        return about(lp, R('y', a)), dh(t)
+    tl.custom('ledge', ledge)
+    ev(6.85, 'ledge_open', 0.55, 'swish'); ev(7.05, 'ledge_land', 0.5, 'thud')
+    for nm, (t0, t1, h) in (('lamp', (7.15, 7.33, 0.35)), ('ledge_books', (7.55, 7.71, 0.30)), ('ledge_phone', (7.90, 8.04, 0.25))):
+        f = drop(nm, t0, t1, h, 0.05, 0.45)
+        tl.custom(nm, lambda t, f=f: (f(t)[0], f(t)[1] and dh(t)))
+    tl.custom('lamp_on', lambda t: (I, t >= 7.45 and dh(t)))
+    ev(7.45, 'lamp_on', 0.45, 'chime')
+    ev(8.45, 'charge', 0.35, 'chime')
+    # ---- zone 2b (9.5-13.2): bed drawers out, suitcase, rolled duvet, three bags, shut
+    off = (-0.58, 0, 0)
+    f1 = drawer('bd1', off, [(9.90, 12.60), (TW + 0.08, WT['bd1'])], t_in=1.30)
+    f2 = drawer('bd2', off, [(10.10, 12.40), (TW + 0.06, WT['bd2'])], t_in=1.30)
+    for nm, f in (('bd1', f1), ('bd2', f2)):
+        base = tl.anims['bed_plat']
+        tl.custom(nm, lambda t, f=f, base=base: (base(t)[0] @ f(t)[0], base(t)[1]) if t < 1.45 else f(t))
+    ride('bd1_suit', tl.anims['bd1'], drop=(10.45, 10.65, 0.45))
+    ride('bd1_roll', tl.anims['bd1'], drop=(10.80, 10.98, 0.40))
+    for k in range(3):
+        ride(f'bd2_bag{k}', tl.anims['bd2'], drop=(11.20 + 0.25 * k, 11.38 + 0.25 * k, 0.42))
+    # ---- zone 3a (13.5-16.2): bench lid lifts, shoes + throws, shuts
+    bpiv = (0, BN[2], BN[4] - 0.012)
+    LIDK = [(13.90, 15.70), (TW + 0.12, WT['bench_lid'])]
+
+    def lid_ang(t):
+        a = 0.0
+        for (to, ts) in LIDK:
+            if t < to:
+                break
+            if t < ts:
+                a = math.radians(78) * eob(c01((t - to) / 0.28), 1.2); break
+            u = (t - ts) / 0.17
+            a = math.radians(78) * (1 - u * u) if u < 1 else 0.0
+        return a
+
+    def blid(t):
+        if t < 1.92:
+            return I, False
+        return tl.anims['bench'](t)[0] @ about(bpiv, R('x', lid_ang(t))), True
+    tl.custom('bench_lid', blid)
+    for (to, ts) in LIDK:
+        ev(to + 0.05, 'bench_open', 0.4, 'swish'); ev(ts + 0.17, 'bench_shut', 0.7, 'thud')
+    drop('bench_c', 14.20, 14.38, 0.45, 0.05, 0.4)
+    drop('bench_c2', 14.65, 14.85, 0.45, 0.04, 0.45, 'thud')
+    # ---- zone 3b (16.5-19.6): desk folds down, recess lights, laptop + notebooks + pen pot + plant
+    dpiv = (0, SUY, DKZ)
+
+    def desk(t):
+        if t < T_IN['desk'] - 0.14:
+            return I, False
+        if t < T_IN['desk']:
+            u = (t - (T_IN['desk'] - 0.14)) / 0.14
+            return about((0, 0, 0), S(1, 1, 0.02 + 0.98 * eob(u, 1.0))), True
+        if t < 16.80:
+            return I, True
+        return about(dpiv, R('x', math.radians(-90) * eob(c01((t - 16.80) / 0.38), 0.25))), True
+    tl.custom('desk', desk)
+    ev(T_IN['desk'], 'desk_land', 0.5, 'thud'); ev(17.15, 'desk_open', 0.7, 'thud')
+    slide('rec_lap', 17.40, 17.62, (0, 0.40, 0), 1.0, 0.4, 'tick')
+    drop('rec_bk', 17.85, 18.02, 0.25, 0.05, 0.4)
+    drop('rec_pot', 18.25, 18.40, 0.25, 0.05, 0.35)
+    drop('rec_pl', 18.62, 18.80, 0.25, 0.06, 0.35)
+    # ---- zone 4a (19.9-22.6): the rack swings out and down, boxes and books land, swings back up
+    rp = (0, 0.06, RACK_PZ)
+
+    def th(t):
+        if t < 20.20:
+            return 0.0
+        if t < 22.0:
+            return RACK_A * eob(c01((t - 20.20) / 0.55), 0.3)
+        return RACK_A * (1 - smooth(c01((t - 22.0) / 0.45)))
+
+    def rack(t):
+        if t < T_IN['rack'] - 0.14:
+            return I, False
+        if t < T_IN['rack']:
+            u = (t - (T_IN['rack'] - 0.14)) / 0.14
+            return about((0, 0, 1.62), S(1, 1, 0.02 + 0.98 * eob(u, 1.0))), True
+        a = th(t)
+        return T(0, RACK_R * math.sin(a), -RACK_R * (1 - math.cos(a))), True
+    tl.custom('rack', rack)
+    ev(T_IN['rack'], 'rack_land', 0.45, 'thud'); ev(20.25, 'rack_down', 0.55, 'swish'); ev(22.47, 'rack_up', 0.7, 'thud')
+    tl.custom('rack_arm', lambda t: (about(rp, R('x', -th(t))), 20.15 <= t < 22.5))
+    for k in range(3):
+        ride(f'rack_box{k}', tl.anims['rack'], drop=(20.70 + 0.22 * k, 20.88 + 0.22 * k, 0.30))
+    ride('rack_bk', tl.anims['rack'], drop=(21.36, 21.52, 0.25))
+    # ---- zone 4b (22.9-26.6) + zone 5 (26.9-33.3): door A, the walk-in, the dollhouse
+    hA = (CX, AISLE['doorA'][1], 0)
+    dA = hinge('doorA', hA, 'z', math.radians(92), [(0.78, 1.30), (25.60, 30.2), (34.10, 35.00), (TW + 0.05, WT['doorA'])],
+               land=(T_IN['doorA'] - 0.14, T_IN['doorA'], 'z', (0, 0, 0)))
+    tl.custom('doorA', lambda t: (dA(t)[0], dA(t)[1] and dh(t)))
+    ev(T_IN['doorA'], 'doorA_land', 0.55, 'thud')
+    ev(25.40, 'latch', 0.6, 'tick')
+    tl.custom('cl_light', lambda t: (I, 0.80 <= t < 1.47 or 25.65 <= t < 39.9))
+    ev(25.70, 'closet_light', 0.5, 'chime')
+    ev(23.30 + 0.75, 'swish1', 0.25, 'swish')
+    for k in range(9):
+        t0 = 27.80 + 0.13 * k
+        fly(f'cl_bot{k}', t0, t0 + 0.16, (0, -0.18, 0.08), 0.04, 0.3, 'tick')
+    for k in range(3):
+        fly(f'cl_box{k}', 29.20 + 0.22 * k, 29.38 + 0.22 * k, (0.5, 0, 0.04), 0.04, 0.4, 'thud')
+    for k in range(4):
+        drop(f'cl_shoe{k}', 30.40 + 0.14 * k, 30.54 + 0.14 * k, 0.30, 0.05, 0.35)
+    for k in range(3):
+        drop(f'cl_shoeF{k}', 30.95 + 0.12 * k, 31.09 + 0.12 * k, 0.30, 0.05, 0.3)
+    for nm, (t0, t1) in (('cl_fold', (31.35, 31.52)), ('cl_fold2', (31.65, 31.82))):
+        drop(nm, t0, t1, 0.25, 0.04, 0.45, 'thud')
+    for nm in ('pn_a1', 'pn_bed', 'cl_gaps', 'cl_top', 'cl_recess'):
+        base = tl.anims.get(nm, lambda t: (I, True))
+        tl.custom(nm, lambda t, base=base: (base(t)[0], base(t)[1] and dh(t)))
+    # ---- mirror: lands; long leaf swings into the closet (dollhouse 32.0, the walk-out 36.2)
+    mp = (0.90, CY - PNT / 2, 0)
+    MK = [(31.95, 32.95), (36.20, 37.40)]
+
+    def m_ang(t):
+        a = 0.0
+        for (to, ts) in MK:
+            if t < to:
+                break
+            if t < ts:
+                a = math.radians(-90) * eob(c01((t - to) / 0.35), 0.4); break
+            u = (t - ts) / 0.22
+            a = math.radians(-90) * (1 - smooth(u)) if u < 1 else 0.0
+        return a
+
+    def mirror(t):
+        if t < T_IN['mirror'] - 0.14:
+            return I, False
+        if t < T_IN['mirror']:
+            u = (t - (T_IN['mirror'] - 0.14)) / 0.14
+            return about((0, 0, 0), S(1, 1, 0.02 + 0.98 * eob(u, 1.0))), True
+        return about(mp, R('z', m_ang(t))), True
+    tl.custom('mirror', mirror)
+    ev(T_IN['mirror'], 'mirror_land', 0.55, 'thud')
+    for (to, ts) in MK:
+        ev(to + 0.05, 'mirror_open', 0.45, 'swish'); ev(ts + 0.22, 'mirror_shut', 0.7, 'thud')
+    mc_piv = tl.cen['mirror_c']
+
+    def mirror_c(t):
+        if t < 32.25:
+            return I, False
+        M = mirror(t)[0]
+        u = (t - 32.25) / 0.20
+        if u < 1:
+            return M @ T(0, 0, 0.18 * (1 - u * u)) @ about(mc_piv, S(*([0.5 + 0.5 * smooth(u / 0.35)] * 3))), True
+        return M, True
+    tl.custom('mirror_c', mirror_c)
+    ev(32.45, 'jars', 0.4, 'tick'); ev(32.60, 'jars2', 0.35, 'tick')
+    # ---- zone 6 (33.3-39.7): the person
+    walk_in = [(33.30, (1.38, 0.75, 0)), (34.75, (1.38, 2.10, 0)), (35.15, (1.38, 2.10, -90)), (35.85, (0.60, 2.15, -90))]
+    pose_w, at_w = fg.walk(walk_in, FIG_D)
+
+    def floor_d(t):
+        x = at_w(t)[0]
+        return PZ * smooth(c01((1.12 - x) / 0.22))
+
+    def pose_d(t):
+        if 35.15 <= t < 35.40:
+            return fg.lerp_pose(pose_w(t), 'step_up', math.sin(math.pi * (t - 35.15) / 0.25))
+        return pose_w(t)
+    FIG_D.animate(tl, pose=pose_d, at=at_w, floor=floor_d, visible=lambda t: 33.3 <= t < 35.95 or DH[0] + 0.4 <= t < DH[1],
+                  pop=None)
+    # in the dollhouse (30.6-33.3) she is not shown walking: hide the walker there (she arrives at 33.3)
+    for nm in FIG_D.pieces:
+        base = tl.anims[nm]
+        tl.custom(nm, lambda t, base=base: (base(t)[0], base(t)[1] and 33.3 <= t < 35.95))
+    walk_out = [(36.45, (0.60, 1.95, 180)), (37.15, (0.60, 0.75, 180)), (37.75, (0.60, 0.75, 0)), (38.55, (0.60, 0.75, 0)),
+                (38.80, (0.60, 0.75, 200)), (39.50, (0.45, 0.05, 200))]
+    pose_t, at_t = fg.walk(walk_out, FIG_T)
+
+    def floor_t(t):
+        y = at_t(t)[1]
+        return PZ * smooth(c01((y - 1.10) / 0.22))
+
+    def pose_tt(t):
+        if 37.80 <= t < 38.50:
+            return fg.lerp_pose('stand', dict(fg.POSES['stand'], sh_r=60, elbow_r=90, neck=-6), math.sin(math.pi * (t - 37.8) / 0.7))
+        return pose_t(t)
+    FIG_T.animate(tl, pose=pose_tt, at=at_t, floor=floor_t, visible=lambda t: 36.45 <= t < 39.45)
+    ev(36.50, 'music_drop', 0.0, 'none')
+    # ---- zone 7 (40.0-44.0): open wave, ripple, lights, the drawer gag, the throw
+    for i, nm in enumerate(ripple):
+        ev(WT[nm] + 0.175, f'latch{i}', 0.5 + 0.08 * i, 'tick')
+    ev(WT[ripple[-1]] + 0.30, 'clack', 0.6, 'tick')
+    for i, nm in enumerate(('led3', 'led0', 'led1', 'led2')):
+        appear(nm, T_LIGHTS + 0.12 * i)
+    ev(T_LIGHTS, 'lights_on', 0.65, 'chime')
+    ev(41.52, 'boing', 0.5, 'swish')
+    drop('throw', 42.10, 42.30, 0.45, 0.04, 0.5, 'thud')
+    return tl
 
 if __name__ == '__main__':
     import json
