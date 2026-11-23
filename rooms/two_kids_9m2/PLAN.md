@@ -74,18 +74,26 @@ and at 2.1-2.6 s it **nudges 18° on the post and settles back** (teases the pay
 | 11.55-12.35 | **S4** night, A's side | dusk 11.4; A's reading lamp clicks on 11.75; child A on the loft |
 | 12.55-15.00 | **S5** B's side → glides back to the exact frame-1 pose | child B on the mid-sleeper; B's lamp 12.65; loft LED, downlights; panel retracts 12.62; **wardrobe swings back 12.95-13.95**; drifting wide that loops on the tape line |
 
-## Long cut (~44 s) — `ROOM_CUT=long`, shared `build()`
+## Long cut (44 s) — `ROOM_CUT=long`, shared `build()`
 
-| Time | Zone | Content |
+15 stations, a new angle every 1.6-4.6 s, the wow at 25.6 s (58 %), a drifting wide at the end that lands on frame 1.
+
+| Time | Station | Content |
 |---|---|---|
-| 0-5 | doorway | same opening (tape, floors, beds, post, track, wardrobe slam, nudge) |
-| 5-11 | A's side | ladder, rails, mattress + bedding, book wall fills (by ~6 s), desk + drawer, lamp, stool |
-| 11-17 | B's side | stair-drawer wave; den door + cushions; B's desk |
-| 17-23 | shared mode | play table + stools on the rugs, lid lifts, toys in; face A doors open/close; the two kids play at the table, then walk to their own sides; A climbs the ladder, B the stair drawers |
-| 23-30 | **wow** (~65 %) | near-overhead: table + stools roll back to the entry strip, the wardrobe swings onto the tape, panel telescopes; face B bins fill (close shot) |
-| 30-36 | the two bedrooms | hatch opens on both faces and a book passes through; both desk drawers fill mirrored; beanbag + floor lamp land in B's corner |
-| 36-41 | bedtime | dusk; each reading lamp clicks on in turn; the kids in their own beds |
-| 41-44 | loop | panel retracts, the wardrobe swings back, drift to the frame-1 view on the tape |
+| 0-4.9 | doorway, then A's book wall | same opening as the 15 s cut (tape, floors, beds, post, track, slam, 28° nudge, bedding, book wall) |
+| 5.15-8.6 | A's under-loft desk | both desks slide out of the walls at once; lamps, stool, B's shelf; both desk drawers open, fill and shut together |
+| 8.9-12.6 | B's stair drawers (low, close) | the wave: open bottom → top, fill, close top → bottom |
+| 12.9-15.6 | B's den | the sliding den door opens, LED on, cushions + picture books fly in, door shuts |
+| 15.9-19.6 | wardrobe face A | doors open on loaded folded shelves, a drawer fills, doors close |
+| 19.9-24.5 | shared play table (high, on the tape) | table drops on the rugs, lid lifts, toys in, lid shuts; both kids kneel and play, then walk to their own sides (outside the arc); the den door opens and the table rolls home |
+| 24.8-26.8 | A's entry corner, 1.9 m | **the swing 25.55-26.6** (whoosh → latch clunk), the kids watch from their sides |
+| 26.84-28.4 | daylight payoff wide on the tape | the end panel telescopes out: A left, B right |
+| 28.7-30.3 | face B close | 12 bins + books cascade into the cubbies |
+| 30.6-32.9 | B's freed corner, child height | **the hatch**: both hatch doors open, A passes a book through to B, doors close |
+| 33.2-35.0 | B's freed corner | beanbag, floor lamp, a plush lands on the rug |
+| 35.3-37.3 | night, A's side | dusk; A's reading light, loft LED, desk lamp; child A on the loft |
+| 37.5-39.9 | night, B's side | B's reading light, downlights; child B on the mid-sleeper |
+| 40.2-44.0 | → frame-1 pose | the panel retracts, the wardrobe swings back (the wow plays twice), drifting wide that loops on the tape |
 
 ## Sound
 

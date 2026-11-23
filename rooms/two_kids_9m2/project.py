@@ -64,7 +64,7 @@ CAPTIONS = []                                          # no on-screen text
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('subfloor', tex=3, col=srgb(168, 167, 164), p=(0.06,))
+    mat('subfloor', tex=3, col=srgb(204, 203, 200), p=(0.05,))
     mat('floor', tex=1, col=srgb(218, 192, 158), col2=srgb(200, 172, 136), rough=0.4, f0=0.04, glossy=True, p=(0.16, 1.5))
     mat('wall', tex=3, col=srgb(240, 240, 238), p=(0.015,))
     mat('ceiling', col=srgb(247, 247, 246))
@@ -76,7 +76,8 @@ def materials():
     mat('sky_blue', tex=3, col=srgb(160, 181, 204), rough=0.6, p=(0.02,))
     mat('tapeA', col=srgb(150, 176, 118), rough=0.5)
     mat('tapeB', col=srgb(118, 152, 198), rough=0.5)
-    mat('steel', col=srgb(178, 180, 184), rough=0.28, metal=1)
+    mat('steel', col=srgb(196, 198, 200), rough=0.32, metal=1)
+    mat('track_m', col=srgb(206, 206, 204), rough=0.35, f0=0.04, glossy=True)
     mat('caster', col=srgb(60, 62, 66), rough=0.5)
     mat('alu', col=srgb(200, 202, 206), rough=0.3, metal=1)
     mat('winframe', col=srgb(238, 238, 236), rough=0.35)
@@ -97,7 +98,7 @@ def materials():
     mat('led', col=(0, 0, 0), emis=(7.5, 6.9, 5.6))
     mat('led_off', col=srgb(232, 231, 228))
     mat('dl_emis', col=(0, 0, 0), emis=(8.5, 7.8, 6.6))
-    mat('backdrop', tex=9, emis=(1.35, 1.35, 1.35), p=(1.0, 1.0))
+    mat('backdrop', tex=9, emis=(1.9, 1.9, 1.9), p=(1.0, 1.0))
     mat('backdrop_night', tex=16, emis=(1.0, 1.0, 1.0), p=(1.0, 1.0))
     mat('box_linen', tex=3, col=srgb(214, 208, 196), p=(0.06,))
     mat('bin_grey', tex=6, col=srgb(206, 206, 204))
@@ -111,9 +112,9 @@ def materials():
     for nm, c in (('toy_red', (204, 112, 96)), ('toy_yellow', (230, 194, 100)), ('toy_blue', (110, 150, 200)), ('toy_green', (128, 176, 120)),
                   ('toy_white', (242, 240, 236))):
         mat(nm, col=srgb(*c), rough=0.45, f0=0.04, glossy=True)
-    for nm, c in (('fb_sage', (172, 190, 150)), ('fb_blue', (150, 174, 204)), ('fb_mustard', (220, 190, 120)), ('fb_terra', (204, 146, 118)),
+    for nm, c in (('fb_sage', (172, 190, 150)), ('fb_blue', (150, 174, 204)), ('fb_mustard', (216, 192, 138)), ('fb_terra', (201, 154, 134)),
                   ('fb_cream', (230, 222, 204)), ('fb_grey', (190, 190, 190))):
-        mat(nm, tex=6, col=srgb(*c))
+        mat(nm, tex=3, col=srgb(*c), rough=0.85, p=(0.035,))
     mat('shoe_white', col=srgb(244, 244, 240), rough=0.5)
     fg.materials()
 
@@ -514,7 +515,7 @@ def build_wardrobe(rng):
                   3 if z < 1.9 else 2, rng)
     WR_PIECES.append('wrFold')
     for z in (1.316, 1.766):
-        wadd('wrBoxA', rbox(((xv + x1) / 2, y0 + 0.13, z + 0.17), (0.38, 0.22, 0.30), 0.015, 3), 'fb_terra' if z < 1.5 else 'fb_sage')
+        wadd('wrBoxA', rbox(((xv + x1) / 2, y0 + 0.13, z + 0.17), (0.38, 0.22, 0.30), 0.015, 3), 'fb_blue' if z < 1.5 else 'fb_sage')
     stack('wrDrAc', 1.85, y0 + 0.13, 0.39, (0.30, 0.18, 0.04), ['cl_white', 'cl_celery', 'cl_grey'], 3, rng)
     stack('wrDrAc', 2.25, y0 + 0.13, 0.39, (0.30, 0.18, 0.04), ['cl_mustard', 'cl_cream', 'cl_sage'], 3, rng)
     stack('wrDrAc', 2.68, y0 + 0.13, 0.39, (0.30, 0.18, 0.04), ['cl_denim', 'cl_white', 'cl_terra'], 3, rng)
@@ -526,7 +527,7 @@ def build_wardrobe(rng):
         for ci in range(3):
             xa, xb = cols[ci] + 0.012, cols[ci + 1] - 0.012
             h = min(0.30, zb - za - 0.06)
-            wadd(f'wrBin{k}', rbox(((xa + xb) / 2, y1 - 0.12, za + h / 2), (xb - xa - 0.05, 0.20, h), 0.02, 3), binm[k])
+            wadd(f'wrBin{k}', rbox(((xa + xb) / 2, y1 - 0.12, za + h / 2), (xb - xa - 0.05, 0.20, h), 0.006, 2), binm[k])
             k += 1
     for ci in range(2):
         xa = cols[ci] + 0.03
@@ -549,10 +550,10 @@ def build_wardrobe(rng):
     for i, a in enumerate(np.linspace(-math.pi / 2 - 0.05, 0.05, n)):
         for j, rr in enumerate((TRK_R - 0.022, TRK_R + 0.022)):
             V[i, j] = (PIV[0] + rr * math.cos(a), PIV[1] + rr * math.sin(a), 0.0035)
-    add('track', grid_tris(V), 'steel')
+    add('track', grid_tris(V), 'track_m')
 
 
-LONG_ONLY = ('table', 'tableLid', 'tableC', 'stool1', 'stool2', 'beanbag', 'floorLamp')
+LONG_ONLY = ('table', 'tableLid', 'tableC', 'stool1', 'stool2', 'beanbag', 'floorLamp', 'hatchBook')
 
 
 def build_long_extras(rng):
@@ -570,6 +571,7 @@ def build_long_extras(rng):
         disc(nm, (x, 1.42), 0.14, 0.0, 0.22, m)
     add('plushB', ellipsoid((2.18, 1.22, 0.104), (0.09, 0.08, 0.09), 16), 'toy_white')
     add('plushB', ellipsoid((2.18, 1.22, 0.224), (0.065, 0.06, 0.06), 14), 'toy_white')
+    add('hatchBook', box(1.72, 2.07, 1.035, 1.88, 2.21, 1.062), 'bk_mustard')
     add('beanbag', ellipsoid((2.55, 2.55, 0.20), (0.36, 0.34, 0.22), 18), 'fb_blue')
     add('floorLamp', lathe(rprof(0.11, 0.0, 0.015, 0.005, 3), 24, (3.38, 3.18)), 'ceramic')
     add('floorLamp', tube([(3.38, 3.18, 0.01), (3.38, 3.18, 1.35)], 0.008, 8), 'ceramic')
@@ -595,7 +597,7 @@ def build():
     add('rlOnB', ellipsoid((W - 0.08, 1.62, BZ1 + 0.895), (0.04, 0.04, 0.008), 10), 'bulb')
     for (x, y) in DL:
         disc('dlOn', (x, y), 0.037, H - 0.005, H - 0.0035, 'dl_emis')
-    KID_A = fg.figure('kidA', 'child', pose=LONG_SIT, at=(0.33, 2.55, 90), seat=LZ1 + 0.15, mat='fig_sage')
+    KID_A = fg.figure('kidA', 'child', pose=LONG_SIT, at=(0.33, 2.55, 90), seat=LZ1 + 0.15, mat='fig_white')
     KID_B = fg.figure('kidB', 'child', pose=LONG_SIT, at=(3.02, 1.72, 180), seat=BZ1 + 0.15, mat='fig_blue')
 
 
@@ -607,12 +609,12 @@ def P(x, y, z, yaw, pitch, vf=VFOV):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch, vf=vf)
 
 
-F1 = P(CX, -0.45, 1.40, 0.0, -13.0, 95.0)
+F1 = P(CX, -0.45, 1.40, 0.0, -12.0, 88.0)
 S1 = (F1, P(CX, 0.55, 1.50, 0.0, -15.0, 88.0))                                             # doorway, down the tape
 S1B = (P(1.80, 0.64, 1.50, -32.0, -13.0), P(1.62, 0.78, 1.44, -42.0, -12.0))          # A: book wall + loft                                               # doorway, down the tape
 S2 = (P(1.12, 0.18, 0.98, 60.0, -11.0), P(1.42, 0.72, 0.86, 74.0, -6.0))              # B: stair drawers + den
 S3 = (P(1.30, 0.30, 1.95, 16.0, -17.0), P(0.92, 0.16, 1.86, 18.0, -16.0))
-S3B = (P(2.98, 1.62, 1.72, -44.0, -17.0), P(2.84, 1.86, 1.64, -58.0, -15.0))
+S3B = (P(2.98, 1.62, 1.74, -44.0, -13.0), P(2.86, 1.76, 1.72, -58.0, -11.0))
 S3W = (P(CX, -0.40, 1.88, 0.0, -17.0, 95.0), P(CX, -0.28, 1.84, 0.0, -17.0, 95.0))      # daylight payoff wide on the tape          # face B: the cubbies fill   # near-overhead: the swing (wow)
 S4 = (P(CX, 0.14, 2.22, -24.0, -22.0, 98.0), P(CX, 0.16, 2.18, -10.0, -23.0, 98.0))      # night: A's side
 S5 = (P(CX, 0.16, 2.18, 20.0, -24.0, 98.0), F1)                                        # B's side -> frame 1                                                # the two bedrooms -> frame 1
@@ -649,9 +651,9 @@ LSUN = (95000.0, 86000.0, 72000.0)
 LDOOR = (2.2, 2.2, 2.15)
 LFILL = (0.6, 0.6, 0.59)
 LLED = (40.0, 36.0, 29.0)
-LRL = (900.0, 800.0, 640.0)
-LLAMP = (80.0, 66.0, 46.0)
-LDOWN = (760.0, 720.0, 650.0)
+LRL = (1100.0, 1000.0, 860.0)
+LLAMP = (90.0, 80.0, 64.0)
+LDOWN = (1050.0, 1065.0, 1070.0)
 LDEN = (70.0, 60.0, 44.0)
 
 
@@ -666,8 +668,8 @@ def lights(mats4, vis):
     Ls.append(rect_light((W + 0.16, WY0, WZ0), (0, 0, WZ1 - WZ0), (0, WY1 - WY0, 0), k(LSKY, not night), always=1))       # 1 sky E (-x)
     sc = np.array([0.0, (WY0 + WY1) / 2, (WZ0 + WZ1) / 2]) - SUN_DIR * 3.0
     Ls.append(spot_rect(tuple(sc), tuple(SUN_DIR), 0.06, k(LSUN, not night), 0.0))                                       # 2 sun (W)
-    Ls.append(rect_light((DX0, -0.4, 0.2), (0, 0, 1.9), (DX1 - DX0, 0, 0), k(LDOOR, True, 0.3 if night else 1.0), always=1))  # 3 +y
-    Ls.append(rect_light((0.4, 0.3, H - 0.012), (0, D - 0.6, 0), (W - 0.8, 0, 0), k(LFILL, True, 0.5 if night else 1.0)))     # 4 down
+    Ls.append(rect_light((DX0, -0.4, 0.2), (0, 0, 1.9), (DX1 - DX0, 0, 0), k(LDOOR, True, 0.7 if night else 1.0), always=1))  # 3 +y
+    Ls.append(rect_light((0.4, 0.3, H - 0.012), (0, D - 0.6, 0), (W - 0.8, 0, 0), k(LFILL, True, 1.6 if night else 1.0)))     # 4 down
     Ls.append(spot_rect((0.08, 2.95, LZ1 + 0.56), (0.35, 0.0, -1.0), 0.03, k(LRL, vis.get('rlOnA')), 5.0))                # 5
     Ls.append(spot_rect((W - 0.08, 1.62, BZ1 + 0.89), (-0.35, 0.0, -1.0), 0.03, k(LRL, vis.get('rlOnB')), 5.0))           # 6
     Ls.append(rect_light((LX1 - 0.09, LY0 + 0.1, LZ0 - 0.013), (0, D - LY0 - 0.2, 0), (0.015, 0, 0), k(LLED, vis.get('ledLoft'))))  # 7
@@ -953,6 +955,108 @@ class Story:
         tl.ev(t0 + 0.12, 'den_led', 0.4, 'chime')
         tl.fly('denC', t0 + 0.26, t0 + 0.46, (-0.6, 0, 0.05), 0.05, 0.5, 'thud')
 
+    def den_door(self, opens):
+        tl = self.tl
+        base = tl.anims['denDoor']
+
+        def f(t):
+            M, v = base(t)
+            if not v:
+                return M, v
+            for (t0, t1) in opens:
+                if t0 <= t < t1 + 0.25:
+                    if t < t1:
+                        return T(-0.02, 0.56 * eob(c01((t - t0) / 0.25), 0.6), 0) @ M, v
+                    u = c01((t - t1) / 0.2)
+                    return T(-0.02 * (1 - u), 0.56 * (1 - smooth(u)), 0) @ M, v
+            return M, v
+        tl.custom('denDoor', f)
+        for (t0, t1) in opens:
+            tl.ev(t0 + 0.1, 'den_open', 0.5, 'swish'); tl.ev(t1 + 0.2, 'den_shut', 0.85, 'thud')
+
+    def kid_track(self, kid, segs):
+        """segs = [(t0, t1, animate-kwargs)]: the kid shows each segment's animation inside [t0, t1), hidden otherwise."""
+        tl, I = self.tl, self.I
+        fns = []
+        for (t0, t1, kw) in segs:
+            kid.animate(tl, **kw)
+            fns.append((t0, t1, {nm: tl.anims[nm] for nm in kid.pieces}))
+        for nm in kid.pieces:
+            def f(t, nm=nm):
+                for (t0, t1, d) in fns:
+                    if t0 <= t < t1:
+                        return d[nm](t)
+                return I, False
+            tl.custom(nm, f)
+
+    def play_beat(self, t0):
+        """Play table + toys on the rugs; both kids kneel and play, then walk to their own sides; the table rolls into the den."""
+        tl = self.tl
+        c = np.array([CX, 1.42, 0.0])
+        drop_t = tl.drop('table', t0, t0 + 0.18, 0.5, 0.04, 0.8, 'thud')
+        lid_h = np.array([CX - 0.275, 0, 0.445])
+        t_away = t0 + 3.70
+
+        def roll(t):
+            if t < t_away:
+                return np.eye(4)
+            return T(1.35 * smooth(c01((t - t_away) / 0.5)), 0.02, 0)
+
+        def table(t):
+            M, v = drop_t(t)
+            return roll(t) @ M, v and t < t_away + 0.75
+        tl.custom('table', table)
+
+        def lid(t):
+            M, v = drop_t(t)
+            a = 0.0
+            if t0 + 0.55 <= t < t0 + 1.35:
+                a = -math.radians(70) * eob(c01((t - t0 - 0.55) / 0.25), 1.0)
+            elif t0 + 1.35 <= t < t0 + 1.55:
+                a = -math.radians(70) * (1 - smooth((t - t0 - 1.35) / 0.2))
+            return roll(t) @ M @ about(lid_h, R('y', a)), v and t < t_away + 0.75
+        tl.custom('tableLid', lid)
+        tl.ev(t0 + 0.65, 'lid_open', 0.45, 'swish'); tl.ev(t0 + 1.55, 'lid_shut', 0.7, 'thud')
+        cdrop = tl.drop('tableC', t0 + 0.8, t0 + 0.96, 0.3, 0.06, 0.45)
+        tl.custom('tableC', lambda t: (roll(t) @ cdrop(t)[0], cdrop(t)[1] and t < t_away + 0.75))
+        tl.ev(t_away + 0.5, 'table_home', 0.5, 'thud')
+        self.den_door([(13.05, 14.40), (t_away - 0.15, t_away + 0.55)])
+        crouch = fg.pose_of('crouch')
+
+        def play_pose(sg):
+            def f(t):
+                p = dict(crouch)
+                p['sh_r'] = 40 + 25 * math.sin(2 * math.pi * 1.4 * (t - t0) + sg)
+                p['sh_l'] = 40 + 25 * math.sin(2 * math.pi * 1.4 * (t - t0) + sg + 2.0)
+                return p
+            return f
+        tp, tw0, tw1 = t0 + 1.65, t0 + 2.75, t0 + 3.60
+        pa, aa = fg.walk([(tw0, (1.38, 1.42, 90)), (tw1, (1.10, 0.78, 180))], KID_A)
+        pb, ab = fg.walk([(tw0, (2.22, 1.42, -90)), (tw1, (2.20, 0.72, 180))], KID_B)
+        return dict(A=[(tp, tw0, dict(pose=play_pose(0.0), at=(1.38, 1.42, 90), seat=None, pop=tp)),
+                       (tw0, 30.65, dict(pose=pa, at=aa, seat=None))],
+                    B=[(tp, tw0, dict(pose=play_pose(1.5), at=(2.22, 1.42, -90), seat=None, pop=tp + 0.1)),
+                       (tw0, 30.65, dict(pose=pb, at=ab, seat=None))])
+
+    def hatch_beat(self, t0):
+        """Both hatch doors open; A passes a book through to B; the doors close."""
+        tl = self.tl
+        hx0 = 2.62
+        tl.custom('wrHatchA', self.hinge_fn((hx0, WRY0, 0), math.radians(-100), t0, t0 + 1.30))
+        tl.custom('wrHatchB', self.hinge_fn((hx0, WRY1, 0), math.radians(100), t0 + 0.05, t0 + 1.25))
+        tl.ev(t0 + 0.1, 'hatch_open', 0.5, 'swish'); tl.ev(t0 + 1.5, 'hatch_shut', 0.7, 'thud')
+
+        def book(t):
+            if t < t0 + 0.2 or t > t0 + 1.25:
+                return np.eye(4), False
+            u = smooth(c01((t - t0 - 0.25) / 0.6))
+            return T(-0.33 + 0.70 * u, 0, 0), True
+        tl.custom('hatchBook', book)
+        tl.ev(t0 + 0.85, 'book_pass', 0.45, 'tick')
+        reach = dict(sh_r=82, sh_r_out=4, elbow_r=12, sh_l_out=6, elbow_l=10, spine=6)
+        return dict(A=[(t0 - 0.3, t0 + 1.9, dict(pose=reach, at=(1.30, 2.14, 90), seat=None, pop=t0 - 0.3))],
+                    B=[(t0 - 0.3, t0 + 1.9, dict(pose=fg.mirror(reach), at=(2.30, 2.14, -90), seat=None, pop=t0 - 0.25))])
+
     def drawerA_beat(self, t0):
         tl = self.tl
         f = self.drawer_fn(0.0, t0, t0 + 0.55, (0, -0.26, 0))
@@ -1012,9 +1116,56 @@ class Story:
         return tl
 
     def long(self):
-        raise NotImplementedError
+        tl = self.tl
+        self.build_beat(0.0)
+        a, b = self.desks_quick(5.30)
+        for s_, base, sg in (('A', a, 1), ('B', b, -1)):
+            f = self.drawer_fn(0.0, 6.30, 7.00, (sg * 0.28, 0, 0), base=base)
+            tl.custom(f'ddr{s_}', f)
+            tl.drop(f'ddc{s_}', 6.48, 6.64, 0.22, 0.05, 0.4 if s_ == 'A' else 0.0, 'tick' if s_ == 'A' else 'none', parent=f)
+        tl.ev(6.38, 'ddr_open', 0.5, 'swish'); tl.ev(7.17, 'ddr_shut', 0.85, 'thud')
+        tl.ev(5.46, 'desks', 0.7, 'thud')
+        self.stairs_beat(9.05, step=0.25, hold=0.60)
+        tl.fly('denC', 13.31, 13.51, (-0.6, 0, 0.05), 0.05, 0.5, 'thud')
+        self.appear('denLed', 13.17, 14.6)
+        tl.ev(13.17, 'den_led', 0.4, 'chime')
+        self.doorsA_beat(16.05, 17.55)
+        for k, nm in enumerate(('wrHatchA',)):
+            pass
+        kids = self.play_beat(20.05)
+        self.swing(25.55, 26.60, 0.0, -90.0)
+        self.panel(27.15, 40.45)
+        self.bins_beat(28.85)
+        hk = self.hatch_beat(30.95)
+        tl.drop('beanbag', 33.30, 33.50, 0.5, 0.08, 0.6, 'thud')
+        bb = tl.anims['beanbag']
+        tl.custom('beanbag', lambda t: (bb(t)[0] @ about((2.55, 2.55, 0), S(*([max(0.02, 1 - smooth((t - 40.0) / 0.2))] * 3))) if t > 40.0
+                                        else bb(t)[0], bb(t)[1] and t < 40.2))
+        tl.drop('floorLamp', 33.62, 33.80, 0.4, 0.04, 0.5)
+        tl.drop('plushB', 34.10, 34.28, 0.5, 0.12, 0.4)
+        self.night_beat(35.45)
+        sitA = dict(pose=LONG_SIT, at=(0.33, 2.55, 90), seat=LZ1 + 0.15)
+        sitB = dict(pose=LONG_SIT, at=(3.02, 1.72, 180), seat=BZ1 + 0.15)
+        self.kid_track(KID_A, kids['A'] + hk['A'] + [(35.75, 99, dict(sitA, pop=35.75))])
+        self.kid_track(KID_B, kids['B'] + hk['B'] + [(37.65, 99, dict(sitB, pop=37.65))])
+        self.swing(40.85, 41.90, -90.0, 0.0)
+        self.hide('stool1', 'stool2')
+        self.finish_wardrobe()
+        return tl
 
 
+LA = (P(1.58, 1.80, 1.18, -80.0, -12.0), P(1.42, 2.15, 1.12, -98.0, -10.0))            # long: A's under-loft desk
+LDN = (P(1.45, 0.95, 0.98, 88.0, -6.0), P(1.55, 1.30, 0.92, 98.0, -5.0))             # long: B's den
+LC = (P(0.95, 0.35, 1.55, 25.0, -10.0), P(1.35, 0.30, 1.50, 12.0, -12.0))            # long: wardrobe face A
+LD = (P(CX, 0.02, 1.78, 0.0, -30.0), P(1.62, 0.22, 1.72, -5.0, -31.0))               # long: shared play table
+LF = (P(2.95, 2.80, 1.35, -116.0, -8.0), P(2.85, 2.62, 1.30, -124.0, -7.0))            # long: the hatch handover
+LF2 = (P(1.85, 0.95, 1.62, 32.0, -18.0), P(2.00, 1.10, 1.58, 40.0, -20.0))           # long: B's freed corner
+S5L = (P(CX, 0.16, 2.18, 20.0, -24.0, 98.0), P(CX, 0.18, 2.16, 26.0, -24.0, 98.0))   # long: bedtime, B's side
+LH = (P(CX, 0.16, 2.18, 10.0, -24.0, 98.0), F1)                                      # long: swing back -> frame 1
+if CUT == 'long' and not REST:
+    HOLDS = [(0.0, 2.45, S1), (2.70, 4.90, S1B), (5.15, 8.60, LA), (8.90, 12.60, S2), (12.90, 15.60, LDN), (15.90, 19.60, LC),
+             (19.90, 24.50, LD), (24.80, 26.80, S3), (26.84, 28.40, S3W), (28.70, 30.30, S3B), (30.60, 32.90, LF),
+             (33.20, 35.00, LF2), (35.30, 37.30, S4), (37.50, 39.90, S5L), (40.20, DUR, LH)]
 camera = make_camera(HOLDS)
 
 if __name__ == '__main__':
