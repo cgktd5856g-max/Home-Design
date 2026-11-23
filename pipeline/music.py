@@ -5,7 +5,9 @@ Usage: python3 music.py <workdir> [bpm]     reads <workdir>/frames.json (written
 Optional <workdir>/music.json overrides: {"bpm": 126, "MUSIC": {"drop_at": 0, "chords": [[..],..], "roots": [..],
 "pluck_bars": [0, 1], "riser": false}}
 Event kinds from the timeline: 'thud' (big pieces; strength sets gain and pitch), 'tick' (small items), 'swish'
-(drawer / door opening), 'chime' (lights on), 'none'.
+(drawer / door opening), 'chime' (lights on), 'click' (a latch), 'creak' (a slow wooden slide; event key 'dur'),
+'pluck' (a rising plucked note; event key 'note' = step on a pentatonic scale), 'none'.
+MUSIC may also hold "hush": [[t0, t1], ...], stretches where the drums drop out.
 """
 import os
 import sys
@@ -141,6 +143,27 @@ def tick(f=1200):
     return np.sin(2 * np.pi * f * t) * np.exp(-t / 0.035) + 0.4 * np.sin(2 * np.pi * f * 1.5 * t) * np.exp(-t / 0.02)
 
 
+def click():
+    """Crisp latch click: two short high transients."""
+    n = int(0.12 * SR); t = t_arr(n)
+    a = hp(rng.standard_normal(n), 2500, 2) * np.exp(-t / 0.0025)
+    b = np.zeros(n); i = int(0.018 * SR)
+    b[i:] = hp(rng.standard_normal(n - i), 3500, 2) * np.exp(-t[:n - i] / 0.0018) * 0.7
+    return (a + b + 0.5 * np.sin(2 * np.pi * 3100 * t) * np.exp(-t / 0.01)) * 0.9
+
+
+def creak(length=1.7):
+    """Slow wooden creak with a soft runner roll underneath (the bookcase section moving by hand)."""
+    n = int(length * SR); t = t_arr(n)
+    f = 190 + 60 * np.sin(2 * np.pi * 0.7 * t) + 25 * np.sin(2 * np.pi * 2.3 * t)
+    ph = np.cumsum(f) / SR
+    pulses = (np.sin(2 * np.pi * ph) > 0.92).astype(float)
+    body = bp(pulses * (0.6 + 0.4 * rng.random(n)), 300, 2400) * 0.9
+    roll = bp(rng.standard_normal(n), 80, 400) * 0.35
+    e = np.clip(t / 0.12, 0, 1) * np.clip((length - t) / 0.25, 0, 1)
+    return (body + roll) * e
+
+
 def chime():
     n = int(1.6 * SR); t = t_arr(n); out = np.zeros(n)
     for m, d in [(84, 0.0), (88, 0.05), (91, 0.10), (96, 0.16)]:
@@ -231,6 +254,16 @@ def build(cfg, sfx_only=False):
             add(sfx, whoosh(1.2, up=False), t, 0.10)
         elif k == 'swish':
             add(sfx, whoosh(0.3, up=True), t - 0.3, g)
+        elif k == 'click':
+            add(sfx, click(), t, g)
+        elif k == 'creak':
+            add(sfx, creak(s.get('dur', 1.7)), t, g)
+        elif k == 'pluck':
+            add(sfx, pluck(s.get('note', 72), 0.4), t, g)
+            add(sfx, whoosh(0.12, up=True), t - 0.12, g * 0.25)
+    for h0, h1 in M.get('hush', []):
+        i0, i1 = int(h0 * SR), int(h1 * SR)
+        drums[i0:i1] *= np.linspace(1, 0, max(i1 - i0, 1)) ** 4
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -277,6 +310,14 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='chime', gain=0.5)
         elif k == 'none':
             sfx = dict(kind='none')
+        elif k == 'click':
+            sfx = dict(kind='click', gain=0.45 + 0.4 * a)
+        elif k == 'creak':
+            sfx = dict(kind='creak', gain=0.35 + 0.3 * a, dur=e.get('dur', 1.7))
+        elif k == 'pluck':
+            scale = [0, 2, 4, 7, 9]
+            nt = int(e.get('note', 0))
+            sfx = dict(kind='pluck', gain=0.30 + 0.2 * a, note=74 + 12 * (nt // 5) + scale[nt % 5])
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
