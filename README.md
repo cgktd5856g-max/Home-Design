@@ -10,8 +10,9 @@ why we make originals instead.
 
 ## Output
 
-- `out/kitchen_build.mp4`: 1080x1920 with original music
-- `out/kitchen_build_sfx_only.mp4`: landing sounds only (add a trending sound in TikTok/IG)
+- `out/kitchen_build_v2.mp4`: **photo-real Blender version** with the pull-out pantry finale, 1080x1920, 15.5 s, original music
+- `out/kitchen_build_v2_sfx_only.mp4`: the same with landing sounds only (add a trending sound in TikTok/IG)
+- `out/kitchen_build.mp4` / `_sfx_only.mp4`: version 1 (simple code renderer)
 - previews (`out/*_preview*.mp4`) are not committed; regenerate them with `run.py ... preview`
 - `out/kitchen_still.jpg`: stills of the finished room
 
