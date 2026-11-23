@@ -70,6 +70,17 @@ looks better.
   with one grey-blue or sage accent works. The colour should come from filled storage: clothes, books, toys.
 - **Ceilings.** Nothing can drop onto a tall unit under a 2.7 m ceiling. Slide it in whole from the aisle.
 - **Pieces land whole.** Nothing grows or morphs, because that reads as AI.
+- **Check the plan's numbers before modelling** (bed on the ceiling, 23 Nov). A pedestal drawer would have opened into
+  the wardrobe, which cost a layout change after two review rounds. Probe every camera station at its start AND end
+  pose: a pose inside a carcass, or 0.4 m from a post, looks fine in the plan's numbers.
+- **Tilted openings.** A camera tilted down for frame 1 loses a rising object off the top of the frame. Set the
+  opening pitch from that object's height.
+- **Seated figures.** `figure.sit_pose` puts the pelvis at `at`; for a bed edge, place `at` 0.1 m inside the mattress.
+- **Make the hook register.** `hh_metrics` counts the first movement only when the mean change on its 45x80 grid tops
+  10, so planks close in brightness to the subfloor never count. Make the subfloor clearly darker and land the planks
+  big and early.
+- **The grade depends on the room.** The default `--grade 1.35,0.03` left a neutral-white room at brightness 138, the
+  edge of the band; a gamma of 1.18 fixed it. Measure after grading.
 - **Moving furniture.**
   - Draw the swing arc in a top view at the swing time before modelling.
   - Keep stand-in figures out of moving arcs.
@@ -98,3 +109,4 @@ Fill in the views after posting (7 days).
 |---|---|---|---|---|
 | #2 Same Bed, Better Room | 8.8 / 1.2 s / 7.17 / 0.2 s / 173 / 0.19 / 30.2: all in range | 6.5 | | |
 | #4 The Advent Stair | 7.7 / 0.4 s / 5.22 / 0.2 s / 164 / 0.27 / 44: all in range (65 glitched frames re-rendered) | 6-6.5 | | |
+| #5 The Bed on the Ceiling | 12.7 / 0.4 s / 10.88 / 0.2 s / 150 / 0.25 / 36.3: all in range | 6 | | |

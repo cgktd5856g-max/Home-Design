@@ -1,6 +1,6 @@
 """Rendered PNG frames (Blender) -> 1080x1920 MP4 with the landing punch, light sharpening and music.
 
-usage: mkvideo_png.py <frames_dir> <fps> <frames.json> <out.mp4> <W> <H> [audio.wav] [captions.json] [--grade SAT,WARM]
+usage: mkvideo_png.py <frames_dir> <fps> <frames.json> <out.mp4> <W> <H> [audio.wav] [captions.json] [--grade SAT,WARM[,GAMMA]]
 frames.json is the timeline export (landing events in seconds); audio comes from music.py.
 captions.json: [[t0, t1, "line one\nline two"], ...] drawn bold white with a black outline near the top.
 """
@@ -67,6 +67,8 @@ for i, f in enumerate(files):
         yl = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
         f = yl + (f - yl) * GRADE[0]
         f[..., 2] *= 1 + GRADE[1]; f[..., 0] *= 1 - GRADE[1]
+        if len(GRADE) > 2:    # optional third value: brightness gamma (1.15 lifts the mids, keeps white and black)
+            f = 255.0 * (np.clip(f, 0, 255) / 255.0) ** (1.0 / GRADE[2])
         img = np.clip(f, 0, 255).astype(np.uint8)
     blur = cv2.GaussianBlur(img, (0, 0), 1.1)
     img = cv2.addWeighted(img, 1.35, blur, -0.35, 0)
