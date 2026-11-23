@@ -131,12 +131,12 @@ class Materials:
         normal_in = None                         # socket that wants the final normal (for bevel chaining)
 
         # emission-only materials (LEDs, screens, window view)
-        if (max(col) < 1e-6 and emis.max() > 0) or tex in (8, 9):
+        if (max(col) < 1e-6 and emis.max() > 0) or tex in (8, 9, 16):
             em = N.new('ShaderNodeEmission')
             k = float(emis.max())
             em.inputs['Color'].default_value = (*(emis / k), 1.0)
             em.inputs['Strength'].default_value = k
-            if tex == 9:
+            if tex in (9, 16):
                 img, au, av, rect = self.baked_image(name, tex, rec, midx)
                 it = N.new('ShaderNodeTexImage'); it.image = img; it.extension = 'EXTEND'
                 L.new(self.uv_from_plane(nt, self.coords(nt), au, av, rect), it.inputs['Vector'])
@@ -222,12 +222,12 @@ class Materials:
             L.new(lt.outputs[0], mix.inputs['Factor'])
             L.new(mix.outputs[2], bsdf.inputs['Base Color'])
             set_in(bsdf, 'Roughness', 0.95); set_in(bsdf, ['Sheen Weight', 'Sheen'], 0.5)
-        elif tex in (11, 13):                                               # baked marble / cement floor
+        elif tex in (1, 11, 13):                                            # baked planks / marble / cement floor
             img, au, av, rect = self.baked_image(name, tex, rec, midx)
             it = N.new('ShaderNodeTexImage'); it.image = img; it.extension = 'EXTEND'; it.interpolation = 'Cubic'
             L.new(self.uv_from_plane(nt, vec, au, av, rect), it.inputs['Vector'])
             L.new(it.outputs['Color'], bsdf.inputs['Base Color'])
-            if tex == 13:
+            if tex in (1, 13):
                 bump = N.new('ShaderNodeBump'); set_in(bump, 'Strength', 0.6); set_in(bump, 'Distance', 0.0012)
                 L.new(it.outputs['Alpha'], bump.inputs['Height'])
                 L.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
@@ -277,6 +277,12 @@ class Materials:
             set_in(bsdf, ['Transmission Weight', 'Transmission'], 1.0)
             set_in(bsdf, 'Roughness', 0.03); set_in(bsdf, 'IOR', 1.47)
             set_in(bsdf, 'Base Color', (0.95, 0.97, 0.96, 1.0))
+        tr = BL.get('translucent', {}).get(name)
+        if tr:
+            tl_ = N.new('ShaderNodeBsdfTranslucent'); tl_.inputs['Color'].default_value = (*col, 1.0)
+            mx = N.new('ShaderNodeMixShader'); mx.inputs['Fac'].default_value = tr
+            L.new(bsdf.outputs['BSDF'], mx.inputs[1]); L.new(tl_.outputs['BSDF'], mx.inputs[2])
+            L.new(mx.outputs['Shader'], out.inputs['Surface'])
         r_bev = None if NO_BEVEL else BL.get('bevel', {}).get(name)
         if r_bev:
             bv = N.new('ShaderNodeBevel'); bv.samples = 6

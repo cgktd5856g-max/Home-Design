@@ -321,8 +321,8 @@ static void evalMat(const float* m, const V3& po, V3& alb, V3& emis, float& roug
       alb = V3(0.01f);
       emis = col * m[10];
     } break;
-    case 9: {  // window backdrop: hazy sky, skyline, trees
-      float x = po.x, z = po.z, hz = m[13];
+    case 9: {  // window backdrop: hazy sky, skyline, trees (p: horizon height, horizontal axis 0 = x / 1 = y)
+      float x = m[14] > 0.5f ? po.y : po.x, z = po.z, hz = m[13];
       float t = clampf((z - hz) / 2.2f, 0.f, 1.f);
       V3 sky = V3(1.0f, 1.0f, 1.0f) * (1 - t) + V3(0.66f, 0.78f, 1.0f) * t;
       V3 col = sky;
@@ -342,6 +342,28 @@ static void evalMat(const float* m, const V3& po, V3& alb, V3& emis, float& roug
       float rx = fx - floorf(fx), ry = fy - floorf(fy);
       float k = (rx < 0.12f || ry < 0.12f) ? 0.35f : 1.0f;
       alb = c * k;
+    } break;
+    case 16: {  // night backdrop: deep blue sky, dark skyline with lit windows (p: horizon height, horizontal axis)
+      float x = m[14] > 0.5f ? po.y : po.x, z = po.z, hz = m[13];
+      float t = clampf((z - hz) / 2.5f, 0.f, 1.f);
+      V3 sky = V3(0.10f, 0.12f, 0.24f) * (1 - t) + V3(0.025f, 0.035f, 0.09f) * t;
+      sky = sky + V3(0.20f, 0.11f, 0.05f) * expf(-fmaxf(z - hz, 0.f) / 0.35f) * 0.6f;
+      V3 col = sky;
+      float bw = 0.16f; int bi = (int)floorf(x / bw);
+      float bh = 0.10f + 0.55f * powf(hashf(bi, 3, 7), 1.8f) + 0.08f * vnoise(V3(x * 0.6f, 4.f, 1.f));
+      if (z < hz + bh) {
+        col = V3(0.012f, 0.014f, 0.024f);
+        float wx = x / 0.022f, wz = (z - hz) / 0.03f;
+        int ix = (int)floorf(wx), iz = (int)floorf(wz);
+        float rx = wx - ix, rz = wz - iz;
+        if (rx > 0.25f && rx < 0.75f && rz > 0.3f && rz < 0.75f && hashf(ix, iz, bi) > 0.72f)
+          col = V3(1.0f, 0.72f, 0.38f) * (0.6f + 0.6f * hashf(ix, iz, 5));
+      }
+      int bi2 = (int)floorf((x + 0.07f) / 0.26f);
+      float bh2 = 0.03f + 0.22f * hashf(bi2, 11, 2);
+      if (z < hz + bh2) col = V3(0.006f, 0.007f, 0.012f);
+      alb = V3(0.0f);
+      emis = col * m[10];
     } break;
     case 11: {  // marble: col base, col2 bold flowing veins (p: scale, vein width, seed, vein strength)
       float sc = m[13], vw = m[14], seed = m[15], vd = m[16];

@@ -110,7 +110,7 @@ def floor_tile(P, rec):
 
 
 def backdrop(P, rec):
-    x, z = P[0], P[2]
+    x, z = (P[1] if rec[14] > 0.5 else P[0]), P[2]
     hz = rec[13]
     t = np.clip((z - hz) / 2.2, 0, 1)[..., None]
     sky = np.array([1.0, 1.0, 1.0]) * (1 - t) + np.array([0.66, 0.78, 1.0]) * t
@@ -127,12 +127,57 @@ def backdrop(P, rec):
     return col
 
 
+def night(P, rec):
+    x, z = (P[1] if rec[14] > 0.5 else P[0]), P[2]
+    hz = rec[13]
+    t = np.clip((z - hz) / 2.5, 0, 1)[..., None]
+    sky = np.array([0.10, 0.12, 0.24]) * (1 - t) + np.array([0.025, 0.035, 0.09]) * t
+    sky = sky + np.array([0.20, 0.11, 0.05]) * (np.exp(-np.maximum(z - hz, 0) / 0.35) * 0.6)[..., None]
+    col = sky.copy()
+    bi = np.floor(x / 0.16)
+    bh = 0.10 + 0.55 * hashf(bi, 3, 7) ** 1.8 + 0.08 * vnoise(x * 0.6, 4.0, 1.0)
+    inb = z < hz + bh
+    wx, wz = x / 0.022, (z - hz) / 0.03
+    ix, iz = np.floor(wx), np.floor(wz)
+    rx, rz = wx - ix, wz - iz
+    lit = (rx > 0.25) & (rx < 0.75) & (rz > 0.3) & (rz < 0.75) & (hashf(ix, iz, bi) > 0.72)
+    win = np.array([1.0, 0.72, 0.38]) * (0.6 + 0.6 * hashf(ix, iz, 5))[..., None]
+    col = np.where(inb[..., None], np.where(lit[..., None], win, np.array([0.012, 0.014, 0.024])), col)
+    bi2 = np.floor((x + 0.07) / 0.26)
+    bh2 = 0.03 + 0.22 * hashf(bi2, 11, 2)
+    col = np.where((z < hz + bh2)[..., None], np.array([0.006, 0.007, 0.012]), col)
+    return col
+
+
+def planks(P, rec):
+    """Floor planks along y (same maths as pt.cpp tex 1). Returns colour and a gap mask for the bump."""
+    c, c2 = np.asarray(rec[1:4]), np.asarray(rec[4:7])
+    pw, pl = rec[13], rec[14]
+    x, y = P[0], P[1]
+    fx = x / pw; ix = np.floor(fx); rx = fx - ix
+    off = hashf(ix, 7, 1) * pl
+    fy = (y + off) / pl; iy = np.floor(fy); ry = fy - iy
+    tone, tone2 = hashf(ix, iy, 3), hashf(ix, iy, 11)
+    g = fbm(x * 42 + tone * 50, y * 2.4 + tone2 * 20, tone * 9, 4)
+    g2 = vnoise(x * 190, y * 11, tone * 10)
+    k = (0.74 + 0.40 * tone + 0.30 * (g - 0.5) + 0.10 * (g2 - 0.5))[..., None]
+    base = c[None, None] * (1 - tone2 * 0.5)[..., None] + c2[None, None] * (tone2 * 0.5)[..., None]
+    alb = base * k
+    gap = np.minimum(np.minimum(rx, 1 - rx) * pw, np.minimum(ry, 1 - ry) * pl)
+    alb = alb * np.where(gap < 0.0016, 0.40 + 0.60 * gap / 0.0016, 1.0)[..., None]
+    return alb, (gap < 0.0012).astype(np.float32)
+
+
 def bake(tex, rec, rect, axes, fixed, res):
     P = _plane(rect, axes, fixed, res)
     if tex == 11:
         return marble(P, rec), None
+    if tex == 1:
+        return planks(P, rec)
     if tex == 13:
         return floor_tile(P, rec)
     if tex == 9:
         return backdrop(P, rec), None
+    if tex == 16:
+        return night(P, rec), None
     raise ValueError(f'no baker for tex {tex}')
