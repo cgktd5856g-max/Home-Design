@@ -73,11 +73,11 @@ def materials():
     mat('duvet', tex=5, col=srgb(150, 172, 140), p=(0, 0.014))
     mat('pil_white', tex=3, col=srgb(242, 238, 230), rough=0.9, p=(0.05,))
     mat('pil_sage', tex=6, col=srgb(166, 184, 156))
-    mat('throw', tex=5, col=srgb(218, 184, 112), p=(1, 0.012))
+    mat('throw', tex=5, col=srgb(214, 192, 142), p=(1, 0.012))
     mat('sheet_sky', tex=3, col=srgb(150, 194, 228), rough=0.9, p=(0.04,))
     mat('backdrop', tex=9, emis=(1.35, 1.35, 1.35), p=(1.0, 0.0, 0.0))
-    mat('backdrop_dusk', tex=9, emis=(1.05, 0.78, 0.82), p=(1.0, 0.0, 1.0))
-    mat('led', col=(0, 0, 0), emis=(7.5, 6.6, 5.0))
+    mat('backdrop_dusk', tex=9, emis=(1.15, 1.0, 1.0), p=(1.0, 0.0, 1.0))
+    mat('led', col=(0, 0, 0), emis=(7.5, 7.1, 6.4))
     mat('led_off', col=srgb(232, 230, 224))
     mat('bulb', col=(0, 0, 0), emis=(9.0, 7.4, 5.2))
     mat('nl_shell', col=srgb(246, 242, 234), rough=0.3, f0=0.04, glossy=True)
@@ -91,14 +91,14 @@ def materials():
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
     for nm, c in (('pk_sky', (140, 190, 228)), ('pk_coral', (236, 140, 116)), ('pk_teal', (70, 160, 156)),
                   ('pk_mustard', (228, 182, 72)), ('pk_white', (246, 245, 242))):
-        mat(nm, col=srgb(*c), rough=0.35, f0=0.04)
+        mat(nm, col=srgb(*c), rough=0.75)
     for nm, c in (('bk_sage', (150, 168, 144)), ('bk_coral', (214, 128, 100)), ('bk_navy', (54, 66, 100)),
                   ('bk_mustard', (214, 168, 70)), ('bk_white', (240, 238, 232))):
         mat(nm, col=srgb(*c), rough=0.6)
     mat('basket', tex=6, col=srgb(214, 196, 166))
     mat('swaddle', tex=5, col=srgb(244, 240, 232), p=(0, 0.01))
-    mat('fig_p1', col=srgb(124, 136, 156), rough=0.48, f0=0.04)
-    mat('fig_p2', col=srgb(92, 116, 160), rough=0.48, f0=0.04)
+    mat('fig_p1', col=srgb(206, 200, 192), rough=0.85)
+    mat('fig_p2', col=srgb(168, 184, 208), rough=0.85)
 
 
 # ------------------------------------------------------------------------------------------- helpers
@@ -204,8 +204,9 @@ def build_shell():
     add(r, box(x0 - 0.03, D - 0.03, z0 - 0.02, x1 + 0.03, D + 0.17, z0), 'sill')
     fy0, fy1 = D + 0.10, D + 0.13
     xm = (x0 + x1) / 2
-    for b in (box(x0, fy0, z0, x0 + 0.045, fy1, z1), box(x1 - 0.045, fy0, z0, x1, fy1, z1), box(x0, fy0, z1 - 0.045, x1, fy1, z1),
-              box(x0, fy0, z0, x1, fy1, z0 + 0.045), box(xm - 0.02, fy0, z0, xm + 0.02, fy1, z1)):
+    fw = 0.045
+    for b in (box(x0, fy0, z0, x0 + fw, fy1, z1), box(x1 - fw, fy0, z0, x1, fy1, z1), box(x0 + fw, fy0, z1 - fw, x1 - fw, fy1, z1),
+              box(x0 + fw, fy0, z0, x1 - fw, fy1, z0 + fw), box(xm - 0.02, fy0, z0 + fw, xm + 0.02, fy1, z1 - fw)):
         add(r, b, 'winframe')
     add(r, box(W, -0.2, -0.25, W + 0.2, D + 0.2, H + 0.35), 'wall')                 # east wall
     # headboard niche in the north wall beside the window (birch-lined)
@@ -232,7 +233,7 @@ def build_shell():
     # floor planks in six bands (land far to near)
     edges = [-0.012, 0.5, 1.0, 1.5, 2.0, 2.5, D + 0.01]
     for k in range(6):
-        add(f'floor{k}', box(0, edges[k], -0.012, W, edges[k + 1], 0.0), 'floor')
+        add(f'floor{k}', box(-0.004, edges[k], -0.012, W, edges[k + 1], 0.0), 'floor')
 
 
 # ------------------------------------------------------------------------------------------- bed deck
@@ -333,9 +334,9 @@ def build_crib(rng):
     for (x, y) in ((x0, y0), (x1 - p, y0), (x0, y1 - p), (x1 - p, y1 - p)):
         add(c, box(x, y, 0.06, x + p, y + p, 0.85), 'birch_z')
         disc(c, (x + p / 2, y + p / 2), 0.022, 0.0, 0.06, 'castor', 16)
-    for (a, b, cc, d) in ((x0, y0, x1, y0 + 0.03), (x0, y1 - 0.03, x1, y1)):
+    for (a, b, cc, d) in ((x0 + p, y0, x1 - p, y0 + 0.03), (x0 + p, y1 - 0.03, x1 - p, y1)):
         add(c, box(a, b, 0.81, cc, d, 0.85), 'birch_x'); add(c, box(a, b, 0.20, cc, d, 0.25), 'birch_x')
-    for (a, b, cc, d) in ((x0, y0, x0 + 0.03, y1), (x1 - 0.03, y0, x1, y1)):
+    for (a, b, cc, d) in ((x0, y0 + p, x0 + 0.03, y1 - p), (x1 - 0.03, y0 + p, x1, y1 - p)):
         add(c, box(a, b, 0.81, cc, d, 0.85), 'birch_y'); add(c, box(a, b, 0.20, cc, d, 0.25), 'birch_y')
     for x in np.arange(x0 + 0.075, x1 - 0.05, 0.062):
         for (yy) in (y0 + 0.008, y1 - 0.022):
@@ -538,14 +539,14 @@ def wall_mode(t):
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
 LSKY = (9.0, 9.6, 10.6)
 LDUSK = (9.6, 8.0, 8.6)
-LSUN = (38000.0, 34000.0, 28500.0)
+LSUN = (24000.0, 21500.0, 18000.0)
 LHALL = (1.15, 1.12, 1.06)
-LWEST = (1.10, 1.07, 1.02)
+LWEST = (1.70, 1.66, 1.58)
 LCEIL = (0.55, 0.54, 0.52)
-LUNDER = (0.45, 0.43, 0.40)
+LUNDER = (0.75, 0.72, 0.68)
 LHALLTOP = (0.8, 0.78, 0.75)
 LREAD = (900.0, 760.0, 540.0)
-LTREAD = (80.0, 68.0, 48.0)
+LTREAD = (80.0, 75.0, 66.0)
 LSHELF = (150.0, 128.0, 94.0)
 LNIGHT = (45.0, 32.0, 18.0)
 T_DUSK = 11.10
@@ -586,7 +587,7 @@ def lights(mats4, vis):
 
 # Blender (Cycles) look: see pipeline/blender_render.py
 BLENDER = dict(
-    exposure=-0.30,
+    exposure=0.05,
     look='AgX - Medium High Contrast',
     separate=['backdrop', 'backdrop_dusk'],
     fill_lights=[2, 3, 4, 5, 13],
@@ -707,8 +708,8 @@ def timeline_15(tl):
 
     def crib_extra(t):
         M = I
-        if 0.14 < t < 0.38:                                          # hops as its plank row lands
-            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.14) / 0.24))
+        if 0.26 < t < 0.50:                                          # hops as its plank row lands
+            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.26) / 0.24))
         if 13.90 < t < 14.40:                                        # rocks ~1 cm under parent 1's hand
             M = M @ T(0.010 * math.sin(2 * math.pi * (t - 13.9) / 0.25) * (1 - (t - 13.9) / 0.5), 0, 0)
         return M
@@ -719,8 +720,8 @@ def timeline_15(tl):
     tl.custom('crib', crib)
     tl.custom('crib_mat', crib)                                      # the sky sheet rides in with the crib
     ev(1.75, 'crib_park', 0.5, 'roll'); ev(11.90, 'crib_night', 0.5, 'roll')
-    for k in range(6):                                               # near to far (band 0 is by the door)
-        t1 = 0.12 + 0.05 * k
+    for k in range(6):                                               # far to near (band 5 is the north end)
+        t1 = 0.10 + 0.05 * (5 - k)
         drop(f'floor{k}', t1 - 0.14, t1, 0.22, 0.05, 0.3 + 0.03 * (5 - k), 'tick')
     drop('posts', 0.50, 0.62, 0.6, 0.04, 0.6, 'thud')
     drop('deck', 0.66, 0.82, 1.2, 0.035, 1.0, 'thud')

@@ -115,7 +115,7 @@ def backdrop(P, rec):
     t = np.clip((z - hz) / 2.2, 0, 1)[..., None]
     dusk = len(rec) > 15 and rec[15] > 0.5          # p[2] = 1: soft lavender-peach evening sky
     if dusk:
-        sky = np.array([1.0, 0.70, 0.55]) * (1 - t) + np.array([0.62, 0.55, 0.85]) * t
+        sky = np.array([1.0, 0.78, 0.64]) * (1 - t) + np.array([0.74, 0.70, 0.90]) * t
     else:
         sky = np.array([1.0, 1.0, 1.0]) * (1 - t) + np.array([0.66, 0.78, 1.0]) * t
     col = sky.copy()
