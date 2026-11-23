@@ -462,8 +462,8 @@ def build():
     build_wardrobe(rng)
     build_desk(rng)
     if LONG:
-        fg.materials()
-        FIG[0] = fg.figure('fig', 'adult', pose='stand', at=(0.74, 0.70, 58.0))
+        mat('fig_mid', col=srgb(128, 132, 140), rough=0.48)               # mid grey: reads against the white walls
+        FIG[0] = fg.figure('fig', 'adult', pose='stand', at=(0.74, 0.70, 58.0), mat='fig_mid')
 
 
 # ------------------------------------------------------------------------------------------- camera
@@ -539,13 +539,13 @@ def segs_long():
     A = (P(0.74, 0.65, 1.55, -8.0, 6.0), P(0.82, 2.05, 1.40, 8.0, -26.0))                 # window desk, push in
     Bs = (P(1.38, 2.40, 1.45, -70.0, -20.0), P(1.25, 1.40, 1.30, -22.0, -12.0))          # slide along the window
     C = (P(0.50, 0.60, 0.95, 62.0, 6.0), P(1.20, 0.12, 0.90, 14.0, 10.0))                 # low circle, bed corner
-    Ds = (P(0.50, 0.30, 1.50, 62.0, -28.0), P(1.20, 0.10, 1.80, 90.0, -42.0))            # along the stairs
+    Ds = (P(0.50, 0.30, 1.50, 62.0, -28.0), P(1.05, 0.15, 1.75, 70.0, -36.0))            # along the stairs
     E = (P(1.42, 1.10, 1.55, 276.0, 16.0), P(1.42, 1.80, 1.36, 260.0, -8.0))             # wardrobe, straight on
     F = (P(1.38, 1.05, 1.10, 285.0, -26.0), P(1.30, 2.10, 1.30, 235.0, -18.0))           # wardrobe drawers, toward the desk
-    G = (P(1.75, 0.05, 1.20, -8.0, -2.0), P(2.00, 0.55, 2.10, 14.0, -26.0))                # rising glide up the stairs
-    Hs = (P(1.20, 0.05, 1.12, -2.0, -13.0, 56.0), P(0.92, 0.62, 0.95, 18.0, -9.0, 56.0))  # the rail, low in the aisle
-    J1 = (P(1.42, 0.08, 1.38, -20.0, -12.0), P(1.36, 0.60, 1.28, -58.0, -12.0))            # dolly: the person comes in
-    J2 = (P(0.82, 2.62, 1.70, 188.0, -12.0), P(1.18, 1.80, 1.35, 150.0, -18.0))          # window end, down the aisle
+    G = (P(1.20, 0.55, 1.45, 28.0, -10.0), P(1.38, 1.05, 2.00, 48.0, -30.0))                # rising glide up the stairs
+    Hs = (P(1.15, 0.04, 1.32, -2.0, -18.0, 70.0), P(0.95, 0.42, 1.22, 14.0, -16.0, 70.0))  # the rail, low in the aisle
+    J1 = (P(1.28, 2.58, 1.58, 192.0, -16.0), P(1.32, 2.25, 1.45, 210.0, -12.0))            # dolly: the person comes in
+    J2 = (P(1.28, 0.06, 1.35, -12.0, -8.0), P(1.20, 0.30, 1.25, 8.0, -10.0))          # window end, down the aisle
     K = (P(2.88, 0.10, 2.40, -46.0, -30.0), P(2.40, 0.38, 2.30, -28.0, -26.0))           # high south-east corner
     sw = lambda a, b: (lambda u, t: mix(a, b, smooth(u), lift=2.0))
     gl = lambda st: (lambda u, t: mix(st[0], st[1], u))
@@ -708,7 +708,7 @@ def beats_long():
              chair_out=(10.30, 12.55), desk_lamp=10.75, desk_nb=11.05, desk_pl=11.35,
              legs=(13.35, 13.52), plat=(13.50, 14.50), steps=(14.80, 15.10, 15.40),
              sdr=[(16.40, 16.95), (16.62, 17.17), (16.84, 17.39)], ddr=(17.85, 18.80),
-             wr_top=(19.50, 19.95), wd_opens=[(20.10, 23.40), (32.80, 33.80)], wr_cl=(20.35, 20.75),
+             wr_top=(19.50, 19.95), wd_opens=[(20.10, 23.40), (32.90, 34.40)], wr_cl=(20.35, 20.75),
              wr_drs=[(21.80, 22.60), (22.05, 22.85)],
              ledge=(24.50, 24.68), ledge_bk=24.85, ledge_pl=25.08, hb_lamp=25.30, slippers=25.50, mslide=(25.80, 26.55),
              rails=[((27.80, 28.50), (29.75, 30.10)), ((37.05, 37.65), (38.60, 38.95))], on=39.40)
@@ -723,8 +723,8 @@ def person(tl, B):
     wpose, wat = fg.walk([(31.35, A0), (31.95, A1), (32.50, A2), (36.0, A2), (36.65, A3)], fig)
     OPEN = dict(sh_r=72, sh_r_out=4, elbow_r=18, sh_l=10, sh_l_out=6, elbow_l=10, spine=4)
     PULL = dict(sh_r=48, sh_l=40, sh_r_out=6, sh_l_out=8, elbow_r=12, elbow_l=20, spine=22, neck=8, hip_l=12, hip_r=6, knee_l=10, knee_r=4)
-    poses = fg.track([(32.45, 'stand'), (32.70, OPEN), (33.05, OPEN), (33.35, 'stand'), (33.65, OPEN), (33.95, 'stand'),
-                      (35.20, 'stand'), (35.45, 'reach_both'), (35.80, 'reach_both'), (36.0, 'stand'),
+    poses = fg.track([(32.50, 'stand'), (32.80, OPEN), (33.15, OPEN), (33.45, 'stand'), (34.15, OPEN), (34.50, 'stand'),
+                      (34.75, 'stand'), (35.05, 'reach_both'), (35.80, 'reach_both'), (36.0, 'stand'),
                       (36.65, 'stand'), (36.95, PULL), (38.45, PULL), (38.75, 'stand')])
 
     def pose(t):
