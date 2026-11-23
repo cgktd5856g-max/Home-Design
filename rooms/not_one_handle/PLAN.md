@@ -1,3 +1,13 @@
+> **Changes made during production (this copy is kept current; the original is research/top10_ideas.md section 7):**
+> - Coordinates: bed platform y 1.0-3.0 with the headboard shelf at y 3.0-3.2; bench y 0.66-1.0 (0.34 deep, so its lid clears the folded desk); desk folds to 0.42 m deep.
+> - Frame-1 pose is (2.85, 0.40, 2.10), yaw -38, pitch -21 (the plan's y 0.15 sits inside the south wall unit).
+> - 15 s cut: door-A teaser moved earlier to 0.78-1.30 s and into the frame centre (review gate 1); the panel domino now starts at 0.30 s with the aisle-face panels first, so the first clear movement is at 0.2 s.
+> - 15 s cut: S2 starts close on the bedside panel (the flap flips at 3.28 s); door A opens at 7.15 s and is filmed from the south-east so its leaf swings away from the lens; the dollhouse runs 9.2-11.0 s from the south-east corner above the bed, so the rails are seen at an angle, not end-on; the open wave lasts 11.0-11.75 s, ripple 11.75-12.5 s, lights on 12.55 s, the drawer gag 12.85 / 14.0 s.
+> - The tall plant is left out of the 15 s cut (it sat in the overhead foreground); it lands at 23.15 s in the long cut.
+> - The camera-only hiding of the aisle face is done with ordinary per-frame visibility (both renderers), hidden behind the two hard cuts; the Blender bridge now holds the camera pose at hard cuts and opens the shutter at the frame, so motion blur never smears across a cut.
+> - Long cut: the rack is a top-hinged flap that lifts, then a shelf on parallel arms swings out and down (the first version's front panel hid the boxes). Door A shuts at 35.8 s, after she is inside.
+> - Throw: off-white knit, not a second colour; storage colours muted to dusty teal, berry, sand, sky, blush and charcoal after review gate 2; garments are shaped meshes on oak hangers.
+
 ## 7. Not One Handle in Sight
 
 - **At a glance**:

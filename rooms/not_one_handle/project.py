@@ -702,8 +702,10 @@ def helpers(tl):
                 a = math.copysign(math.radians(1.6), a_open) * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08))
             return a
 
+        t_hide = t_in if t_in is not None else (land[0] if land is not None else None)
+
         def f(t):
-            if t_in is not None and t < t_in:
+            if t_hide is not None and t < t_hide:
                 return I, False
             if vis is not None and not vis(t):
                 return I, False
