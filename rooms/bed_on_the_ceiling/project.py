@@ -54,7 +54,7 @@ CAPTIONS = []                                        # no on-screen text
 
 # ------------------------------------------------------------------------------------------- materials
 def materials():
-    mat('subfloor', tex=3, col=srgb(142, 142, 144), p=(0.08,))
+    mat('subfloor', tex=3, col=srgb(128, 128, 131), p=(0.08,))
     mat('floor', tex=1, col=srgb(210, 180, 142), col2=srgb(190, 158, 120), rough=0.38, f0=0.04, glossy=True, p=(0.18, 1.6))
     mat('wall', tex=3, col=srgb(242, 241, 238), p=(0.02,))
     mat('ceiling', col=srgb(247, 246, 243))
@@ -100,7 +100,7 @@ def materials():
     mat('phone', col=srgb(22, 22, 24), rough=0.08, f0=0.05, glossy=True)
     mat('backdrop', tex=9, emis=(1.35, 1.35, 1.35), p=(1.0, 0.0))
     mat('rug', tex=6, col=srgb(228, 220, 204))
-    for nm, c in (('cl_white', (242, 242, 240)), ('cl_rust', (178, 96, 66)), ('cl_denim', (90, 114, 150)), ('cl_sage', (150, 166, 142)),
+    for nm, c in (('cl_white', (242, 242, 240)), ('cl_rust', (166, 104, 80)), ('cl_denim', (90, 114, 150)), ('cl_sage', (150, 166, 142)),
                   ('cl_camel', (192, 152, 110)), ('cl_cream', (234, 226, 210)), ('cl_grey', (156, 156, 160)), ('cl_navy', (60, 72, 104)),
                   ('cl_mustard', (206, 162, 70))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
@@ -120,13 +120,25 @@ def disc(inst, c, r, z0, z1, m, n=28):
 
 
 def garment(inst, x, y, z_top, length, width, m, along='y'):
-    """Hanging garment on a rail running along `along` (width is across the rail)."""
-    if along == 'y':
-        add(inst, tube([(x - width * 0.45, y, z_top - 0.05), (x, y, z_top), (x + width * 0.45, y, z_top - 0.05)], 0.004, 6), 'steel_d')
-        add(inst, rbox((x, y, z_top - 0.06 - length / 2), (width, 0.035, length), 0.016, 3), m)
+    """Hanging garment on a rail running along `along`: hanger, rounded shoulders and a softly flared body."""
+    c = np.array([x, y, z_top])
+    if along == 'y':                     # rail along y: the garment's width runs along x
+        Rm = np.eye(4)
     else:
-        add(inst, tube([(x, y - width * 0.45, z_top - 0.05), (x, y, z_top), (x, y + width * 0.45, z_top - 0.05)], 0.004, 6), 'steel_d')
-        add(inst, rbox((x, y, z_top - 0.06 - length / 2), (0.035, width, length), 0.016, 3), m)
+        Rm = R('z', math.pi / 2)
+    hook = [(-width * 0.42, 0, -0.05), (0, 0, 0), (width * 0.42, 0, -0.05)]
+    add(inst, xform(tube(hook, 0.004, 6), T(*c) @ Rm), 'steel_d')
+    add(inst, xform(ellipsoid((0, 0, -0.085), (width * 0.48, 0.045, 0.05), 12), T(*c) @ Rm), m)
+    nu, nv = 9, 8
+    V = np.zeros((nu, nv, 3))
+    for i, u in enumerate(np.linspace(0, 1, nu)):
+        zz = -0.09 - u * length
+        hw = width * (0.47 + 0.06 * u)
+        for j, v in enumerate(np.linspace(0, 2 * math.pi, nv)):
+            V[i, j] = (hw * math.cos(v), (0.045 - 0.012 * u) * math.sin(v) + 0.006 * math.sin(6 * u + v), zz)
+    P_, N_ = grid_tris(V, closed_v=True)
+    add(inst, xform((P_, N_), T(*c) @ Rm), m)
+    add(inst, xform(ellipsoid((0, 0, -0.09 - length), (width * 0.53, 0.034, 0.012), 10), T(*c) @ Rm), m)
 
 
 def stack(inst, cx, cy, z0, size, mats_, n, rng):
@@ -409,7 +421,7 @@ def build_bed(rng):
               box(1.02, 1.818, dz0, BX1 - t, 1.83, z0 + 0.12)):
         add('bed_drawer', b, 'white_in')
     stack('bd_pj', 1.22, 1.35, dz0 + 0.008, (0.26, 0.24, 0.03), ['cl_denim', 'cl_cream'], 2, rng)
-    add('bd_book', box(1.12, 1.56, dz0 + 0.008, 1.30, 1.70, dz0 + 0.035), 'bk_terra')
+    add('bd_book', box(1.12, 1.56, dz0 + 0.008, 1.30, 1.70, dz0 + 0.035), 'bk_sage')
     add('bd_mask', rbox((1.32, 1.74, dz0 + 0.016), (0.16, 0.07, 0.016), 0.007, 3), 'cl_sage')
 
 
@@ -598,13 +610,13 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-S1 = (P(2.34, 0.22, 1.50, -42.0, -7.0), P(2.18, 0.42, 1.46, -46.0, 13.0))
-S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.55, 1.62, 1.30, 24.0, -14.0))
+S1 = (P(2.55, 0.12, 1.70, -39.0, -11.0), P(2.30, 0.40, 1.55, -56.0, 8.0))
+S2 = (P(1.00, 0.80, 1.34, 74.0, -6.0), P(1.75, 1.85, 1.32, 24.0, -18.0))
 S3 = (P(2.26, 0.14, 1.22, -22.0, 15.0), P(2.14, 0.22, 1.00, -28.0, 4.0))
-S4 = (P(1.98, 0.95, 0.98, -30.0, -16.0), S1[0])
+S4 = (P(1.90, 1.05, 0.85, -34.0, -14.0), S1[0])
 HOLDS = [(0.0, 3.08, S1), (3.3, 7.08, S2), (7.3, 10.78, S3), (11.0, DUR, S4)]
 RIDE = 2                                             # index of the ride hold
-EASE_IN = {0: 0.2}                                   # holds whose glide eases in over the first x seconds
+EASE_IN = {0: 0.0}                                   # holds whose glide eases in over the first x seconds
 EASE_OUT = {3: 0.4}                                  # ... or eases out over the last x seconds
 
 
@@ -681,7 +693,7 @@ L_ST = [
 if LONG:
     HOLDS = L_ST
     RIDE = 8
-    EASE_IN = {0: 0.2}
+    EASE_IN = {0: 0.0}
     EASE_OUT = {14: 0.4}
 
 camera = make_camera(HOLDS, RIDE, EASE_IN, EASE_OUT, ride_cam)
@@ -845,8 +857,8 @@ def timeline_15(tl, kit):
     appear = kit.appear
     # ---- S1 (0.0-3.0): planks, the bed rises and docks, rail, posts, towers, motor, books, sofa
     for k in range(6):
-        t1 = 0.26 + 0.075 * k
-        drop(f'floor{k}', t1 - 0.18, t1, 0.55, 0.05, 0.3 + 0.03 * k, 'tick')
+        t1 = 0.16 + 0.06 * k
+        drop(f'floor{k}', t1 - 0.14, t1, 0.55, 0.05, 0.3 + 0.03 * k, 'tick')
     tl.custom('bed', bed_fn)
     ev(T_UP0 + 0.1, 'bed_pop', 0.4, 'tick')
     ev(T_UP1, 'bed_dock', 1.0, 'clunk')
@@ -875,7 +887,7 @@ def timeline_15(tl, kit):
     drop('ottoman', 2.88, 3.00, 0.35, 0.04, 0.5, 'thud')
     drop('ottoman_lid', 2.88, 3.00, 0.35, 0.04, 0.0, 'none')
     # ---- S2 (3.3-7.0): wardrobe, tee drawer, fronts, desk, pedestal drawer, chair, laptop, lamp
-    slide('wr_body', 3.30, 3.45, (0.60, 0, 0), 1.0, 0.9)
+    slide('wr_body', 3.16, 3.32, (0.60, 0, 0), 1.0, 0.9)
     slide('pegs', 3.48, 3.60, (0, 0.25, 0), 1.0, 0.3, 'tick')
     fly('coat', 3.58, 3.76, (0.0, 0.35, 0.10), 0.05, 0.3, 'swish')
     fly('tote', 3.66, 3.82, (0.0, 0.35, 0.10), 0.05, 0.25, 'tick')
@@ -929,7 +941,7 @@ def timeline_15(tl, kit):
         dict(t=7.42, kind='pose', pose='stand'),
         dict(t=7.62, kind='pose', pose=PRESS),
         dict(t=7.74, kind='pose', pose=PRESS),
-        dict(t=8.15, kind='walk', to=(1.92, 1.92, -50), pose=LOOKUP),
+        dict(t=8.15, kind='walk', to=(2.04, 1.78, -50), pose=LOOKUP),
         dict(t=10.40, kind='pose', pose=LOOKUP),
         dict(t=10.85, kind='sit', at=(1.62, 2.24, 95), seat=BED_SEAT),
     ])
@@ -1100,8 +1112,8 @@ def timeline_long(tl, kit):
     hide = lambda t: (I4, False)
     # ---- L1 (0.0-3.0): planks, the bed rises and docks, rail, posts, towers, motor, first shelf of books
     for k in range(6):
-        t1 = 0.26 + 0.075 * k
-        drop(f'floor{k}', t1 - 0.18, t1, 0.55, 0.05, 0.3 + 0.03 * k, 'tick')
+        t1 = 0.16 + 0.06 * k
+        drop(f'floor{k}', t1 - 0.14, t1, 0.55, 0.05, 0.3 + 0.03 * k, 'tick')
     tl.custom('bed', bed_fn)
     ev(T_UP0 + 0.1, 'bed_pop', 0.4, 'tick')
     ev(T_UP1, 'bed_dock', 1.0, 'clunk')
