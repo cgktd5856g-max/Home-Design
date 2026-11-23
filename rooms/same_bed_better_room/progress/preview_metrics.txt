@@ -1,0 +1,10 @@
+.render/same_bed_better_room/sbbr_preview.mp4
+  ok  dmed     9.3  target 7.5-       motion: median change per 0.2 s (hits 8.4, flops 5.1)
+  ok  s10     0.47  target 0.39-      share of 0.2 s steps with a clear change (hits 0.43, flops 0.35)
+  ok  calm     0.4  target -1.8       longest near-still stretch in seconds (hits 1.4, flops 2.6)
+  ok  camera   8.67  target 1.8-       camera movement: change in the quietest tiles per 0.4 s (hits 2.9, flops 1.0)
+  ok  fb       0.2  target -0.4       first clear movement in seconds
+  OFF lum      181  target 138-178    mean brightness 0-255 (hits 10th-90th percentile)
+  OFF sat     0.16  target 0.17-0.38  mean saturation (hits 10th-90th percentile; flops run warmer and more saturated)
+  ok  warm    25.2  target 22-57      mean red minus blue (hits 10th-90th percentile; above 60: cream or orange cast)
+  OFF len     15.0  target 34-46      seconds, for the long cut (hits 25th-75th percentile; the 15 s cut is a separate test)

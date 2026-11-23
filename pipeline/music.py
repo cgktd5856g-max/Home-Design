@@ -5,7 +5,8 @@ Usage: python3 music.py <workdir> [bpm]     reads <workdir>/frames.json (written
 Optional <workdir>/music.json overrides: {"bpm": 126, "MUSIC": {"drop_at": 0, "chords": [[..],..], "roots": [..],
 "pluck_bars": [0, 1], "riser": false}}
 Event kinds from the timeline: 'thud' (big pieces; strength sets gain and pitch), 'tick' (small items), 'swish'
-(drawer / door opening), 'chime' (lights on), 'none'.
+(drawer / door opening), 'chime' (lights on), 'none', plus 'bonk' (door hits furniture), 'clack' (wooden tile
+clack), 'scrape' (furniture sliding; event 'len' = seconds), 'zip' (runner glide + click), 'chime2' (bright two notes).
 """
 import os
 import sys
@@ -148,6 +149,54 @@ def chime():
     return out * 0.35 + hp(rng.standard_normal(n), 3000) * np.exp(-t / 0.003) * 0.5
 
 
+def bonk(f0=190):
+    """Dull wooden bonk with a springy wobble (door hitting the bed)."""
+    n = int(0.75 * SR); t = t_arr(n)
+    f = f0 * (1 + 0.18 * np.exp(-t / 0.05)) * (1 + 0.06 * np.sin(2 * np.pi * 11 * t) * np.exp(-t / 0.25))
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.16)
+    spring = np.sin(2 * np.pi * np.cumsum(420 + 140 * np.sin(2 * np.pi * 14 * t)) / SR) * np.exp(-t / 0.22) * 0.35
+    knock = bp(rng.standard_normal(n), 200, 1400) * np.exp(-t / 0.012) * 0.7
+    return np.tanh(1.5 * (body + spring + knock))
+
+
+def clack(f=880):
+    """Dry wooden clack, like puzzle tiles meeting."""
+    n = int(0.16 * SR); t = t_arr(n)
+    tone = np.sin(2 * np.pi * f * t) * np.exp(-t / 0.018) + 0.5 * np.sin(2 * np.pi * f * 2.6 * t) * np.exp(-t / 0.008)
+    nz = bp(rng.standard_normal(n), 1500, 6000) * np.exp(-t / 0.004) * 0.8
+    return np.tanh(1.3 * (tone + nz))
+
+
+def scrape(length=0.6):
+    """A long furniture scrape over a wooden floor."""
+    n = int(length * SR); t = t_arr(n)
+    nz = bp(rng.standard_normal(n), 250, 1600)
+    am = 0.65 + 0.35 * np.sin(2 * np.pi * 23 * t) ** 2
+    e = np.clip(t / 0.05, 0, 1) * np.clip((length - t) / 0.12, 0, 1)
+    return nz * am * e * 0.9
+
+
+def zip_(length=0.5):
+    """Smooth rising zip of a runner, then a soft click."""
+    n = int(length * SR); t = t_arr(n)
+    nz = rng.standard_normal(n); out = np.zeros(n); segs = 20
+    for k in range(segs):
+        a, b2 = k * n // segs, (k + 1) * n // segs
+        fc = 700 * (5 ** (k / (segs - 1)))
+        out[a:b2] = bp(nz[a:b2], fc * 0.8, fc * 1.3)
+    e = np.sin(np.pi * np.clip(t / length, 0, 1)) ** 0.7
+    return out * e * 0.7
+
+
+def chime2():
+    """Bright two-note chime (where the bonk used to be)."""
+    n = int(1.4 * SR); t = t_arr(n); out = np.zeros(n)
+    for m, d in [(88, 0.0), (95, 0.12)]:
+        i = int(d * SR); tt = t[:n - i]
+        out[i:] += (np.sin(2 * np.pi * hz(m) * tt) + 0.3 * np.sin(2 * np.pi * hz(m) * 2 * tt)) * np.exp(-tt / 0.45)
+    return out * 0.5
+
+
 def reverb(x, secs=1.6, mix=0.18):
     n = int(secs * SR); t = t_arr(n)
     ir = lp(rng.standard_normal(n) * np.exp(-t / (secs / 5.5)), 6000)
@@ -231,6 +280,17 @@ def build(cfg, sfx_only=False):
             add(sfx, whoosh(1.2, up=False), t, 0.10)
         elif k == 'swish':
             add(sfx, whoosh(0.3, up=True), t - 0.3, g)
+        elif k == 'bonk':
+            add(sfx, bonk(s.get('f0', 190)), t, g)
+        elif k == 'clack':
+            add(sfx, clack(s.get('freq', 880)), t, g)
+        elif k == 'scrape':
+            add(sfx, scrape(s.get('len', 0.6)), t, g)
+        elif k == 'zip':
+            add(sfx, zip_(s.get('len', 0.5)), t, g)
+            add(sfx, clack(1500), t + s.get('len', 0.5), g * 0.5)
+        elif k == 'chime2':
+            add(sfx, chime2(), t, g)
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -277,6 +337,16 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='chime', gain=0.5)
         elif k == 'none':
             sfx = dict(kind='none')
+        elif k == 'bonk':
+            sfx = dict(kind='bonk', gain=0.45 + 0.4 * a)
+        elif k == 'clack':
+            sfx = dict(kind='clack', gain=0.25 + 0.4 * a, freq=760 + 90 * (i % 5))
+        elif k == 'scrape':
+            sfx = dict(kind='scrape', gain=0.3 + 0.3 * a, len=e.get('len', 0.6))
+        elif k == 'zip':
+            sfx = dict(kind='zip', gain=0.35 + 0.3 * a, len=e.get('len', 0.5))
+        elif k == 'chime2':
+            sfx = dict(kind='chime2', gain=0.4 + 0.3 * a)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
