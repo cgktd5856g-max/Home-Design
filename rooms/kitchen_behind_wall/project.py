@@ -65,8 +65,8 @@ def materials():
     wood_mats('oak', srgb(214, 188, 154), seed=3.0)
     wood_mats('birch', srgb(228, 208, 174), seed=8.0)
     mat('groove', col=srgb(170, 150, 120))
-    mat('tile', tex=12, col=srgb(172, 194, 168), col2=srgb(232, 234, 228), rough=0.18, f0=0.04, glossy=True,
-        p=(0.075, 0.30, 0.0022, 1, 0.0))
+    mat('tile', tex=12, col=srgb(172, 194, 168), col2=srgb(226, 230, 222), rough=0.18, f0=0.04, glossy=True,
+        p=(0.075, 0.30, 0.0035, 1, 0.0))
     mat('worktop', tex=15, col=srgb(222, 222, 220), col2=srgb(176, 176, 178), rough=0.18, f0=0.045, glossy=True, p=(700.0, 0.86))
     mat('steel', tex=14, col=srgb(206, 207, 211), rough=0.26, metal=1, p=(2,))
     mat('steel_x', tex=14, col=srgb(206, 207, 211), rough=0.30, metal=1, p=(0,))
@@ -121,7 +121,7 @@ def materials():
     for nm, c in (('bk_sage', (150, 172, 142)), ('bk_blue', (96, 130, 178)), ('bk_yel', (232, 196, 92)),
                   ('bk_white', (240, 238, 234)), ('bk_grey', (150, 152, 156)), ('bk_teal', (70, 140, 140))):
         mat(nm, col=srgb(*c), rough=0.6)
-    fg.materials(['fig_adult'])
+    mat('fig_denim', col=srgb(104, 132, 170), rough=0.48, f0=0.04)
 
 
 # ------------------------------------------------------------------------------------------- helpers
@@ -548,8 +548,9 @@ def build_uppers(rng):
     plant('herb', 3.54, 3.26, 1.525, 0.055, 0.09, rng, 9, pot_m='ceramic')
     plant('herb2', 3.52, 3.30, 1.885, 0.045, 0.075, rng, 8, pot_m='mug_sage')
     jar('herb2', 3.74, 3.30, 1.885, 0.04, 0.16, 'pasta')
-    add('board', xform(rbox((0, 0, 0.17), (0.28, 0.018, 0.34), 0.008, 3), T(3.04, 3.44, CT) @ R('x', -0.12)), 'board')
-    add('board', xform(rbox((0, 0, 0.13), (0.22, 0.018, 0.26), 0.008, 3), T(3.22, 3.43, CT) @ R('x', -0.10)), 'oak_z')
+    bdx = 0.62 if LONG else 0.0                   # long cut: keep the worktop under the pull-down clear
+    add('board', xform(rbox((0, 0, 0.17), (0.28, 0.018, 0.34), 0.008, 3), T(3.04 + bdx, 3.44, CT) @ R('x', -0.12)), 'board')
+    add('board', xform(rbox((0, 0, 0.13), (0.22, 0.018, 0.26), 0.008, 3), T(3.22 + bdx, 3.43, CT) @ R('x', -0.10)), 'oak_z')
     # kettle on the worktop over the blind corner
     kx, ky = 3.56, 3.12
     add('kettle', lathe([(0, CT), (0.07, CT), (0.085, CT + 0.06), (0.08, CT + 0.16), (0.05, CT + 0.20), (0.02, CT + 0.21),
@@ -580,6 +581,20 @@ def build_fridge_contents():
             add('fr_bins', lathe([(0, z + 0.01), (0.03, z + 0.01), (0.03, z + 0.16), (0.014, z + 0.21), (0, z + 0.21)], 16, (3.475, y)), m)
 
 
+def build_shared_extras():
+    tin('tea', 1.44, 3.36, CT, 0.045, 0.13, 'teal')
+    mx = (1.48, 1.40) if LONG else (2.96, 3.08)
+    my = (3.06, 3.00) if LONG else (3.30, 3.36)
+    mug('mugs2', mx[0], my[0], CT, 'mug_sage', ang=-1.2)
+    mug('mugs2', mx[1], my[1], CT, 'mug_yel', ang=-1.9)
+    add('vase', lathe([(0, CT), (0.035, CT), (0.045, CT + 0.08), (0.025, CT + 0.15), (0.02, CT + 0.17), (0, CT + 0.17)], 22, (1.12, 3.40)), 'ceramic')
+    for k in range(5):
+        a = k * 1.3
+        tip = (1.12 + 0.06 * math.cos(a), 3.40 + 0.05 * math.sin(a), CT + 0.30 + 0.02 * k)
+        add('vase', tube([(1.12, 3.40, CT + 0.15), tip], 0.003, 5), 'leaf')
+        add('vase', ellipsoid(tip, (0.02, 0.012, 0.035), 7), 'leaf2')
+
+
 def build_long_extras(rng):
     # utensil rail on the tile over the sink (x 2.12-2.80; gap at the tap)
     add('rail', tube([(2.14, 3.46, 1.30), (2.80, 3.46, 1.30)], 0.008, 10), 'oak_x')
@@ -593,13 +608,6 @@ def build_long_extras(rng):
         add('oils', lathe([(0, 1.525), (0.03, 1.525), (0.03, 1.70), (0.012, 1.75), (0.012, 1.78), (0, 1.78)], 18, (xx, 3.22)),
             ('bot_g', 'bot_y', 'bot_b')[i])
     plant('cplant', 3.62, 3.26, 2.245, 0.05, 0.08, rng, 9)
-    tin('tea', 1.44, 3.36, CT, 0.045, 0.13, 'teal')
-    add('vase', lathe([(0, CT), (0.035, CT), (0.045, CT + 0.08), (0.025, CT + 0.15), (0.02, CT + 0.17), (0, CT + 0.17)], 22, (1.12, 3.40)), 'ceramic')
-    for k in range(5):
-        a = k * 1.3
-        tip = (1.12 + 0.06 * math.cos(a), 3.40 + 0.05 * math.sin(a), CT + 0.30 + 0.02 * k)
-        add('vase', tube([(1.12, 3.40, CT + 0.15), tip], 0.003, 5), 'leaf')
-        add('vase', ellipsoid(tip, (0.02, 0.012, 0.035), 7), 'leaf2')
     # over-bed cupboard on the west wall: two lift-up flaps + an open book bay
     oz0, oz1, ox1 = 1.85, 2.45, 0.32
     carcass_y = (0.15, 1.95)
@@ -732,11 +740,12 @@ def build():
     build_stool()
     build_desk_props(rng)
     build_fridge_contents()
+    build_shared_extras()
     if LONG:
         build_long_extras(rng)
     add('dimmer', box(-5.0, -5.0, -5.0, -4.99, -4.99, -4.99), 'white_in')        # hidden; its x offset = daylight dip
     global COOK
-    COOK = fg.Figure('cook', 'adult')
+    COOK = fg.Figure('cook', 'adult', mat='fig_denim')
     COOK.build(COOK.sit_pose(SEAT, base='sit_desk'), at=(STOOL_DESK[0], STOOL_DESK[1] + 0.02, 0.0), seat=SEAT)
 
 
@@ -785,10 +794,10 @@ LSUN = (62000.0, 58500.0, 52000.0)
 LDOOR = (2.2, 2.2, 2.15)
 LBOUNCE = (1.1, 1.1, 1.08)
 LNICHE = (5.0, 5.0, 4.9)
-LUP = (60.0, 53.0, 41.0)
-LJAR = (52.0, 46.0, 35.0)
-LHOOD = (520.0, 470.0, 370.0)
-LLAMP = (110.0, 88.0, 58.0)
+LUP = (95.0, 85.0, 66.0)
+LJAR = (80.0, 71.0, 55.0)
+LHOOD = (800.0, 720.0, 560.0)
+LLAMP = (170.0, 136.0, 92.0)
 LBED = (160.0, 130.0, 90.0)
 LOB = (40.0, 35.0, 27.0)
 
@@ -1084,10 +1093,13 @@ def timeline_15(tl):
     appear('led_jar', 11.80, 14.55); ev(11.80, 'jar_on', 0.5, 'chime')
     appear('hood_on', 12.00, 14.55); ev(12.00, 'hood_on', 0.5, 'chime')
     appear('lamp_on', 11.90, 14.55); ev(11.90, 'lamp_on', 0.5, 'chime')
-    tl.custom('dimmer', lambda t: (T(0.18 * smooth(c01((t - 11.15) / 0.5)) * (1 - smooth(c01((t - 13.80) / 0.60))), 0, 0), False))
+    tl.custom('dimmer', lambda t: (T(0.15 * smooth(c01((t - 11.15) / 0.5)) * (1 - smooth(c01((t - 13.80) / 0.60))), 0, 0), False))
+    drop('tea', 11.92, 12.04, 0.25, 0.05, 0.35)
     drop('board', 12.26, 12.40, 0.25, 0.04, 0.4)
+    drop('mugs2', 12.48, 12.60, 0.22, 0.05, 0.3)
     drop('kettle', 12.64, 12.80, 0.30, 0.04, 0.45, 'thud')
     drop('herb2', 13.06, 13.20, 0.22, 0.05, 0.35)
+    drop('vase', 13.42, 13.56, 0.25, 0.06, 0.35)
 
 
 def timeline_rest(tl):
@@ -1185,6 +1197,7 @@ def timeline_long(tl):
         drop(f'jar{k}', 8.98 + 0.14 * k, 9.10 + 0.14 * k, 0.22, 0.06, 0.32)
     drop('kettle', 9.94, 10.10, 0.30, 0.04, 0.5, 'thud')
     drop('tea', 10.26, 10.40, 0.25, 0.05, 0.35)
+    drop('mugs2', 10.42, 10.54, 0.22, 0.05, 0.3)
     drop('herb', 10.58, 10.70, 0.25, 0.06, 0.3)
 
     # ===== Z2 a4 (11.2-14.6): two-door cupboard, utensil rail, oils + plant
