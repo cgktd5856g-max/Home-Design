@@ -683,7 +683,7 @@ def P(x, y, z, yaw, pitch):
 
 SA = (P(0.20, 0.15, 2.30, 37.0, -26.0), P(0.55, 0.70, 1.55, 28.0, -8.0))       # high doorway corner, craning down fast
 SB = (P(0.55, 1.05, 1.00, -12.0, 2.0), P(1.55, 1.35, 0.90, 10.0, 4.0))         # the den under the loft
-SC = (P(1.10, 1.08, 0.62, 74.0, -7.0), P(1.02, 1.70, 1.05, 84.0, -9.0))        # tight push up the stair with the ripple
+SC = (P(1.32, 0.66, 0.46, 52.0, 6.0), P(1.05, 1.56, 1.02, 82.0, -8.0))        # low, looking up the stair, rising with the ripple
 SC2 = (P(0.30, 1.20, 0.85, 80.0, -4.0), P(0.80, 1.56, 0.86, 90.0, -4.0))       # all 24 open: push in, level
 SD = (P(0.95, 0.60, 1.40, 48.0, 6.0), P(1.20, 0.90, 1.66, 36.0, 13.0))        # the child, the top drawer, the star, lights on
 SE = (P(0.64, 0.72, 1.82, 30.0, -13.0), SA[0])                                  # final: drift back into the frame-1 pose
@@ -728,7 +728,7 @@ def lights(mats4, vis):
 
 SEPARATE = ['sky_day', 'snow_day', 'pineo_day', 'house_day', 'roof_day', 'flake', 'bulb_on', 'star_glow', 'led', 'dl_emis', 'lamp_bulb', 'glint_glow']
 BLENDER = dict(
-    exposure=-0.30,
+    exposure=-0.45,
     look='AgX - Medium High Contrast',
     translucent={'lampshade': 0.5},
     separate=SEPARATE,
@@ -830,10 +830,10 @@ def timeline_short(tl):
 
     # ================= S1 (0-2.9, high corner): planks, the stair lands (and teases one drawer), posts, deck, bed
     for k in range(6):
-        t1 = 0.14 + 0.05 * (5 - k)
-        drop(f'floor{k}', t1 - 0.14, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
+        t1 = 0.08 + 0.03 * (5 - k)
+        drop(f'floor{k}', t1 - 0.08, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
     for i in range(NST):
-        drop(f'stc{i}', 0.16 + 0.07 * i, 0.32 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
+        drop(f'stc{i}', 0.46 + 0.07 * i, 0.62 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
     T_TEASE = 1.02
     T_C = 5.70                                    # cascade start
     STEP = 0.12
@@ -883,10 +883,10 @@ def timeline_short(tl):
     tl.custom('glint', glint)
     ev(T_CL + 0.02 * 23 + 0.22, 'all_shut', 0.9, 'thud')
     ev(9.15, 'sparkle', 0.45, 'chime')
-    grow('loft_posts', 1.30, 1.48, 'z', (0, 0, 0), 0.8)
-    drop('loft_deck', 1.50, 1.68, 0.45, 0.02, 0.9, 'thud')
-    tl.custom('cupboard', lambda t: (tl.anims['loft_deck'](t)[0], t >= 1.50))
-    slide('loft_rail', 1.74, 1.90, (0, -0.5, 0), 1.0, 0.5)
+    drop('loft_deck', 0.08, 0.28, 0.9, 0.02, 1.0, 'thud')
+    grow('loft_posts', 0.30, 0.44, 'z', (0, 0, 0), 0.8)
+    tl.custom('cupboard', lambda t: (tl.anims['loft_deck'](t)[0], t >= 0.08))
+    slide('loft_rail', 1.40, 1.56, (0, -0.5, 0), 1.0, 0.5)
     drop('stair_guard', 1.88, 2.02, 0.35, 0.03, 0.45)
     drop('loft_mat', 1.94, 2.10, 0.35, 0.03, 0.6, 'thud')
     drop('loft_duvet', 2.16, 2.32, 0.30, 0.03, 0.45)
