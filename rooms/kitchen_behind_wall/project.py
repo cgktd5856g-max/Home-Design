@@ -776,7 +776,7 @@ S5 = (P(1.95, -0.038, 1.468, -6.93, -3.27), P1)                                 
 HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 8.36, S3), (8.56, 10.75, S3B), (11.0, 13.6, S4), (13.9, DUR_CUT, S5)]
 if LONG:
     A1 = (P1, P(1.95, 0.88, 1.275, 2.5, -8.0))                                         # the wall opens, the run builds
-    A2 = (P(2.45, 1.55, 0.95, 6.0, -14.0), P(1.45, 1.50, 0.95, -6.0, -14.0))          # low slide west: U drawer, dishwasher
+    A2 = (P(2.50, 1.45, 1.32, 0.0, -27.0), P(2.25, 1.60, 1.30, -36.0, -26.0))          # low slide west: U drawer, dishwasher
     A3 = (P(1.60, 1.15, 1.50, -6.0, 4.0), P(1.75, 1.55, 1.50, -2.0, 6.0))             # push-in on the hob end: uppers, hood, duct
     A4 = (P(2.05, 1.40, 1.55, -4.0, -2.0), P(2.60, 1.55, 1.55, 16.0, -2.0))           # slide east: cupboard, rail, corner shelf
     A5 = (P(2.30, 1.25, 1.30, 26.0, -24.0), P(2.80, 1.35, 1.25, 12.0, -26.0))         # corner shelves, orbit
@@ -784,7 +784,7 @@ if LONG:
     A7 = (P(1.55, 0.55, 0.75, 52.0, 6.0), P(1.70, 0.70, 1.30, 50.0, -8.0))            # larder, low angle rising
     A8 = (P(2.05, 0.55, 2.05, 48.0, -32.0), P(2.30, 0.80, 2.05, 56.0, -34.0))         # larder, high slide
     A9 = (P(1.20, 0.85, 1.55, 34.0, -17.0), P(1.85, 0.90, 1.55, 6.0, -17.0))          # orbit around the new desk
-    A10 = (P(1.80, 1.70, 1.45, 32.0, 6.0), P(1.95, 1.85, 1.45, 36.0, 9.0))            # pull-down over the figure
+    A10 = (P(2.72, 1.62, 1.40, 9.0, 6.0), P(2.82, 1.82, 1.42, 4.0, 9.0))            # pull-down over the figure
     A11 = (P(3.10, 1.05, 1.40, -104.0, -16.0), P(2.70, 1.00, 1.32, -104.0, -16.0))    # beside the larder, the bed drawers
     A12 = (P(2.00, 1.85, 1.55, -100.0, 5.0), P(2.00, 1.05, 1.55, -88.0, 5.0))         # over-bed cupboard, slide south
     A13 = (P(1.95, -0.73, 1.382, -8.2, -5.45), P1)                                     # the lit wide, drifts into frame 1
