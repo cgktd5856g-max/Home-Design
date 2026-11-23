@@ -148,6 +148,23 @@ def chime():
     return out * 0.35 + hp(rng.standard_normal(n), 3000) * np.exp(-t / 0.003) * 0.5
 
 
+def clink(f=2350.0):
+    """Ceramic clink: a few inharmonic partials with fast decay (plates, cups)."""
+    n = int(0.45 * SR); t = t_arr(n); out = np.zeros(n)
+    for r, a, d in ((1.0, 1.0, 0.09), (2.32, 0.55, 0.05), (3.71, 0.35, 0.03), (5.1, 0.2, 0.02)):
+        out += a * np.sin(2 * np.pi * f * r * t) * np.exp(-t / d)
+    return out * 0.6 + hp(rng.standard_normal(n), 4000) * np.exp(-t / 0.002) * 0.4
+
+
+def clack():
+    """Ratchet clack-clack-clack (three quick wooden knocks, the last one firmest)."""
+    n = int(0.3 * SR); out = np.zeros(n)
+    for k, (d, a) in enumerate(((0.0, 0.5), (0.045, 0.6), (0.09, 1.0))):
+        i = int(d * SR); m = n - i; t = t_arr(m)
+        out[i:] += a * (bp(rng.standard_normal(m), 600, 2600) * np.exp(-t / 0.012) + 0.6 * np.sin(2 * np.pi * 420 * t) * np.exp(-t / 0.03))
+    return out
+
+
 def reverb(x, secs=1.6, mix=0.18):
     n = int(secs * SR); t = t_arr(n)
     ir = lp(rng.standard_normal(n) * np.exp(-t / (secs / 5.5)), 6000)
@@ -226,6 +243,10 @@ def build(cfg, sfx_only=False):
             add(sfx, thud(s.get('f0', 70)), t, g)
         elif k == 'tick':
             add(sfx, tick(s.get('freq', 1300)), t, g)
+        elif k == 'clink':
+            add(sfx, clink(), t, g)
+        elif k == 'clack':
+            add(sfx, clack(), t - 0.09, g)
         elif k == 'chime':
             add(sfx, chime(), t, g)
             add(sfx, whoosh(1.2, up=False), t, 0.10)
@@ -277,6 +298,10 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='chime', gain=0.5)
         elif k == 'none':
             sfx = dict(kind='none')
+        elif k == 'clink':
+            sfx = dict(kind='clink', gain=0.20 + 0.25 * a)
+        elif k == 'clack':
+            sfx = dict(kind='clack', gain=0.45 + 0.3 * a)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
