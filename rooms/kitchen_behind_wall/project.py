@@ -749,12 +749,13 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-P1 = P(1.95, 0.20, 1.32, -2.0, -7.0)                                                  # frame 1 (and the loop end)
-S1 = (P1, P(1.95, 0.80, 1.28, 2.0, -8.0))                                             # doorway push-in on the birch wall
+P1 = P(1.95, 0.20, 1.32, -4.0, -7.0)                                                  # frame 1 (and the loop end)
+S1 = (P1, P(1.95, 1.10, 1.24, 4.0, -9.0))                                             # doorway push-in on the birch wall
 S2 = (P(1.80, 1.05, 1.45, -6.0, -6.0), P(2.70, 0.95, 1.45, 10.0, -7.0))                # cooking run, slide east
-S3 = (P(1.15, 0.45, 1.50, 42.0, -14.0), P(1.45, 0.25, 1.46, 22.0, -12.0))             # larder + desk, orbit
-S4 = (P(1.95, -0.60, 1.373, -7.33, -5.67), P1)                                         # wide, drifts into frame 1
-HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.7, S3), (11.0, DUR_CUT, S4)]
+S3 = (P(1.00, 0.60, 1.55, 48.0, -15.0), P(1.75, 0.15, 1.42, 16.0, -11.0))             # larder + desk, orbit
+S4 = (P(1.85, 1.35, 1.40, -14.0, -6.0), P(2.65, 1.25, 1.40, 4.0, -8.0))               # lit run, slide east
+S5 = (P(1.95, -0.13, 1.3493, -6.93, -6.27), P1)                                       # closing wide, drifts into frame 1
+HOLDS = [(0.0, 3.0, S1), (3.3, 7.0, S2), (7.3, 10.7, S3), (11.0, 13.6, S4), (13.9, DUR_CUT, S5)]
 if LONG:
     A1 = (P1, P(1.95, 0.88, 1.275, 2.5, -8.0))                                         # the wall opens, the run builds
     A2 = (P(2.45, 1.55, 0.95, 6.0, -14.0), P(1.45, 1.50, 0.95, -6.0, -14.0))          # low slide west: U drawer, dishwasher
@@ -923,14 +924,14 @@ def timeline_15(tl):
 
     # ---- the wall folds open (0.10-0.44), the stack slides into the pocket (0.44-0.62); closes 13.75-14.40
     panels_anim(tl, [(0.10, 0.0, 0.0), (0.42, 90.0, 0.0), (0.46, 90.0, 0.0), (0.64, 90.0, SLIDE_IN),
-                     (13.75, 90.0, SLIDE_IN), (13.92, 90.0, 0.0), (14.40, 0.0, 0.0)],
+                     (13.95, 90.0, SLIDE_IN), (14.10, 90.0, 0.0), (14.55, 0.0, 0.0)],
                 clacks=[(0.16, 0.55, 140), (0.24, 0.6, 160), (0.32, 0.65, 180), (0.40, 0.7, 200),
-                        (13.98, 0.7, 200), (14.12, 0.65, 180), (14.26, 0.6, 160), (14.40, 0.75, 120)])
+                        (14.16, 0.7, 200), (14.29, 0.65, 180), (14.42, 0.6, 160), (14.55, 0.75, 120)])
     ev(0.64, 'pocket', 0.35, 'swish')
     # ---- sage tiles slap onto the back wall right to left (0.30-1.00)
     for i, k in enumerate(range(9, -1, -1)):
         t1 = 0.30 + 0.078 * i
-        from_camera(f'tile{k}', t1 - 0.14, t1, cam_s1, 0.22, 0.25, 'tick')
+        from_camera(f'tile{k}', t1 - 0.16, t1, cam_s1, 0.40, 0.25, 'tick')
     # ---- base units grow out of the back wall (1.05-1.65)
     for i, nm in enumerate(('b_dw', 'b_hob', 'b_sink', 'b_corner')):
         grow(nm, 0.92 + 0.15 * i, 1.08 + 0.15 * i, 'y', (0, D, 0), 0.75)
@@ -1065,11 +1066,11 @@ def timeline_15(tl):
 
     # ---- S4: put back, lights on, then the wall closes and the room returns to frame 1
     drop('herb', 11.18, 11.30, 0.25, 0.06, 0.35)
-    appear('led_up', 11.60, 14.40); ev(11.60, 'led_on', 0.7, 'chime')
-    appear('led_jar', 11.80, 14.40); ev(11.80, 'jar_on', 0.5, 'chime')
-    appear('hood_on', 12.00, 14.40); ev(12.00, 'hood_on', 0.5, 'chime')
-    appear('lamp_on', 11.90, 14.40); ev(11.90, 'lamp_on', 0.5, 'chime')
-    tl.custom('dimmer', lambda t: (T(0.12 * smooth(c01((t - 11.45) / 0.5)) * (1 - smooth(c01((t - 13.85) / 0.55))), 0, 0), False))
+    appear('led_up', 11.60, 14.55); ev(11.60, 'led_on', 0.7, 'chime')
+    appear('led_jar', 11.80, 14.55); ev(11.80, 'jar_on', 0.5, 'chime')
+    appear('hood_on', 12.00, 14.55); ev(12.00, 'hood_on', 0.5, 'chime')
+    appear('lamp_on', 11.90, 14.55); ev(11.90, 'lamp_on', 0.5, 'chime')
+    tl.custom('dimmer', lambda t: (T(0.12 * smooth(c01((t - 11.45) / 0.5)) * (1 - smooth(c01((t - 13.80) / 0.60))), 0, 0), False))
     drop('board', 12.26, 12.40, 0.25, 0.04, 0.4)
     drop('kettle', 12.64, 12.80, 0.30, 0.04, 0.45, 'thud')
     drop('herb2', 13.06, 13.20, 0.22, 0.05, 0.35)
