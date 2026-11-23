@@ -77,7 +77,7 @@ def materials():
     mat('box_linen', tex=3, col=srgb(214, 208, 196), p=(0.06,))
     mat('box_white', col=srgb(240, 240, 238), rough=0.5)
     mat('suitcase', col=srgb(124, 150, 176), rough=0.3, f0=0.05, glossy=True)
-    for nm, c in (('cl_rust', (174, 110, 86)), ('cl_mustard', (206, 178, 112)), ('cl_terra', (198, 126, 92)), ('cl_white', (242, 242, 240)),
+    for nm, c in (('cl_rust', (150, 160, 174)), ('cl_mustard', (216, 210, 198)), ('cl_terra', (112, 140, 178)), ('cl_white', (242, 242, 240)),
                   ('cl_sage', (146, 166, 138)), ('cl_navy', (54, 66, 100)), ('cl_denim', (90, 114, 152)), ('cl_grey', (192, 192, 196))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
     for nm, c in (('bk_sage', (150, 168, 144)), ('bk_white', (240, 238, 232)), ('bk_terra', (194, 116, 84)), ('bk_navy', (56, 68, 102)),
@@ -545,7 +545,7 @@ def segs_long():
     F = (P(1.38, 1.05, 1.10, 285.0, -26.0), P(1.30, 2.10, 1.30, 235.0, -18.0))           # wardrobe drawers, toward the desk
     G = (P(1.20, 0.55, 1.45, 14.0, -10.0), P(1.38, 1.05, 2.00, 60.0, -30.0))                # rising glide up the stairs
     Hs = (P(1.15, 0.04, 1.32, -2.0, -18.0, 70.0), P(0.95, 0.42, 1.22, 14.0, -16.0, 70.0))  # the rail, low in the aisle
-    J1 = (P(1.28, 2.58, 1.58, 192.0, -16.0), P(1.32, 2.25, 1.45, 210.0, -12.0))            # dolly: the person comes in
+    J1 = (P(1.40, 2.58, 1.58, 196.0, -16.0), P(1.42, 2.25, 1.45, 214.0, -12.0))            # dolly: the person comes in
     J2 = (P(1.28, 0.06, 1.35, -12.0, -8.0), P(1.20, 0.30, 1.25, 8.0, -10.0))          # window end, down the aisle
     K = (P(2.88, 0.10, 2.40, -60.0, -30.0), P(2.40, 0.38, 2.30, -18.0, -26.0))           # high south-east corner
     sw = lambda a, b: (lambda u, t: mix(a, b, smooth(u), lift=2.0))

@@ -307,7 +307,12 @@ def make_mesh(name, Pt, Nt, Mi, mats):
     verts = V[first]
     faces = inv.reshape(-1, 3)
     ok = (faces[:, 0] != faces[:, 1]) & (faces[:, 1] != faces[:, 2]) & (faces[:, 0] != faces[:, 2])
-    faces, Nl, Mi = faces[ok], Nt[ok].reshape(-1, 3), Mi[ok]
+    faces, Nt, Mi = faces[ok], Nt[ok], Mi[ok]
+    # identical triangles (two boxes sharing a face) are dropped by Blender, which would shift every later face's
+    # custom normals and leave black patches: keep only the first copy
+    _, keep = np.unique(np.sort(faces, axis=1), axis=0, return_index=True)
+    keep = np.sort(keep)
+    faces, Nl, Mi = faces[keep], Nt[keep].reshape(-1, 3), Mi[keep]
     me = bpy.data.meshes.new(name)
     me.from_pydata(verts.tolist(), [], faces.tolist())
     used = sorted(set(Mi.tolist()))
@@ -317,6 +322,8 @@ def make_mesh(name, Pt, Nt, Mi, mats):
     me.polygons.foreach_set('material_index', [remap[k] for k in Mi.tolist()])
     me.polygons.foreach_set('use_smooth', [True] * len(faces))
     me.update()
+    if len(me.polygons) != len(faces):
+        print(f'  warning: {name}: {len(faces)} faces sent, {len(me.polygons)} kept; normals may be off')
     Nl = Nl / (np.linalg.norm(Nl, axis=1, keepdims=True) + 1e-12)
     try:
         me.normals_split_custom_set(Nl.tolist())
