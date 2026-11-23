@@ -10,6 +10,7 @@ the search engine's copy of the page, which can lag the live page. View, like an
 | [YouTube @Havenhaus1 Shorts tab](https://www.youtube.com/@Havenhaus1/shorts) | all 298 Shorts with titles and displayed views; 151K subscribers, 309 videos | read in the owner's browser, 22 Nov 2026 |
 | YouTube video pages for 33 Shorts (URLs in `videos.csv`, `data_status` = "video page via browser") | exact views, likes, length, upload date | read in the owner's browser |
 | Top videos: [kitchen](https://www.youtube.com/watch?v=ZlcRIf31-6g), [loft](https://www.youtube.com/watch?v=3jQL43v_uIQ), [bedroom](https://www.youtube.com/watch?v=cGjsij1i3fA), [8 m² kids' room](https://www.youtube.com/watch?v=0_2UqtXKyOA), [24 m² flat](https://www.youtube.com/watch?v=Z_BBJKn6v64); flops: [kitchen re-cut](https://www.youtube.com/watch?v=_yiQm2amRLE), [floral kitchen](https://www.youtube.com/watch?v=Y2ttSM1k9uI) | frame contact sheets (1-2 s steps) and top comments | read in the owner's browser; analysis only, nothing saved or re-uploaded |
+| 59 Haven Haus Shorts (25 hits, 25 same-week flops, 9 from 2026), listed with links in `deep_analysis.csv` | played in full in the owner's browser: every 0.2 s frame measured (motion, colour, scene changes, camera), sound measured at double speed through a silent tap, 5 frames per video coded by eye | 22 Nov 2026; analysis only, nothing saved or re-uploaded |
 | [Instagram @havenhaus_1](https://www.instagram.com/havenhaus_1/) | 1M followers, 346 posts, older bio | search snapshot |
 | [YouTube @Havenhaus1](https://www.youtube.com/@Havenhaus1) and [Shorts tab](https://www.youtube.com/@Havenhaus1/shorts) | channel ID, description, page keywords | page read; video grid not readable |
 | [X: Massimo (@Rainmaker1973)](https://x.com/Rainmaker1973/status/1999371467843104913) | balcony cabinet repost credited to havenhaus_1; date from the status ID | search snapshot |
@@ -74,6 +75,6 @@ the search engine's copy of the page, which can lag the live page. View, like an
 
 ## Our own files (measured 22 Nov 2026)
 
-- `out/kitchen_build.mp4`, analysed with `pipeline/analyze_reference.py`
+- `out/kitchen_build.mp4`, analysed with `pipeline/analyze_reference.py` and `research/hh_metrics.py`
 - `rooms/kitchen/project.py` (timeline: pieces, sound events, swings, lights-on, pantry)
 - `pipeline/music.py` (default 126 BPM)
