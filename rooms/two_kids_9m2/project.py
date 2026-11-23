@@ -505,6 +505,30 @@ def build_partition():
     add('rug', rbox((CX, 1.0, 0.007), (0.66, 1.7, 0.014), 0.006, 3), 'rug')
 
 
+LONG_ONLY = ('dkShelf', 'dkBooks', 'dkPlush', 'fairy', 'fairyOn', 'throwW', 'rugToys')
+
+
+def build_long_extras(rng):
+    """Pieces used only in the long cut: a shelf over the loft bed, fairy lights on the rail, a throw, toys on the rug."""
+    wood('dkShelf', 0.10, D - 0.20, DKT + 0.80, 0.86, D, DKT + 0.825, 'oak')
+    books_row('dkBooks', 0.14, 0.30, D - 0.17, DKT + 0.825, [], 'y')
+    x = 0.14
+    for m, th, h in (('bk_sage', 0.03, 0.20), ('bk_blush', 0.035, 0.18), ('bk_cream', 0.028, 0.21), ('bk_mustard', 0.03, 0.19),
+                     ('bk_blue', 0.032, 0.2)):
+        add('dkBooks', box(x, D - 0.17, DKT + 0.825, x + th, D - 0.02, DKT + 0.825 + h), m); x += th + 0.004
+    add('dkPlush', ellipsoid((0.62, D - 0.10, DKT + 0.905), (0.085, 0.07, 0.08), 16), 'toy_white')
+    add('dkPlush', ellipsoid((0.76, D - 0.10, DKT + 0.875), (0.05, 0.05, 0.05), 12), 'pil_mustard')
+    for k, y in enumerate(np.arange(BY0 + 0.08, D - 0.05, 0.11)):
+        zz = DKT + 0.335 - 0.025 * math.sin(math.pi * ((y - BY0) % 0.44) / 0.44)
+        add('fairy', ellipsoid((DK - 0.018, y, zz), (0.011, 0.011, 0.014), 8), 'led_off')
+        add('fairyOn', ellipsoid((DK - 0.018, y, zz), (0.012, 0.012, 0.015), 8), 'bulb')
+    add('fairy', tube([(DK - 0.018, BY0 + 0.05, DKT + 0.335), (DK - 0.018, D - 0.05, DKT + 0.335)], 0.002, 5), 'alu')
+    cloth('throwW', 0.03, DK - 0.07, 1.62, 2.05, DKT + 0.195, DKT + 0.12, 0.03, 'pil_mustard', 11, sides=('e',), puff=0.004)
+    for k, (x, y, m) in enumerate(((1.18, 0.62, 'toy_red'), (1.30, 0.70, 'toy_yellow'), (1.24, 0.80, 'toy_blue'), (1.40, 0.58, 'toy_green'))):
+        add('rugToys', rbox((x, y, 0.045), (0.07, 0.07, 0.06), 0.01, 3), m)
+    add('rugToys', ellipsoid((1.42, 0.86, 0.075), (0.06, 0.06, 0.06), 14), 'toy_blue')
+
+
 def build():
     materials()
     rng = np.random.default_rng(9)
@@ -513,6 +537,7 @@ def build():
     build_east(rng)
     build_desks(rng)
     build_partition()
+    build_long_extras(rng)
     # emitters that switch on
     add('ledDeck', box(DK - 0.035, BY0 + 0.05, DKZ - 0.0125, DK - 0.02, D - 0.05, DKZ - 0.0115), 'led')
     add('ledOc', box(OCX0 + 0.02, BY0 + 0.05, OCZ0 - 0.0065, OCX0 + 0.045, D - 0.05, OCZ0 - 0.0055), 'led')
@@ -539,14 +564,24 @@ def P(x, y, z, yaw, pitch):
 
 
 F1 = P(CX, -0.55, 1.52, 0.0, -6.0)                                               # frame 1: from the doorway
-S1 = (F1, P(CX, -0.18, 1.47, 0.0, -7.0))                                         # hero push-in
-S2 = (P(CX + 0.05, -0.55, 1.22, -1.0, -14.0), P(CX - 0.06, -0.30, 1.18, 1.0, -15.0))   # drawer pairs (stair / chest)
-S3 = (P(1.62, 0.62, 1.06, -50.0, -6.0), P(1.52, 0.86, 1.02, -56.0, -6.0))         # wardrobe under the raised bed (wow)
-S4 = (P(CX, 0.42, 2.62, 86.0, -84.0), P(CX, 0.50, 2.56, 94.0, -84.0))  # reverse: both desks
+S1 = (F1, P(CX, 0.30, 1.40, 0.0, -9.0))                                         # hero push-in
+S2 = (P(CX + 0.26, -0.66, 1.28, -9.0, -12.0), P(CX - 0.24, -0.12, 1.12, 9.0, -17.0))   # drawer pairs (stair / chest)
+S3 = (P(1.72, 0.48, 1.14, -38.0, -8.0), P(1.44, 1.02, 0.98, -64.0, -4.0))         # wardrobe under the raised bed (wow)
+S4 = (P(CX, 0.38, 2.64, 74.0, -84.0), P(CX, 0.54, 2.42, 106.0, -84.0))  # reverse: both desks
 S5 = (P(1.62, 0.25, 1.92, -14.0, -15.0), F1)                                     # partition, lights, back to frame 1
 STATIONS = [S1, S2, S3, S4, S5]
 HOLDS = [(0.0, 3.00, S1), (3.30, 6.40, S2), (6.70, 9.90, S3), (10.20, 11.90, S4), (12.20, DUR, S5)]
-camera = hold_camera(HOLDS, VFOV, rest=REST) if CUT != 'long' or REST else None
+S3B = (P(1.58, 0.75, 1.15, -48.0, -8.0), P(1.45, 1.05, 1.05, -60.0, -6.0))         # long: wardrobe, outside
+L1 = (P(0.80, 0.95, 1.28, 42.0, -27.0), P(0.86, 1.22, 1.22, 36.0, -28.0))         # long: under-bed drawers
+L2 = (P(0.92, 1.05, 1.48, 46.0, 12.0), P(0.98, 1.30, 1.46, 40.0, 14.0))           # long: overhead flaps
+L3 = (P(1.38, 1.55, 2.36, -55.0, -30.0), P(1.30, 1.90, 2.30, -62.0, -30.0))       # long: deck top
+L4 = (P(0.80, 1.53, 0.80, 2.0, -4.0), P(0.78, 1.78, 0.80, 0.0, -4.0))             # long: inside the wardrobe
+L5 = (P(CX, 0.50, 1.56, 0.0, -10.0), P(CX, 0.86, 1.50, 0.0, -10.0))               # long: the kids
+if CUT == 'long' and not REST:
+    DUR = 40.0
+    HOLDS = [(0.0, 3.00, S1), (3.30, 6.00, S4), (6.30, 9.60, S2), (9.90, 12.90, L1), (13.20, 16.00, L2), (16.30, 19.40, L3),
+             (19.70, 22.60, S3), (22.90, 26.60, S3B), (26.90, 31.00, L4), (31.30, 34.00, L5), (34.30, DUR, S5)]
+camera = hold_camera(HOLDS, VFOV, rest=REST)
 
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
@@ -767,8 +802,6 @@ class Story:
         drop('matW', t0 + 1.98, t0 + 2.14, 0.4, 0.05, 0.7, 'thud')
         drop('matE', t0 + 1.98, t0 + 2.14, 0.4, 0.05, 0.0, 'none')
         drop('ptTrack', t0 + 2.12, t0 + 2.24, 0.15, 0.02, 0.35)
-        for k in range(3):
-            drop(f'pt{k}', t0 + 2.16 + 0.04 * k, t0 + 2.30 + 0.04 * k, 0.5, 0.02, 0.4 if k == 2 else 0.0, 'tick' if k == 2 else 'none')
         drop('duvetW', t0 + 2.30, t0 + 2.48, 0.35, 0.03, 0.6, 'thud')
         drop('duvetE', t0 + 2.30, t0 + 2.48, 0.35, 0.03, 0.0, 'none')
         for i, (a, b) in enumerate((('pilW1', 'pilE1'), ('pilW2', 'pilE2'), ('pilW3', 'pilE3'))):
@@ -805,7 +838,7 @@ class Story:
             tl.drop(cn, to + 0.18, to + 0.34, 0.22, 0.05, 0.0, 'none', parent=f)
         self.used |= {'pairs'}
 
-    def wardrobe_beat(self, t0, t_close):
+    def wardrobe_beat(self, t0, t_close, gap=0.055, late=None, late_gap=0.14):
         """Sliding slatted door opens, LED on, rail, garments one by one, shoes, stacks, boxes; the door slams."""
         tl = self.tl
         d1 = tl.anims['wdoor1']
@@ -824,14 +857,19 @@ class Story:
         tl.ev(t0 + 0.1, 'wdoor_open', 0.5, 'swish'); tl.ev(t_close + 0.22, 'wdoor_shut', 0.9, 'thud')
         self.appear('ledWr', t0 + 0.32); tl.ev(t0 + 0.32, 'ledWr', 0.6, 'chime')
         tl.drop('wrRail', t0 + 0.40, t0 + 0.54, 0.2, 0.03, 0.45)
+        every = 2 if gap < 0.1 else 1
         for k in range(14):
-            tt = t0 + 0.62 + 0.055 * k
-            tl.fly(f'gW{k}', tt - 0.16, tt, (0.0, -0.45, 0.03), 0.02, 0.32 if k % 2 == 0 else 0.0, 'tick' if k % 2 == 0 else 'none')
-        tl.drop('wrShoes', t0 + 1.48, t0 + 1.62, 0.25, 0.05, 0.45)
-        tl.fly('wrShelf', t0 + 1.62, t0 + 1.76, (0.4, 0, 0), 0.03, 0.4)
-        tl.drop('wrStack0', t0 + 1.80, t0 + 1.94, 0.3, 0.04, 0.4)
-        tl.drop('wrStack1', t0 + 1.92, t0 + 2.06, 0.3, 0.04, 0.4)
-        tl.drop('wrBoxes', t0 + 2.06, t0 + 2.20, 0.25, 0.04, 0.45)
+            tt = t0 + 0.62 + gap * k
+            on = k % every == 0
+            tl.fly(f'gW{k}', tt - 0.16, tt, (0.0, -0.45, 0.03), 0.02, 0.32 if on else 0.0, 'tick' if on else 'none')
+        tz = late if late is not None else t0 + 0.62 + gap * 14 + 0.10
+        for i, (nm, kind) in enumerate((('wrShoes', 'drop'), ('wrShelf', 'fly'), ('wrStack0', 'drop'), ('wrStack1', 'drop'),
+                                        ('wrBoxes', 'drop'))):
+            ta = tz + late_gap * i
+            if kind == 'fly':
+                tl.fly(nm, ta, ta + 0.14, (0.4, 0, 0), 0.03, 0.4)
+            else:
+                tl.drop(nm, ta, ta + 0.14, 0.28, 0.04, 0.45)
 
     def climb_beat(self, kid, t0, dt=0.30, end=None):
         """Child A pops in by the aisle and climbs the stair drawers to the deck."""
@@ -912,9 +950,11 @@ class Story:
             tl.drop(f'ddc{s}', t0 + 1.34, t0 + 1.48, 0.2, 0.04, 0.4 if s == 'W' else 0.0, 'tick' if s == 'W' else 'none', parent=f)
         tl.ev(t0 + 1.28, 'ddr_open', 0.45, 'swish'); tl.ev(t0 + 1.79, 'ddr_shut', 0.8, 'thud')
 
-    def final_beat(self, t0):
+    def final_beat(self, t0, long=False):
         """Partition telescopes out, the kids, dusk, the lights cascade."""
         tl = self.tl
+        for k in range(3):
+            tl.drop(f'pt{k}', t0 - 0.30 + 0.05 * k, t0 - 0.14 + 0.05 * k, 0.9, 0.02, 0.5 if k == 0 else 0.0, 'thud' if k == 0 else 'none')
         for k, (dy, ts) in enumerate(((-(D - PL - BY0), 0.0), (-(D - PL - BY0) / 2, 0.08))):
             base = tl.anims[f'pt{k}']
 
@@ -930,11 +970,16 @@ class Story:
         tn = t0 + 0.75
         self.appear('bd_day', -1.0, tn); self.appear('bd_night', tn)
         tl.ev(tn, 'night', 0.5, 'swish')
-        for nm, dt in (('ledDeck', 0.18), ('ledOc', 0.26), ('rlOnW', 0.36), ('rlOnE', 0.36), ('lampOnW', 0.46), ('lampOnE', 0.46),
-                       ('dlOn', 0.56)):
+        if not long:
+            cas = (('ledDeck', 0.18, 0.7), ('ledOc', 0.26, 0.5), ('rlOnW', 0.36, 0.6), ('rlOnE', 0.36, 0.0), ('lampOnW', 0.46, 0.4),
+                   ('lampOnE', 0.46, 0.0), ('dlOn', 0.56, 0.6))
+        else:
+            cas = (('ledDeck', 0.20, 0.7), ('ledOc', 0.40, 0.5), ('rlOnW', 0.60, 0.6), ('rlOnE', 0.80, 0.6), ('fairyOn', 1.00, 0.6),
+                   ('lampOnW', 1.15, 0.0), ('lampOnE', 1.15, 0.0), ('dlOn', 1.25, 0.7))
+        for nm, dt, st in cas:
             self.appear(nm, tn + dt)
-        for nm, dt, st in (('led', 0.18, 0.7), ('oc', 0.26, 0.5), ('reading', 0.36, 0.6), ('lamps', 0.46, 0.4), ('down', 0.56, 0.6)):
-            tl.ev(tn + dt, nm, st, 'chime')
+            if st:
+                tl.ev(tn + dt, nm, st, 'chime')
 
     def kids_final(self, t_pop_a, t_pop_b, wave=True):
         wv = dict(fg.pose_of('wave'), hip_l=90, hip_r=90, knee_l=4, knee_r=4, ankle_l=10, ankle_r=10, spine=4, sh_l=30, elbow_l=30)
@@ -947,32 +992,105 @@ class Story:
             return p
         return pose_a
 
+    def kids_on_beds(self, t_b, t_a):
+        """B pops onto the low bed; A (the same figure that climbed) pops sitting on the deck, waving."""
+        tl = self.tl
+        KID_B.animate(tl, pop=t_b, visible=True)
+        climb = {nm: tl.anims[nm] for nm in KID_A.pieces}
+        KID_A.animate(tl, pose=self.kids_final(t_a, t_a), at=(0.46, 2.45, 180), seat=DKT + 0.16, pop=t_a)
+        deck = {nm: tl.anims[nm] for nm in KID_A.pieces}
+        for nm in KID_A.pieces:
+            tl.custom(nm, lambda t, nm=nm: deck[nm](t) if t >= t_a else climb[nm](t))
+
+    def underbed_beat(self, t0):
+        tl = self.tl
+        for k in range(2):
+            to = t0 + 0.95 * k
+            base = tl.anims[f'ubE{k}']
+            f = self.drawer_fn(0.0, to, to + 0.80, (-0.55, 0, 0), base=base)
+            tl.custom(f'ubE{k}', f)
+            tl.ev(to + 0.08, f'ubE{k}_open', 0.5, 'swish'); tl.ev(to + 0.97, f'ubE{k}_shut', 0.85, 'thud')
+            tl.drop(f'ubEc{k}', to + 0.22, to + 0.40, 0.3, 0.05, 0.5, 'tick', parent=f)
+
+    def flaps_beat(self, t0):
+        tl = self.tl
+        for k, nm in enumerate(('flE1', 'flE2')):
+            to = t0 + 1.05 * k
+            base = tl.anims[nm]
+            hinge = (OCX0 - 0.018, 0, OCZ1)
+            fl = self.flap_on(nm, base, hinge, math.radians(80), to, to + 0.85)
+            for j in range(2):
+                b = 2 * k + j
+                tl.fly(f'ocBox{b}', to + 0.28 + 0.13 * j, to + 0.46 + 0.13 * j, (-0.6, 0, 0.05), 0.04, 0.35, 'tick')
+
+    def flap_on(self, name, base, hinge, a_open, t_open, t_close, dur=0.2):
+        tl, hinge = self.tl, np.array(hinge, float)
+
+        def f(t):
+            M, v = base(t)
+            if t < t_open:
+                return M, v
+            if t < t_close:
+                return about(hinge, R('y', a_open * eob(c01((t - t_open) / 0.3), 1.2))), True
+            u = (t - t_close) / dur
+            if u < 1:
+                return about(hinge, R('y', a_open * (1 - u * u))), True
+            tau = t - t_close - dur
+            return about(hinge, R('y', math.radians(1.5) * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08)))), True
+        tl.custom(name, f)
+        tl.ev(t_open + 0.1, name + '_open', 0.45, 'swish'); tl.ev(t_close + dur, name + '_shut', 0.8, 'thud')
+        return f
+
+    def deck_beat(self, t0):
+        tl = self.tl
+        tl.slide('dkShelf', t0, t0 + 0.16, (0, -0.3, 0), 1.0, 0.5, 'thud')
+        tl.from_camera('dkBooks', t0 + 0.24, t0 + 0.42, np.array(L3[0]['pos']), 0.3, 0.4, 'tick')
+        tl.drop('dkPlush', t0 + 0.55, t0 + 0.72, 0.3, 0.1, 0.4)
+        tl.drop('fairy', t0 + 0.85, t0 + 1.02, 0.25, 0.04, 0.35)
+        self.appear('fairyOn', 99)
+        tl.grow('throwW', t0 + 1.15, t0 + 1.40, 'x', (0.0, 0, 0), 0.45)
+        for i, nm in enumerate(('pilW2', 'pilW3')):
+            base = tl.anims[nm]
+            ta = t0 + 1.6 + 0.25 * i
+
+            def hop(t, base=base, ta=ta, nm=nm):
+                M, v = base(t)
+                if t < ta:
+                    return M, v
+                tau = t - ta
+                z = 0.12 * math.exp(-tau / 0.12) * abs(math.sin(math.pi * tau / 0.22))
+                return T(0, 0, z) @ M, v
+            tl.custom(nm, hop)
+            tl.ev(ta + 0.22, nm + '_hop', 0.25, 'tick')
+
     # ---------------------------------------------------------------- cuts
     def short(self):
-        tl = self.tl
         self.build_beat(0.0)
         self.pairs_beat(3.50)
         self.wardrobe_beat(6.80, 9.30)
         self.climb_beat(KID_A, 8.85, dt=0.27, end=10.05)
         self.desks_beat(10.25)
         self.final_beat(12.25)
-        # kids for the finale: A waves from the deck, B sits on the low bed
-        KID_B.animate(tl, pop=12.35, visible=True)
-        pa = self.kids_final(12.45, 12.45)
-        a_vis = lambda t: t >= 12.45
-
-        # child A: second figure instance would need new pieces; reuse A (hidden 10.05..12.45, then on the deck)
-        climb = {nm: tl.anims[nm] for nm in KID_A.pieces}
-        KID_A.animate(tl, pose=pa, at=(0.46, 2.45, 180), seat=DKT + 0.16, pop=12.45)
-        deck = {nm: tl.anims[nm] for nm in KID_A.pieces}
-        for nm in KID_A.pieces:
-            tl.custom(nm, lambda t, nm=nm: deck[nm](t) if t >= 12.45 else climb[nm](t))
+        self.kids_on_beds(12.35, 12.45)
         self.appear('ledWr', 7.12, 9.52)
-        self.hide('ubEc0', 'ubEc1')
-        return tl
+        self.hide('ubEc0', 'ubEc1', *LONG_ONLY)
+        return self.tl
 
     def long(self):
-        raise NotImplementedError
+        tl = self.tl
+        self.build_beat(0.0)
+        self.desks_beat(3.45)
+        self.pairs_beat(6.45, step=0.75)
+        self.underbed_beat(10.10)
+        self.flaps_beat(13.40)
+        self.deck_beat(16.50)
+        self.climb_beat(KID_A, 19.85, dt=0.32, end=22.65)
+        self.wardrobe_beat(23.05, 30.40, gap=0.12, late=27.10, late_gap=0.32)
+        self.kids_on_beds(31.45, 31.80)
+        tl.drop('rugToys', 32.25, 32.42, 0.3, 0.06, 0.4)
+        self.final_beat(34.55, long=True)
+        self.appear('ledWr', 23.37, 30.62)
+        return tl
 
 
 if __name__ == '__main__':
