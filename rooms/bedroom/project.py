@@ -523,14 +523,19 @@ def build():
 
 # ------------------------------------------------------------------------------------------- camera
 VFOV = 85.0
-SA = dict(pos=(1.70, 0.66, 1.46), yaw=0.0, pitch=-3.0)       # nook, straight on
-SA2 = dict(pos=(0.35, 1.30, 1.42), yaw=60.0, pitch=-18.0)    # across the bed: lift-up storage, bedding
-SB = dict(pos=(0.30, 1.02, 1.28), yaw=22.0, pitch=0.0)       # west tower, niche, bed
-SC = dict(pos=(0.95, 0.85, 1.32), yaw=80.0, pitch=-7.0)      # desk + window
-SD = dict(pos=(2.25, 2.55, 1.32), yaw=181.0, pitch=-4.0)     # wardrobe wall
-SE = dict(pos=(1.70, 0.64, 1.50), yaw=0.0, pitch=-4.0)       # final
-SHOTS = [(0.0, SA), (3.62, None), (3.92, SA2), (7.30, None), (7.60, SB), (12.40, None), (12.70, SC), (18.20, None), (18.50, SD),
-         (26.50, None), (27.10, SE)]
+# Each station glides slowly from its start pose to its end pose (the hits' camera never stands still),
+# and fast eased swings join the stations.
+def P(x, y, z, yaw, pitch):
+    return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
+
+
+SA = (P(1.70, 0.66, 1.46, 0.0, -3.0), P(1.70, 0.92, 1.40, 0.0, -4.0))          # nook, straight on: push in
+SA2 = (P(0.35, 1.30, 1.42, 60.0, -18.0), P(0.45, 1.55, 1.38, 52.0, -17.0))     # across the bed: lift-up storage, bedding
+SB = (P(0.30, 1.02, 1.28, 22.0, 0.0), P(0.36, 1.32, 1.26, 18.0, -1.0))         # west tower, niche, bridge
+SC = (P(0.95, 0.85, 1.32, 80.0, -7.0), P(1.22, 1.00, 1.30, 84.0, -7.0))        # desk + window
+SD = (P(2.25, 2.55, 1.32, 181.0, -4.0), P(2.22, 2.20, 1.30, 178.0, -4.0))      # wardrobe wall
+SE = (P(1.70, 0.64, 1.50, 0.0, -4.0), P(1.70, 0.98, 1.42, 0.0, -5.0))          # final: slow push in through the lights
+HOLDS = [(0.0, 3.62, SA), (3.92, 7.30, SA2), (7.60, 12.40, SB), (12.70, 18.20, SC), (18.50, 26.50, SD), (27.10, DUR, SE)]
 
 
 def lerp_cam(a, b, s, lift=2.0):
@@ -540,21 +545,25 @@ def lerp_cam(a, b, s, lift=2.0):
                 pitch=a['pitch'] + (b['pitch'] - a['pitch']) * s + lift * math.sin(math.pi * s), vfov=VFOV)
 
 
+def glide(st, u):
+    a, b = st
+    return lerp_cam(a, b, c01(u), lift=0.0)
+
+
 def camera(t):
     if REST:
-        return dict([SA, SA2, SB, SC, SD, SE][min(5, int(t))], vfov=VFOV)
-    for i in range(0, len(SHOTS) - 1, 2):
-        t0, st = SHOTS[i]
-        t1 = SHOTS[i + 1][0]
-        if t < t1:
-            return dict(st, vfov=VFOV)
-        t2, nxt = SHOTS[i + 2]
-        if t < t2:
-            u = (t - t1) / (t2 - t1)
-            if i + 2 == len(SHOTS) - 1:
-                return lerp_cam(st, nxt, 1 - (1 - c01(u)) ** 3, lift=4.0)
-            return lerp_cam(st, nxt, smooth(u))
-    return dict(SHOTS[-1][1], vfov=VFOV)
+        return dict([SA, SA2, SB, SC, SD, SE][min(5, int(t))][0], vfov=VFOV)
+    for i, (t0, t1, st) in enumerate(HOLDS):
+        if t < t1 or i == len(HOLDS) - 1:
+            return glide(st, (t - t0) / (t1 - t0))
+        n0, _, nst = HOLDS[i + 1]
+        if t < n0:
+            u = (t - t1) / (n0 - t1)
+            a, b = glide(st, 1.0), glide(nst, 0.0)
+            if i + 1 == len(HOLDS) - 1:
+                return lerp_cam(a, b, 1 - (1 - c01(u)) ** 3, lift=4.0)
+            return lerp_cam(a, b, smooth(u))
+    return glide(HOLDS[-1][2], 1.0)
 
 
 # ------------------------------------------------------------------------------------------- lights (fixed slots)
@@ -609,7 +618,7 @@ def lights(mats4, vis):
 
 # Blender (Cycles) look: see pipeline/blender_render.py
 BLENDER = dict(
-    exposure=-0.25,
+    exposure=-0.38,
     look='AgX - Medium High Contrast',
     translucent={'sheer': 0.55},
     separate=['backdrop', 'backdrop_night'],
@@ -762,7 +771,7 @@ def timeline():
     for k in range(3):
         slide(f'shelf{k}', 13.40 + 0.08 * k, 13.56 + 0.08 * k, (0.3, 0, 0), 1.0, 0.35)
     for k in range(3):
-        from_camera(f'books{k}', 13.75 + 0.14 * k, 13.93 + 0.14 * k, np.array(SC['pos']), 0.3, 0.3, 'tick')
+        from_camera(f'books{k}', 13.75 + 0.14 * k, 13.93 + 0.14 * k, np.array(SC[0]['pos']), 0.3, 0.3, 'tick')
     drop('laptop', 14.28, 14.44, 0.30, 0.03, 0.4)
     drop('lid', 14.28, 14.44, 0.30, 0.03, 0.0, 'none')
     drop('lamp', 14.42, 14.60, 0.35, 0.05, 0.4)
@@ -817,7 +826,7 @@ def timeline():
     grow('rug', 18.52, 18.76, 'y', (0, 1.9, 0), 0.6)
     slide('wr_body', 18.85, 19.10, (0, -0.62, 0), 1.0, 1.0)
     drop('wr_div', 19.15, 19.32, 0.35, 0.03, 0.4)
-    from_camera('wr_shelves', 19.38, 19.58, np.array(SD['pos']), 0.3, 0.4, 'tick')
+    from_camera('wr_shelves', 19.38, 19.58, np.array(SD[0]['pos']), 0.3, 0.4, 'tick')
     slide('wr_drawers', 19.65, 19.85, (0, 0.5, 0), 1.0, 0.5)
     fB = drawer_fn(19.65, 22.00, 22.60, (0, 0.34, 0),
                    base=lambda t: (T(0, 0.5 * (1 - eob(c01((t - 19.65) / 0.2), 1.0)), 0) if t < 19.85 else I, True))

@@ -1,6 +1,6 @@
 """Rendered PNG frames (Blender) -> 1080x1920 MP4 with the landing punch, light sharpening and music.
 
-usage: mkvideo_png.py <frames_dir> <fps> <frames.json> <out.mp4> <W> <H> [audio.wav] [captions.json]
+usage: mkvideo_png.py <frames_dir> <fps> <frames.json> <out.mp4> <W> <H> [audio.wav] [captions.json] [--grade SAT,WARM]
 frames.json is the timeline export (landing events in seconds); audio comes from music.py.
 captions.json: [[t0, t1, "line one\nline two"], ...] drawn bold white with a black outline near the top.
 """
@@ -9,7 +9,11 @@ import cv2, numpy as np
 
 fdir, fps, fj, out, OW, OH = sys.argv[1], float(sys.argv[2]), sys.argv[3], sys.argv[4], int(sys.argv[5]), int(sys.argv[6])
 audio = sys.argv[7] if len(sys.argv) > 7 and sys.argv[7] != '-' else None
-captions = json.load(open(sys.argv[8])) if len(sys.argv) > 8 else []
+GRADE = (1.0, 0.0)
+if '--grade' in sys.argv:
+    i = sys.argv.index('--grade'); GRADE = tuple(float(v) for v in sys.argv[i + 1].split(','))
+    del sys.argv[i:i + 2]
+captions = json.load(open(sys.argv[8])) if len(sys.argv) > 8 and sys.argv[8] != '-' else []
 FONT = '/usr/share/fonts/opentype/inter/Inter-ExtraBold.otf'
 
 
@@ -58,6 +62,12 @@ for i, f in enumerate(files):
     k = OW / W * s
     M = np.float32([[k, 0, (OW - W * k) / 2], [0, k, (OH - H * k) / 2 + dy * OH / 1920.0]])
     img = cv2.warpAffine(img, M, (OW, OH), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
+    if GRADE != (1.0, 0.0):   # saturation around luma, then warmth (BGR order)
+        f = img.astype(np.float32)
+        yl = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
+        f = yl + (f - yl) * GRADE[0]
+        f[..., 2] *= 1 + GRADE[1]; f[..., 0] *= 1 - GRADE[1]
+        img = np.clip(f, 0, 255).astype(np.uint8)
     blur = cv2.GaussianBlur(img, (0, 0), 1.1)
     img = cv2.addWeighted(img, 1.35, blur, -0.35, 0)
     img = np.clip(img.astype(np.float32) + rng.normal(0, 1.2, img.shape[:2])[..., None], 0, 255)
