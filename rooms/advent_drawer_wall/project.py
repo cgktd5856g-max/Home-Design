@@ -681,12 +681,12 @@ def P(x, y, z, yaw, pitch):
     return dict(pos=(x, y, z), yaw=yaw, pitch=pitch)
 
 
-SA = (P(0.20, 0.15, 2.10, 38.0, -18.0), P(0.50, 0.60, 1.60, 28.0, -9.0))       # high doorway corner, craning down
+SA = (P(0.20, 0.15, 2.30, 37.0, -26.0), P(0.55, 0.70, 1.55, 28.0, -8.0))       # high doorway corner, craning down fast
 SB = (P(0.55, 1.05, 1.00, -12.0, 2.0), P(1.55, 1.35, 0.90, 10.0, 4.0))         # the den under the loft
 SC = (P(1.10, 1.08, 0.62, 74.0, -7.0), P(1.02, 1.70, 1.05, 84.0, -9.0))        # tight push up the stair with the ripple
-SC2 = (P(0.42, 1.30, 0.82, 84.0, -4.0), P(0.70, 1.46, 0.84, 88.0, -4.0))       # all 24 open: slow push, level
-SD = (P(1.02, 0.66, 1.48, 44.0, 8.0), P(1.16, 0.82, 1.58, 39.0, 11.0))        # the child, the top drawer, the star, lights on
-SE = (P(0.42, 0.46, 1.90, 33.0, -15.0), SA[0])                                  # final: drift back into the frame-1 pose
+SC2 = (P(0.30, 1.20, 0.85, 80.0, -4.0), P(0.80, 1.56, 0.86, 90.0, -4.0))       # all 24 open: push in, level
+SD = (P(0.95, 0.60, 1.40, 48.0, 6.0), P(1.20, 0.90, 1.66, 36.0, 13.0))        # the child, the top drawer, the star, lights on
+SE = (P(0.64, 0.72, 1.82, 30.0, -13.0), SA[0])                                  # final: drift back into the frame-1 pose
 HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.75, SD), (13.02, DUR_SHORT, SE)]
 HOLDS = HOLDS_SHORT
 
