@@ -73,7 +73,7 @@ def materials():
     mat('duvet', tex=5, col=srgb(150, 172, 140), p=(0, 0.014))
     mat('pil_white', tex=3, col=srgb(242, 238, 230), rough=0.9, p=(0.05,))
     mat('pil_sage', tex=6, col=srgb(166, 184, 156))
-    mat('throw', tex=5, col=srgb(222, 172, 66), p=(1, 0.012))
+    mat('throw', tex=5, col=srgb(218, 184, 112), p=(1, 0.012))
     mat('sheet_sky', tex=3, col=srgb(150, 194, 228), rough=0.9, p=(0.04,))
     mat('backdrop', tex=9, emis=(1.35, 1.35, 1.35), p=(1.0, 0.0, 0.0))
     mat('backdrop_dusk', tex=9, emis=(1.05, 0.78, 0.82), p=(1.0, 0.0, 1.0))
@@ -97,7 +97,8 @@ def materials():
         mat(nm, col=srgb(*c), rough=0.6)
     mat('basket', tex=6, col=srgb(214, 196, 166))
     mat('swaddle', tex=5, col=srgb(244, 240, 232), p=(0, 0.01))
-    fg.materials(['fig_sage', 'fig_blue'])
+    fg.materials(['fig_sage'])
+    mat('fig_p2', col=srgb(150, 172, 206), rough=0.48, f0=0.04)
 
 
 # ------------------------------------------------------------------------------------------- helpers
@@ -187,6 +188,9 @@ def build_shell():
     r = 'room'
     add(r, box(-0.004, -3.6, -0.25, W + 0.3, D + 0.2, -0.012), 'subfloor')     # room + hall floor (pale grey)
     add(r, box(-0.6, -0.2, -0.25, -0.004, D + 0.2, -0.004), 'white_cab')         # cut edge under the west wall
+    for b in (box(-12, -10, -0.30, 14, 10, -0.26), box(-12, -10, 8.0, 14, 10, 8.1), box(-12, -10, -0.3, -11.9, 10, 8),
+              box(13.9, -10, -0.3, 14, 10, 8), box(-12, -10, -0.3, 14, -9.9, 8), box(-12, 9.9, -0.3, 14, 10, 8)):
+        add('studio', b, 'ceiling')                                              # white studio around the set
     add(r, box(-0.2, -0.2, H, W + 0.2, D + 0.2, H + 0.35), 'ceiling')
     x0, x1, z0, z1 = WIN
     # north wall with the window
@@ -362,8 +366,9 @@ def build_crib(rng):
     # baby pull-out: birch front, end-on rail of tiny outfits, two bins below
     px0, px1, py0, py1 = PO
     p = 'pullout'
-    add(p, box(px0 + 0.004, py0, 0.02, px1 - 0.004, py0 + 0.02, 1.07), 'birch_z')
-    add(p, box(px0 + 0.14, py0 - 0.01, 0.95, px1 - 0.14, py0, 0.962), 'pgrey')
+    add(p, box(px0 + 0.004, py0, 0.02, px1 - 0.004, py0 + 0.02, 0.36), 'birch_x')
+    add(p, box(px0 + 0.12, py0 - 0.01, 0.30, px1 - 0.12, py0, 0.312), 'pgrey')
+    add(p, box((px0 + px1) / 2 - 0.012, py0 + 0.005, 0.36, (px0 + px1) / 2 + 0.012, py0 + 0.03, 1.0), 'pgrey')
     add(p, box(px0 + 0.02, py0 + 0.02, 0.03, px1 - 0.02, py1, 0.045), 'white_in')
     add(p, box(px0 + 0.02, py1 - 0.02, 0.03, px1 - 0.02, py1, 1.0), 'white_in')
     add(p, tube([((px0 + px1) / 2, py0 + 0.03, 0.96), ((px0 + px1) / 2, py1 - 0.03, 0.96)], 0.009, 10), 'pgrey')
@@ -397,8 +402,6 @@ def build_wardrobe(rng):
         add(b, box(x0 + 0.03, 0.5 + t / 2, z - 0.018, x1 - t, 1.0 - t / 2, z), 'white_in')
     add(b, tube([(1.79, 0.5 + t, 1.92), (1.79, 1.0 - t, 1.92)], 0.009, 10), 'pgrey')
     # bay C (parents): shelf at 0.55 (laundry basket below)
-    add(b, box(x0 + 0.03, 1.0 + t / 2, 0.53, x1 - t, DECK_Y - t, 0.548), 'white_in')
-    add(b, rbox((1.78, 1.25, 0.37), (0.36, 0.40, 0.30), 0.03, 3), 'basket')
     # top cabinets over B and C (fixed birch doors) + the lift-up flap over A (separate)
     for (a, c2) in ((0.5, 1.0), (1.0, DECK_Y)):
         add(b, box(x0, a + 0.003, 2.06, x0 + t, c2 - 0.003, H - 0.005), 'birch_z')
@@ -446,11 +449,9 @@ def build_wardrobe(rng):
         stack(f'wb_f{k}', 1.70, 0.87, z, (0.26, 0.20, 0.04), mats_[::-1], 4, rng)
     # bay C: one skinny end-on rail (runner + five adult garments) that slides out toward -x
     c = 'wr_rail'
-    add(c, box(x0 + 0.03, 1.235, 2.00, x1 - 0.03, 1.265, 2.02), 'pgrey')
-    add(c, tube([(x0 + 0.04, 1.25, 1.985), (x1 - 0.05, 1.25, 1.985)], 0.008, 10), 'pgrey')
-    add(c, box(x0 + 0.02, 1.20, 1.96, x0 + 0.035, 1.30, 2.02), 'birch_y')
-    for k, m in enumerate(('cl_grey', 'cl_denim', 'cl_white', 'cl_navy', 'cl_denim')):
-        garment(c, x0 + 0.06 + k * 0.075, 1.25, 1.985, 0.62 + 0.13 * k, 0.36, m, along='x')
+    add(c, tube([(1.79, 1.0 + t, 1.95), (1.79, DECK_Y - t, 1.95)], 0.009, 10), 'pgrey')
+    for k, m in enumerate(('cl_navy', 'cl_denim', 'cl_grey', 'cl_navy')):
+        garment(c, 1.79, 1.12 + k * 0.07, 1.95, 0.78 + 0.05 * (k % 2), 0.38, m, along='y')
 
 
 # ------------------------------------------------------------------------------------------- bridge cabinet over the door
@@ -479,11 +480,11 @@ def build():
     # the people (faceless mannequins): parent 1 on step 2 beside the crib, parent 2 sitting up on the bed
     global P1, P2
     P1 = fg.figure('p1', 'adult', pose=P1_POSE(), at=P1_AT, seat=STEP_Z[1], mat='fig_sage')
-    P2 = fg.figure('p2', 'adult', pose=P2_SIT, at=P2_AT, seat=MAT_Z + 0.03, mat='fig_blue')
+    P2 = fg.figure('p2', 'adult', pose=P2_SIT, at=P2_AT, seat=MAT_Z + 0.03, mat='fig_p2')
 
 
 P1_AT = (0.25, 0.90, 180.0)
-P2_AT = (1.32, 2.12, -90.0)
+P2_AT = (1.55, 2.20, -90.0)
 P2_SIT = dict(hip_l=84, hip_r=84, knee_l=8, knee_r=12, ankle_l=10, ankle_r=10, spine=4, neck=6, sh_l=30, sh_r=30,
               sh_l_out=8, sh_r_out=8, elbow_l=30, elbow_r=30)
 P2_LIE = dict(hip_l=40, hip_r=40, knee_l=6, knee_r=10, ankle_l=10, ankle_r=10, spine=-6, neck=10, sh_l=20, sh_r=20,
@@ -510,8 +511,8 @@ def P(x, y, z, yaw, pitch):
 P0 = P(1.0, -2.80, 1.40, 0.0, -1.0)
 S1 = (P0, P(0.62, -2.20, 2.05, 5.0, -9.0))                       # hall: crane up + push in, tilting down
 S2 = (P(0.58, -1.05, 2.35, 2.0, -36.0), P(0.98, -1.15, 2.30, 11.0, -34.0))   # high from the hall: slide east, pan right   # high west over the stair: slide south
-S3 = (P(-1.25, 0.98, 1.92, 90.0, -10.0), P(-1.15, 0.58, 1.90, 92.0, -10.0))   # wardrobe, full height: slide south
-S4 = (P(1.02, -1.50, 0.98, 3.0, -3.0), P(0.50, -1.38, 1.04, -9.0, -4.0))   # low on the crib + stair: truck left
+S3 = (P(-0.85, 0.95, 1.62, 90.0, -8.0), P(-0.78, 0.62, 1.60, 92.0, -8.0))   # wardrobe, full height: slide south
+S4 = (P(1.05, -1.85, 1.12, 3.0, -5.0), P(0.55, -1.72, 1.16, -8.0, -6.0))   # low on the crib + stair: truck left
 S5 = (P(1.42, -3.15, 1.05, -7.0, 2.0), P0)                        # hall wide: crane up into P0 (loops to frame 1)
 HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (13.25, 15.0, S5)]
 HALL15 = [0, 1, 3, 4]                                                 # hall holds (south wall hidden), others: west wall hidden
@@ -525,6 +526,8 @@ def wall_mode(t):
     for i, (t0, t1, _) in enumerate(HOLDS):
         if t0 <= t < t1 or (i == len(HOLDS) - 1 and t >= t0) or (i == 0 and t < t0):
             return 'hall' if i in HALL else 'west'
+        if i + 1 < len(HOLDS) and t1 <= t < HOLDS[i + 1][0] and i in HALL and i + 1 in HALL:
+            return 'hall'                                            # swing between two hall holds
     return 'swing'
 
 
@@ -538,8 +541,8 @@ LCEIL = (0.55, 0.54, 0.52)
 LUNDER = (0.45, 0.43, 0.40)
 LHALLTOP = (0.8, 0.78, 0.75)
 LREAD = (900.0, 760.0, 540.0)
-LTREAD = (38.0, 33.0, 24.0)
-LSHELF = (40.0, 35.0, 26.0)
+LTREAD = (80.0, 68.0, 48.0)
+LSHELF = (70.0, 60.0, 44.0)
 LNIGHT = (14.0, 10.0, 6.0)
 T_DUSK = 11.10
 
@@ -677,13 +680,13 @@ def timeline_15(tl):
     tl.custom('wall_W', lambda t: (I, wall_mode(t) == 'hall'))
 
     # ================= S1 hall (0.0-3.2): crib, planks, posts, DECK SLAM, crib-bay shelf, crib parks, bed
-    crib_land = drop('crib', 0.08, 0.30, 1.1, 0.08, 0.6, 'thud')
+    crib_land = drop('crib', -0.06, 0.26, 1.1, 0.08, 0.6, 'thud')
 
     def crib_y(t):
-        if t < 1.75:
+        if t < 1.40:
             return 0.0
-        if t < 2.10:
-            return CRIB_PARK * smooth((t - 1.75) / 0.35)
+        if t < 1.75:
+            return CRIB_PARK * smooth((t - 1.40) / 0.35)
         if t < 11.30:
             return CRIB_PARK
         if t < 11.90:
@@ -692,8 +695,8 @@ def timeline_15(tl):
 
     def crib_extra(t):
         M = I
-        if 0.50 < t < 0.74:                                          # hops as its plank row lands
-            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.50) / 0.24))
+        if 0.32 < t < 0.56:                                          # hops as its plank row lands
+            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.32) / 0.24))
         if 13.90 < t < 14.40:                                        # rocks ~1 cm under parent 1's hand
             M = M @ T(0.010 * math.sin(2 * math.pi * (t - 13.9) / 0.25) * (1 - (t - 13.9) / 0.5), 0, 0)
         return M
@@ -702,21 +705,21 @@ def timeline_15(tl):
         M, v = crib_land(t)
         return T(0, crib_y(t), 0) @ crib_extra(t) @ M, v
     tl.custom('crib', crib)
-    mat_drop = drop('crib_mat', 0.33, 0.45, 0.30, 0.05, 0.4, 'pip')
+    mat_drop = drop('crib_mat', 0.28, 0.40, 0.30, 0.05, 0.4, 'pip')
     tl.custom('crib_mat', lambda t: (T(0, crib_y(t), 0) @ crib_extra(t) @ mat_drop(t)[0], mat_drop(t)[1]))
-    ev(2.10, 'crib_park', 0.5, 'roll'); ev(11.90, 'crib_night', 0.5, 'roll')
+    ev(1.75, 'crib_park', 0.5, 'roll'); ev(11.90, 'crib_night', 0.5, 'roll')
     for k in range(6):                                               # far to near (band 5 is the north end)
-        t1 = 0.28 + 0.075 * (5 - k)
+        t1 = 0.16 + 0.06 * (5 - k)
         drop(f'floor{k}', t1 - 0.14, t1, 0.22, 0.05, 0.3 + 0.03 * (5 - k), 'tick')
-    drop('posts', 0.86, 1.00, 0.6, 0.04, 0.6, 'thud')
-    drop('deck', 1.04, 1.20, 1.2, 0.035, 1.0, 'thud')
-    drop('cshelf', 1.20, 1.32, 0.5, 0.03, 0.55, 'thud')
+    drop('posts', 0.50, 0.62, 0.6, 0.04, 0.6, 'thud')
+    drop('deck', 0.66, 0.82, 1.2, 0.035, 1.0, 'thud')
+    drop('cshelf', 0.84, 0.94, 0.5, 0.03, 0.55, 'thud')
     for i, nm in enumerate(['cs_f00', 'cs_f01', 'cs_f02', 'cs_f10', 'cs_f11', 'cs_f12', 'cs_f20', 'cs_f21', 'cs_f22']):
-        t1 = 1.38 + 0.04 * i
+        t1 = 0.98 + 0.045 * i
         drop(nm, t1 - 0.10, t1, 0.18, 0.06, 0.3, 'pip' if i % 2 == 0 else 'none')
-    drop('grail', 2.04, 2.16, 0.40, 0.03, 0.5, 'thud')
-    drop('mattress', 2.18, 2.30, 0.45, 0.04, 0.6, 'thud')
-    duv = drop('duvet', 2.32, 2.45, 0.40, 0.03, 0.45, 'tick')
+    drop('grail', 1.80, 1.92, 0.40, 0.03, 0.5, 'thud')
+    drop('mattress', 1.94, 2.06, 0.45, 0.04, 0.6, 'thud')
+    duv = drop('duvet', 2.10, 2.22, 0.40, 0.03, 0.45, 'tick')
 
     def duvet(t):                                                    # settles when parent 2 lies back
         M, v = duv(t)
@@ -725,12 +728,12 @@ def timeline_15(tl):
             M = about((1.0, 2.3, MAT_Z), S(1, 1, 1 - 0.05 * math.sin(math.pi * u) * (1 - u))) @ M
         return M, v
     tl.custom('duvet', duvet)
-    drop('pil1', 2.48, 2.60, 0.35, 0.08, 0.35, 'tick')
-    drop('pil2', 2.58, 2.70, 0.35, 0.08, 0.35, 'tick')
-    grow('throw', 2.68, 2.82, 'y', (0, 1.70, 0), 0.4, 'tick')
-    drop('nlight', 2.84, 2.94, 0.16, 0.05, 0.3, 'pip')
-    drop('books', 2.94, 3.05, 0.18, 0.05, 0.3, 'tick')
-    slide('rlight', 3.02, 3.16, (0, 0, 0.25), 1.0, 0.35, 'tick')
+    drop('pil1', 2.26, 2.36, 0.35, 0.08, 0.35, 'tick')
+    drop('pil2', 2.36, 2.46, 0.35, 0.08, 0.35, 'tick')
+    grow('throw', 2.48, 2.62, 'y', (0, 1.70, 0), 0.4, 'tick')
+    drop('nlight', 2.66, 2.76, 0.16, 0.05, 0.3, 'pip')
+    drop('books', 2.78, 2.88, 0.18, 0.05, 0.3, 'tick')
+    slide('rlight', 2.90, 3.04, (0, 0, 0.25), 1.0, 0.35, 'tick')
     rl = tl.anims['rlight']
     tl.custom('rl_on', lambda t: (rl(t)[0], t >= 12.2))
     ev(12.2, 'read_on', 0.6, 'chime')
@@ -783,16 +786,16 @@ def timeline_15(tl):
     body = slide('wr_body', 7.36, 7.70, (0.47, 0, 0), 0.8, 0.85, 'thud')
     for nm in ('wr_topA', 'wr_step'):
         tl.custom(nm, body)
-    hinge('wr_dA', (WR_X, 0.0, 0), 'z', math.radians(98), 7.90, 11.05, base=body, t_appear=7.36)
-    hinge('wr_dB', (WR_X, 0.5, 0), 'z', math.radians(96), 7.96, 11.12, base=body, t_appear=7.36)
-    hinge('wr_dC', (WR_X, 1.0, 0), 'z', math.radians(94), 8.02, 11.18, base=body, t_appear=7.36)
-    ev(8.00, 'doors_open', 0.5, 'swish'); ev(11.36, 'doors_shut', 0.85, 'thud')
+    hinge('wr_dA', (WR_X, 0.0, 0), 'z', math.radians(98), 8.22, 10.45, base=body, t_appear=7.36)
+    hinge('wr_dB', (WR_X, 0.5, 0), 'z', math.radians(96), 8.28, 10.50, base=body, t_appear=7.36)
+    hinge('wr_dC', (WR_X, 1.0, 0), 'z', math.radians(94), 7.82, 10.55, base=body, t_appear=7.36)
+    ev(8.32, 'doors_open', 0.5, 'swish'); ev(10.73, 'doors_shut', 0.85, 'thud')
 
     tl.custom('wr_rail', body)                   # the parents' skinny rail stays in: their bay is the sparse one
-    ev(8.06, 'bayC_bwomp', 0.6, 'bwomp')
+    ev(7.92, 'bayC_bwomp', 0.6, 'bwomp')
     fills = ['wb_cl0', 'wa_f0', 'wb_cl1', 'wb_f0', 'wb_cl2', 'wa_f1', 'wb_cl3', 'wb_f1', 'wb_cl4', 'wa_f2', 'wb_cl5', 'wb_f2']
     for i, nm in enumerate(fills):
-        t1 = 8.28 + 0.065 * i
+        t1 = 8.46 + 0.06 * i
         if nm.startswith('wb_cl'):
             fly(nm, t1 - 0.12, t1, (-0.35, 0, 0.05), 0.04, 0.3, 'pip')
         else:
@@ -800,23 +803,23 @@ def timeline_15(tl):
     fpiv = (WR_X + 0.04, 0, 0.902)
 
     def flap_ang(t):
-        if t < 9.10:
+        if t < 9.05:
             return 0.0
-        if t < 11.00:
-            return -math.radians(90) * min(1.0, eob(c01((t - 9.10) / 0.26), 0.4))
-        return -math.radians(90) * (1 - smooth(c01((t - 11.00) / 0.20)))
+        if t < 10.25:
+            return -math.radians(90) * min(1.0, eob(c01((t - 9.05) / 0.26), 0.4))
+        return -math.radians(90) * (1 - smooth(c01((t - 10.25) / 0.20)))
 
     def flap(t):
         return body(t)[0] @ about(fpiv, R('y', flap_ang(t))), t >= 7.36
     tl.custom('wr_flap', flap)
-    ev(9.30, 'flap_down', 0.6, 'thud')
-    md = drop('wr_mat', 9.42, 9.58, 0.25, 0.05, 0.4, 'pip')
-    tl.custom('wr_mat', lambda t: (flap(t)[0] @ about(fpiv, R('y', math.radians(90))) @ md(t)[0], md(t)[1] and t < 11.02))
-    fn = drawer_fn(7.36, 9.70, 10.30, (-0.40, 0, 0), base=body)
+    ev(9.25, 'flap_down', 0.6, 'thud')
+    md = drop('wr_mat', 9.36, 9.50, 0.25, 0.05, 0.4, 'pip')
+    tl.custom('wr_mat', lambda t: (flap(t)[0] @ about(fpiv, R('y', math.radians(90))) @ md(t)[0], md(t)[1] and t < 10.27))
+    fn = drawer_fn(7.36, 9.60, 10.05, (-0.40, 0, 0), base=body)
     tl.custom('wr_nap', fn)
-    ev(9.78, 'nap_open', 0.4, 'swish'); ev(10.47, 'nap_shut', 0.7, 'thud')
-    drop('wn_c0', 9.80, 9.92, 0.18, 0.05, 0.3, 'pip', parent=fn)
-    drop('wn_c1', 9.94, 10.06, 0.16, 0.05, 0.3, 'pip', parent=fn)
+    ev(9.68, 'nap_open', 0.4, 'swish'); ev(10.22, 'nap_shut', 0.7, 'thud')
+    drop('wn_c0', 9.70, 9.82, 0.18, 0.05, 0.3, 'pip', parent=fn)
+    drop('wn_c1', 9.84, 9.96, 0.16, 0.05, 0.3, 'pip', parent=fn)
 
     # ================= S4 hall wide (11.0-15.0): dusk, crib rolls out, parents pop in, staggered lights, late beats
     appear('bd_day', -1.0, T_DUSK)
