@@ -5,7 +5,8 @@ Usage: python3 music.py <workdir> [bpm]     reads <workdir>/frames.json (written
 Optional <workdir>/music.json overrides: {"bpm": 126, "MUSIC": {"drop_at": 0, "chords": [[..],..], "roots": [..],
 "pluck_bars": [0, 1], "riser": false}}
 Event kinds from the timeline: 'thud' (big pieces; strength sets gain and pitch), 'tick' (small items), 'swish'
-(drawer / door opening), 'chime' (lights on), 'none'.
+(drawer / door opening), 'chime' (lights on), 'pluck' (a pitched note: event key 'note' = MIDI number), 'bell'
+(two-note doorbell), 'rumble' (rolling, event key 'len' = seconds ending at t), 'clank' (metal), 'none'.
 """
 import os
 import sys
@@ -114,6 +115,25 @@ def bass(m, length):
 def pluck(m, length=0.35):
     n = int(length * SR); t = t_arr(n); f = hz(m)
     return lp((tri(f, n) + 0.3 * np.sin(2 * np.pi * 2 * f * t)) * np.exp(-t / 0.10), 5000)
+
+
+def bell():
+    """Original two-note doorbell (ding-dong), sine bells with a soft strike."""
+    n = int(1.4 * SR); t = t_arr(n); out = np.zeros(n)
+    for m, d in ((79, 0.0), (75, 0.42)):
+        i = int(d * SR); tt = t[:n - i]
+        f = hz(m)
+        out[i:] += (np.sin(2 * np.pi * f * tt) + 0.35 * np.sin(2 * np.pi * 2.76 * f * tt) * np.exp(-tt / 0.12)) * np.exp(-tt / 0.55)
+    return out * 0.5
+
+
+def rumble(length=0.9):
+    """Low rolling rumble (a bed on castors)."""
+    n = int(length * SR); t = t_arr(n)
+    x = lp(rng.standard_normal(n), 160, 4) * 6.0
+    x += 0.4 * np.sin(2 * np.pi * 48 * t) * (1 + 0.3 * np.sin(2 * np.pi * 9 * t))
+    e = np.clip(t / 0.08, 0, 1) * np.clip((length - t) / 0.15, 0, 1)
+    return np.tanh(1.2 * x) * e
 
 
 def whoosh(length, up=True):
@@ -231,6 +251,15 @@ def build(cfg, sfx_only=False):
             add(sfx, whoosh(1.2, up=False), t, 0.10)
         elif k == 'swish':
             add(sfx, whoosh(0.3, up=True), t - 0.3, g)
+        elif k == 'pluck':
+            add(sfx, pluck(s.get('note', 72), 0.9) + 0.5 * pluck(s.get('note', 72) + 12, 0.5), t, g)
+        elif k == 'bell':
+            add(sfx, bell(), t, g)
+        elif k == 'rumble':
+            add(sfx, rumble(s.get('len', 0.9)), t - s.get('len', 0.9), g)
+        elif k == 'clank':
+            add(sfx, thud(95), t, g * 0.6)
+            add(sfx, tick(2300) + 0.6 * tick(3400), t, g * 0.7)
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -277,6 +306,14 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='chime', gain=0.5)
         elif k == 'none':
             sfx = dict(kind='none')
+        elif k == 'pluck':
+            sfx = dict(kind='pluck', gain=0.35 + 0.4 * a, note=e.get('note', 72))
+        elif k == 'bell':
+            sfx = dict(kind='bell', gain=0.3 + 0.5 * a)
+        elif k == 'rumble':
+            sfx = dict(kind='rumble', gain=0.3 + 0.5 * a, len=e.get('len', 0.9))
+        elif k == 'clank':
+            sfx = dict(kind='clank', gain=0.3 + 0.5 * a)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))
