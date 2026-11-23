@@ -548,9 +548,24 @@ def build_loft(rng):
 def build_den(rng):
     # under-landing cupboard (closed; white, oak knob)
     add('cupboard', box(SX0, LY0, 0.0, W, D, 0.05), 'plinth')
-    add('cupboard', box(SX0, LY0, 0.05, W, D, LZ0), 'white_in')
-    add('cupboard', box(SX0 - 0.018, LY0 + 0.02, 0.055, SX0, D - 0.01, LZ0 - 0.01), 'white_cab')
-    add('cupboard', xform(lathe(rprof(0.016, 0, 0.02, 0.007, 3), 14), T(SX0 - 0.018, LY0 + 0.10, 0.70) @ R('y', -math.pi / 2)), 'oak_x')
+    for b in (box(SX0, LY0, 0.05, W, LY0 + 0.018, LZ0), box(SX0, D - 0.018, 0.05, W, D, LZ0), box(W - 0.012, LY0, 0.05, W, D, LZ0),
+              box(SX0, LY0, 0.05, W, D, 0.065), box(SX0, LY0, LZ0 - 0.018, W, D, LZ0)):
+        add('cupboard', b, 'white_in')
+    add('cup_door', box(SX0 - 0.018, LY0 + 0.02, 0.055, SX0, D - 0.01, LZ0 - 0.01), 'white_cab')
+    add('cup_door', xform(lathe(rprof(0.016, 0, 0.02, 0.007, 3), 14), T(SX0 - 0.018, LY0 + 0.10, 0.70) @ R('y', -math.pi / 2)), 'oak_x')
+    add('cup_rail', tube([(2.35, LY0 + 0.04, 1.16), (2.35, D - 0.04, 1.16)], 0.010, 10), 'gold')
+    for k, m in enumerate(('toy_sky', 'knit_white', 'green', 'knit_red', 'bk_mustard', 'linen_grey')):
+        y = LY0 + 0.15 + k * 0.12
+        add('cup_cl', tube([(2.25, y, 1.12), (2.35, y, 1.16), (2.45, y, 1.12)], 0.004, 5), 'gold')
+        add('cup_cl', rbox((2.35, y, 1.12 - 0.26), (0.30, 0.035, 0.50), 0.015, 3), m)
+    for j in range(2):
+        z0 = 0.07 + j * 0.17
+        nm = f'cup_dr{j}'
+        add(nm, box(SX0 + 0.005, LY0 + 0.03, z0, SX0 + 0.023, D - 0.03, z0 + 0.15), 'oakl_y')
+        add(nm, box(SX0 + 0.023, LY0 + 0.05, z0 + 0.005, W - 0.03, D - 0.05, z0 + 0.015), 'white_in')
+        for q, m in enumerate((('knit_white', 'toy_sky', 'knit_red'), ('green', 'linen_grey', 'bk_mustard'))[j]):
+            add(f'cup_drc{j}', rbox((2.30, LY0 + 0.22 + q * 0.26, z0 + 0.045), (0.32, 0.22, 0.05), 0.02, 3), m)
+            add(f'cup_drc{j}', rbox((2.30, LY0 + 0.22 + q * 0.26, z0 + 0.09), (0.32, 0.22, 0.04), 0.018, 3), m)
     # desk against the north wall
     dx0, dx1, dy0, dz = 0.95, 1.98, 2.58, 0.66
     wood('desk', dx0, dy0, dz - 0.03, dx1, D, dz, 'oak')
@@ -611,9 +626,12 @@ def build_den(rng):
             add(f'books{g}', box(x, 2.92, z, x + th, D - 0.01, z + hh), m)
             x += th + 0.003
             k += 1
+    add('basket', lathe([(0, 0.0), (0.16, 0.0), (0.19, 0.26), (0.195, 0.27), (0.0, 0.27)], 24, (0.45, 0.95)), 'basket')
+    put('basket_toys', toy('teddy'), (0.40, 0.93, 0.20), 1.6, 0.4)
+    put('basket_toys', toy('bunny'), (0.52, 1.00, 0.20), 1.5, -0.3)
     add('pouf', lathe(rprof(0.21, 0.016, 0.24, 0.07, 5), 28, (0.62, 1.55)), 'plush_light')
     for dy in (-0.05, 0.05):
-        add('slippers', ellipsoid((1.78, 0.62 + dy, 0.03), (0.11, 0.04, 0.03), 8), 'knit_red' if dy < 0 else 'knit_red')
+        add('slippers', ellipsoid((1.15, 0.80 + dy, 0.03), (0.11, 0.04, 0.03), 8), 'knit_red' if dy < 0 else 'knit_red')
     add('rug', rbox((1.05, 1.25, 0.008), (1.5, 1.1, 0.016), 0.006, 3), 'rug')
 
 
@@ -694,7 +712,25 @@ SC2 = (P(0.80, 1.46, 0.96, 85.0, -6.0), P(0.96, 1.58, 0.98, 90.0, -6.0))       #
 SD = (P(0.78, 0.48, 1.42, 46.0, 1.0), P(0.98, 0.74, 1.52, 38.0, 4.0))         # the child, the top drawer, the star, lights on
 SE = (P(0.64, 0.72, 1.82, 30.0, -13.0), SA[0])                                  # final: drift back into the frame-1 pose
 HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.75, SD), (13.02, DUR_SHORT, SE)]
-HOLDS = HOLDS_SHORT
+HOLDS_LONG = [
+    (0.00, 2.90, SA),
+    (3.20, 5.70, (P(1.95, 1.35, 2.05, -12.0, -24.0), P(0.95, 1.35, 2.05, 8.0, -24.0))),      # the loft from above, sliding west
+    (6.00, 8.50, (P(1.90, 0.28, 1.05, -50.0, -20.0), P(1.78, 0.52, 0.98, -36.0, -18.0))),    # rug, slippers, pouf, basket
+    (8.80, 11.30, SB),                                                                       # den: desk
+    (11.60, 14.10, (P(0.45, 1.50, 0.58, -8.0, -6.0), P(0.50, 1.95, 0.52, -2.0, -8.0))),      # den cubby push-in
+    (14.40, 16.90, (P(1.10, 2.00, 1.00, 58.0, -12.0), P(1.28, 1.78, 1.00, 70.0, -12.0))),    # under-landing wardrobe, orbit right
+    (17.20, 19.70, (P(1.40, 1.90, 0.78, 56.0, -16.0), P(1.62, 2.05, 0.72, 62.0, -20.0))),    # wardrobe push-in
+    (20.00, 22.50, (P(0.70, 1.75, 1.00, -6.0, 2.0), P(1.40, 1.85, 1.00, 6.0, 2.0))),         # book wall
+    (22.80, 25.40, (P(0.40, 0.30, 0.95, 48.0, -6.0), P(0.52, 0.52, 1.40, 58.0, -12.0))),     # rising wide toward the stair
+    (25.70, 28.80, SC),                                                                      # the cascade: low push up the stair
+    (29.00, 31.10, SC2),                                                                     # all 24 open, push in
+    (31.40, 33.70, (P(0.60, 1.85, 1.15, 140.0, -10.0), P(0.80, 1.72, 1.10, 124.0, -8.0))),   # side view: the child walks in
+    (34.00, 36.90, (P(0.98, 0.52, 0.95, 55.0, 6.0), P(1.04, 0.88, 1.42, 45.0, 10.0))),       # rising with the child
+    (37.20, 39.60, (P(1.22, 1.02, 1.72, 40.0, 6.0), P(1.36, 1.22, 1.84, 34.0, 4.0))),        # close 3/4 on the top steps, lights on
+    (39.90, 41.60, (P(1.60, 1.40, 1.15, 22.0, 12.0), P(1.10, 1.48, 1.20, -6.0, 12.0))),      # slow orbit under the rail
+    (41.90, DUR_LONG, (P(0.62, 0.70, 1.82, 30.0, -13.0), SA[0])),                            # final wide into the frame-1 pose
+]
+HOLDS = HOLDS_LONG if CUT == 'long' else HOLDS_SHORT
 
 camera = hold_camera(HOLDS, VFOV, rest=REST)
 
@@ -821,32 +857,10 @@ def timeline():
     return timeline_short(tl)
 
 
-def timeline_short(tl):
+def advent_setup(tl, T_TEASE, T_C, T_CL, T_KID_OPEN, T_KID_CLOSE, T_STAR0, T_STAR1, STEP=0.12):
+    """The tease, the 24-drawer cascade (open bottom to top, hold, close top to bottom) and the child's top drawer + star."""
     I = np.eye(4)
-    hidden = lambda t: (I, False)
     cen, ev = tl.cen, tl.ev
-    drop, fly, slide, grow = tl.drop, tl.fly, tl.slide, tl.grow
-    kid = KID[0]
-
-    def appear(name, t_on, t_off=None):
-        tl.custom(name, lambda t: (I, t >= t_on and (t_off is None or t < t_off)))
-
-    for k in range(2):
-        tl.custom(f'snow{k}', lambda t, k=k: (T(0.04 * math.sin(0.9 * t + k), 0, -SNOW_V[k] * t), True))
-
-    # ================= S1 (0-2.9, high corner): planks, the stair lands (and teases one drawer), posts, deck, bed
-    for k in range(6):
-        t1 = 0.12 + 0.03 * (5 - k)
-        drop(f'floor{k}', t1 - 0.08, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
-    for i in range(NST):
-        drop(f'stc{i}', 0.46 + 0.07 * i, 0.62 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
-    T_TEASE = 1.02
-    T_C = 5.70                                    # cascade start
-    STEP = 0.12
-    T_CL = T_C + STEP * 23 + 1.50                # all 24 open, held 1.5 s: the close starts at 9.96 s
-    T_KID_OPEN = 11.70
-    T_STAR0, T_STAR1 = 11.92, 12.16
-    T_LIGHTS = 12.20
     for k, d in enumerate(DRAWERS):
         col = d['col']
         base = (lambda t, col=col: tl.anims[f'stc{col}'](t))
@@ -857,7 +871,7 @@ def timeline_short(tl):
         tc = T_CL + 0.02 * (23 - k)
         cyc.append((to, tc, True))
         if k == 23:
-            cyc.append((T_KID_OPEN, 12.45, False))
+            cyc.append((T_KID_OPEN, T_KID_CLOSE, False))
         f_front, f_tray, f_toy = advent_fns(k, cyc, base)
         tl.custom(f'af{k}', f_front); tl.custom(f'at{k}', f_tray)
         if k == 23:
@@ -888,10 +902,41 @@ def timeline_short(tl):
         return about(cen['glint'], R('x', 0) @ S(s, s, s) @ np.eye(4)), True
     tl.custom('glint', glint)
     ev(T_CL + 0.02 * 23 + 0.22, 'all_shut', 0.9, 'thud')
+
+
+def timeline_short(tl):
+    I = np.eye(4)
+    hidden = lambda t: (I, False)
+    cen, ev = tl.cen, tl.ev
+    drop, fly, slide, grow = tl.drop, tl.fly, tl.slide, tl.grow
+    kid = KID[0]
+
+    def appear(name, t_on, t_off=None):
+        tl.custom(name, lambda t: (I, t >= t_on and (t_off is None or t < t_off)))
+
+    for k in range(2):
+        tl.custom(f'snow{k}', lambda t, k=k: (T(0.04 * math.sin(0.9 * t + k), 0, -SNOW_V[k] * t), True))
+
+    # ================= S1 (0-2.9, high corner): planks, the stair lands (and teases one drawer), posts, deck, bed
+    for k in range(6):
+        t1 = 0.12 + 0.03 * (5 - k)
+        drop(f'floor{k}', t1 - 0.08, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
+    for i in range(NST):
+        drop(f'stc{i}', 0.46 + 0.07 * i, 0.62 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
+    T_TEASE = 1.02
+    T_C = 5.70                                    # cascade start
+    STEP = 0.12
+    T_CL = T_C + STEP * 23 + 1.50                # all 24 open, held 1.5 s: the close starts at 9.96 s
+    T_KID_OPEN = 11.70
+    T_STAR0, T_STAR1 = 11.92, 12.16
+    T_LIGHTS = 12.20
+    advent_setup(tl, T_TEASE, T_C, T_CL, T_KID_OPEN, 12.45, T_STAR0, T_STAR1)
     ev(9.15, 'sparkle', 0.45, 'chime')
     drop('loft_deck', 0.08, 0.28, 0.9, 0.02, 1.0, 'thud')
     grow('loft_posts', 0.30, 0.44, 'z', (0, 0, 0), 0.8)
-    tl.custom('cupboard', lambda t: (tl.anims['loft_deck'](t)[0], t >= 0.08))
+    for nm in ('cupboard', 'cup_door', 'cup_rail', 'cup_cl', 'cup_dr0', 'cup_dr1', 'cup_drc0', 'cup_drc1'):
+        tl.custom(nm, lambda t: (tl.anims['loft_deck'](t)[0], t >= 0.08))
+    tl.custom('basket', hidden); tl.custom('basket_toys', hidden)
     slide('loft_rail', 1.40, 1.56, (0, -0.5, 0), 1.0, 0.5)
     drop('stair_guard', 1.88, 2.02, 0.35, 0.03, 0.45)
     drop('loft_mat', 1.94, 2.10, 0.35, 0.03, 0.6, 'thud')
@@ -956,8 +1001,168 @@ def timeline_short(tl):
 
 
 def timeline_long(tl):
-    raise NotImplementedError('long cut: see PLAN.md (built after the 15 s cut)')
+    """The 44 s cut: same opening as the 15 s cut, a new zone every 2.5-8 s, the cascade at 25.9-30.8 s (wow at 65-69%),
+    the child walks in and climbs, the star, lights on at 39.0 s, and a 2.1 s drift into the frame-1 pose."""
+    I = np.eye(4)
+    hidden = lambda t: (I, False)
+    cen, ev = tl.cen, tl.ev
+    drop, fly, slide, grow = tl.drop, tl.fly, tl.slide, tl.grow
+    kid = KID[0]
 
+    def appear(name, t_on, t_off=None):
+        tl.custom(name, lambda t: (I, t >= t_on and (t_off is None or t < t_off)))
+
+    for k in range(2):
+        tl.custom(f'snow{k}', lambda t, k=k: (T(0.04 * math.sin(0.9 * t + k), 0, -SNOW_V[k] * t), True))
+    # ===== S1 (0-2.9): identical opening to the 15 s cut up to the duvet
+    for k in range(6):
+        t1 = 0.12 + 0.03 * (5 - k)
+        drop(f'floor{k}', t1 - 0.08, t1, 0.24, 0.05, 0.3 + 0.03 * k, 'tick')
+    for i in range(NST):
+        drop(f'stc{i}', 0.46 + 0.07 * i, 0.62 + 0.07 * i, 0.55, 0.03, 0.55 + 0.05 * i, 'thud')
+    T_C = 25.90
+    T_CL = T_C + 0.12 * 23 + 1.50
+    advent_setup(tl, 1.02, T_C, T_CL, 36.20, 37.10, 36.40, 36.75)
+    drop('loft_deck', 0.08, 0.28, 0.9, 0.02, 1.0, 'thud')
+    grow('loft_posts', 0.30, 0.44, 'z', (0, 0, 0), 0.8)
+    for nm in ('cupboard', 'cup_rail'):
+        tl.custom(nm, lambda t: (tl.anims['loft_deck'](t)[0], t >= 0.08))
+    slide('loft_rail', 1.40, 1.56, (0, -0.5, 0), 1.0, 0.5)
+    drop('loft_mat', 1.94, 2.10, 0.35, 0.03, 0.6, 'thud')
+    drop('loft_duvet', 2.16, 2.32, 0.30, 0.03, 0.45)
+    # ===== S2 (3.2-5.7): the loft from above
+    drop('loft_pil', 3.30, 3.44, 0.25, 0.06, 0.35)
+    grow('loft_throw', 3.48, 3.66, 'x', (1.45, 0, 0), 0.35)
+    drop('loft_cubby', 3.76, 3.92, 0.30, 0.03, 0.4, 'thud')
+    drop('loft_books', 4.12, 4.30, 0.25, 0.04, 0.3)
+    drop('tree', 4.72, 4.90, 0.40, 0.05, 0.55, 'thud')
+    drop('garland', 5.14, 5.30, 0.22, 0.04, 0.3)
+    ev(4.50, 'torch', 0.3, 'tick')
+    # ===== S3 (6.0-8.5): the stair foot: rug, slippers, pouf, toy basket
+    grow('rug', 6.12, 6.36, 'y', (0, 0.7, 0), 0.4)
+    drop('slippers', 6.56, 6.72, 0.30, 0.06, 0.35)
+    drop('pouf', 6.92, 7.12, 0.45, 0.06, 0.55, 'thud')
+    drop('basket', 7.34, 7.50, 0.40, 0.04, 0.45, 'thud')
+    drop('basket_toys', 7.70, 7.90, 0.45, 0.06, 0.35)
+    # ===== S4 (8.8-11.3): the desk
+    slide('desk', 8.86, 9.02, (0, 0.5, 0), 1.0, 0.7)
+    fly('chair', 9.12, 9.30, (0.0, -0.6, 0.0), 0.05, 0.5, 'thud')
+    deskb = lambda t: (tl.anims['desk'](t)[0], t >= 8.86)
+    o0, c0 = 9.66, 10.36
+
+    def ddr(t):
+        M0, v = deskb(t)
+        if t < o0:
+            return M0, v
+        if t < c0:
+            return M0 @ T(0, -0.26 * eob((t - o0) / 0.10, 1.4), 0), v
+        return M0 @ T(0, -0.26 * (1 - smooth((t - c0) / 0.14)), 0), v
+    tl.custom('desk_dr', ddr)
+    drop('desk_drc', 9.88, 10.06, 0.25, 0.04, 0.35, parent=ddr)
+    ev(9.72, 'desk_open', 0.45, 'swish'); ev(10.50, 'desk_shut', 0.55, 'thud')
+    drop('dstuff', 10.58, 10.72, 0.2, 0.04, 0.3)
+    drop('dlamp', 10.70, 10.86, 0.25, 0.05, 0.35)
+    tl.custom('dlamp_on', hidden)
+    # ===== S5 (11.6-14.1): the cubby and its bins
+    drop('cubby', 11.70, 11.86, 0.35, 0.02, 0.55, 'thud')
+    for j in range(4):
+        drop(f'bin{j}', 12.06 + 0.16 * j, 12.24 + 0.16 * j, 0.40, 0.05, 0.35)
+    drop('cubby_top', 13.56, 13.72, 0.25, 0.05, 0.35)
+    # ===== S6-S7 (14.4-19.7): the under-landing wardrobe
+    hinge = np.array([SX0, D - 0.01, 0.0])
+
+    def door(t):
+        M0 = tl.anims['loft_deck'](t)[0]
+        if t < 14.55:
+            a = 0.0
+        elif t < 19.15:
+            a = eob(c01((t - 14.55) / 0.22), 0.6)
+        else:
+            u = (t - 19.15) / 0.16
+            a = 1 - u * u if u < 1 else -0.02 * math.exp(-(t - 19.31) / 0.05) * math.sin(2 * math.pi * (t - 19.31) / 0.1)
+        return M0 @ about(hinge, R('z', -math.radians(100) * a)), t >= 0.08
+    tl.custom('cup_door', door)
+    ev(14.62, 'cup_open', 0.5, 'swish'); ev(19.31, 'cup_shut', 0.8, 'thud')
+    fly('cup_cl', 15.10, 15.50, (0, -0.8, 0.0), 0.03, 0.4, 'tick')
+    for j in range(2):
+        to, tc = 17.40 + 0.2 * j, 18.55 + 0.2 * j
+
+        def cdr(t, to=to, tc=tc):
+            M0 = tl.anims['loft_deck'](t)[0]
+            if t < to:
+                k = 0.0
+            elif t < tc:
+                k = eob((t - to) / 0.12, 1.4)
+            else:
+                k = 1 - smooth((t - tc) / 0.14)
+            return M0 @ T(-0.30 * k, 0, 0), t >= 0.08
+        tl.custom(f'cup_dr{j}', cdr)
+        drop(f'cup_drc{j}', to + 0.30, to + 0.48, 0.35, 0.05, 0.35, parent=cdr)
+        ev(to + 0.06, f'cupdr{j}_open', 0.35, 'swish'); ev(tc + 0.16, f'cupdr{j}_shut', 0.55, 'thud')
+    for j in range(3):
+        ev(15.6 + 0.25 * j, f'cl{j}', 0.25, 'tick')
+    # ===== S8 (20.0-22.5): the book wall
+    slide('bshelf', 20.14, 20.30, (0, 0.3, 0), 1.0, 0.4)
+    for g in range(5):
+        tl.from_camera(f'books{g}', 20.50 + 0.22 * g, 20.68 + 0.22 * g, np.array([1.0, 1.8, 1.0]), 0.3, 0.3, 'tick')
+    appear('den_on', 99.0)
+    # ===== S9 (22.8-25.4): rising wide toward the stair, the guard lands
+    drop('stair_guard', 23.10, 23.26, 0.40, 0.03, 0.5, 'thud')
+    ev(23.8, 'snow_swell', 0.3, 'swish')
+    ev(24.6, 'pre_tick', 0.25, 'tick')
+    # ===== S10 (25.7-31.1): the cascade (advent_setup), a sparkle during the hold
+    ev(T_C + 0.12 * 23 + 0.7, 'sparkle', 0.45, 'chime')
+    # ===== S11-S13: the child walks in, climbs, opens the top drawer, sends the star, climbs to the landing
+    pose_w, at_w = fg.walk([(31.45, (0.45, 0.40, 90)), (33.35, (2.35, 0.60, 0))], kid)
+    climb = [(33.35, 2.35, 0.60, 0.0)]
+    for c in range(4):
+        t0 = 34.05 + 0.5 * c
+        climb.append((t0, 2.35, climb[-1][2], climb[-1][3]))
+        climb.append((t0 + 0.5, 2.35, SY0 + TD * (c + 0.5), RZ * (c + 1)))
+    for c in (4, 5):
+        t0 = 37.40 + 0.5 * (c - 4)
+        climb.append((t0, 2.35, climb[-1][2], climb[-1][3]))
+        climb.append((t0 + 0.5, 2.35, SY0 + TD * (c + 0.5), RZ * (c + 1)))
+    climb.append((38.90, 2.33, 2.42, LZ1))
+
+    def cpos(t):
+        if t <= climb[0][0]:
+            return climb[0]
+        for a, b in zip(climb, climb[1:]):
+            if t < b[0]:
+                u = smooth((t - a[0]) / (b[0] - a[0]))
+                return (t, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u, a[3] + (b[3] - a[3]) * u)
+        return climb[-1]
+    su, sm = fg.POSES['step_up'], fg.mirror(fg.POSES['step_up'])
+    keys = [(33.40, 'stand')]
+    for c in range(4):
+        t0 = 34.05 + 0.5 * c
+        keys += [(t0, 'stand'), (t0 + 0.22, su if c % 2 == 0 else sm), (t0 + 0.48, 'stand')]
+    bend_reach = dict(sh_r=48, sh_r_out=4, elbow_r=6, sh_l=24, sh_l_out=10, elbow_l=24, spine=36, neck=14,
+                      hip_l=20, hip_r=20, knee_l=14, knee_r=14)
+    keys += [(36.10, bend_reach), (36.30, bend_reach), (36.50, 'reach_up'), (37.00, 'reach_up'), (37.25, 'stand')]
+    for c in range(2):
+        t0 = 37.40 + 0.5 * c
+        keys += [(t0, 'stand'), (t0 + 0.22, su if c % 2 == 0 else sm), (t0 + 0.48, 'stand')]
+    keys += [(38.90, 'stand'), (39.15, 'crouch'), (40.30, 'crouch'), (40.60, 'stand'), (40.85, 'wave'), (41.80, 'wave')]
+    track = fg.track(keys)
+    pose_fn = lambda t: pose_w(t) if t < 33.40 else track(t)
+    at_fn = lambda t: at_w(t) if t < 33.40 else (cpos(t)[1], cpos(t)[2], 0 if t < 38.4 else 0)
+    floor_fn = lambda t: 0.0 if t < 33.40 else cpos(t)[3]
+    kid.animate(tl, pose=pose_fn, at=at_fn, floor=floor_fn, pop=31.45, sound=0.4)
+    ev(36.28, 'top_open', 0.45, 'swish'); ev(36.75, 'star_on_tree', 0.6, 'tick'); ev(37.32, 'top_shut', 0.5, 'thud')
+    for c in range(6):
+        ev((34.55 + 0.5 * c) if c < 4 else (37.90 + 0.5 * (c - 4)), f'step{c}', 0.3, 'tick')
+    # ===== lights on at 39.0 s, then the orbit and the final wide
+    T_L = 39.00
+    tl.custom('tree_on', lambda t: (tl.anims['tree'](t)[0], t >= T_L)); ev(T_L, 'tree_on', 0.7, 'chime')
+    tl.custom('star_on', lambda t: (tl.anims['tree'](t)[0], t >= T_L))
+    tl.custom('garland_on', lambda t: (tl.anims['garland'](t)[0], t >= T_L + 0.12))
+    appear('den_on', T_L + 0.26); ev(T_L + 0.26, 'den_on', 0.45, 'chime')
+    appear('dlamp_on', T_L + 0.34)
+    appear('dl_on', T_L + 0.44); ev(T_L + 0.44, 'down_on', 0.4, 'chime')
+    ev(40.85, 'wave', 0.3, 'tick')
+    return tl
 
 if __name__ == '__main__':
     out = sys.argv[1] if len(sys.argv) > 1 else '.'
