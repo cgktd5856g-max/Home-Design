@@ -345,8 +345,14 @@ def build_crib(rng):
         for xx in (x0 + 0.008, x1 - 0.022):
             add(c, box(xx, y - 0.008, 0.25, xx + 0.014, y + 0.008, 0.81), 'birch_z')
     add(c, box(x0 + 0.03, y0 + 0.03, 0.215, x1 - 0.03, y1 - 0.03, 0.235), 'birch_x')
-    add(c, box(x0 + 0.04, y0 - 0.002, 0.075, x1 - 0.04, y0 + 0.02, 0.19), 'birch_x')          # crib drawer front
-    add(c, box(x0 + 0.24, y0 - 0.008, 0.155, x1 - 0.24, y0, 0.163), 'pgrey')
+    add('crib_dr', box(x0 + 0.04, y0 - 0.002, 0.075, x1 - 0.04, y0 + 0.02, 0.19), 'birch_x')    # crib drawer front
+    add('crib_dr', box(x0 + 0.24, y0 - 0.008, 0.155, x1 - 0.24, y0, 0.163), 'pgrey')
+    add('crib_dr', box(x0 + 0.05, y0 + 0.02, 0.078, x1 - 0.05, y1 - 0.06, 0.088), 'white_in')
+    for bb in (box(x0 + 0.05, y0 + 0.02, 0.088, x0 + 0.062, y1 - 0.06, 0.17), box(x1 - 0.062, y0 + 0.02, 0.088, x1 - 0.05, y1 - 0.06, 0.17)):
+        add('crib_dr', bb, 'white_in')
+    if LONG:
+        stack('crib_dr_c', 0.72, y0 + 0.20, 0.088, (0.18, 0.24, 0.025), ('cl_coral', 'cl_white', 'cl_coral'), 3, rng)
+        stack('crib_dr_c', 0.95, y0 + 0.20, 0.088, (0.18, 0.24, 0.025), ('cl_teal', 'cl_white', 'cl_teal'), 3, rng)
     add('crib_mat', rbox(((x0 + x1) / 2, (y0 + y1) / 2, 0.285), (x1 - x0 - 0.075, y1 - y0 - 0.075, 0.10), 0.03, 4), 'sheet_sky')
     # crib-bay open shelf behind the parked crib (with an LED under the deck)
     s = 'cshelf'
@@ -396,12 +402,12 @@ def build_wardrobe(rng):
     add(b, box(x0 + 0.018, 0.0, 0.20, x0 + 0.02, DECK_Y, 0.218), 'white_cab')
     # bay A (baby): changing shelf at 0.90, shelves above, sock shelf below
     for z in (0.90, 1.45, 1.75):
-        add(b, box(x0 + 0.06 if z == 0.90 else x0 + 0.03, t, z - 0.018, x1 - t, 0.5 - t / 2, z), 'white_in')
-    add(b, box(x0 + 0.03, t, 0.58, x1 - t, 0.5 - t / 2, 0.598), 'white_in')
+        add('wr_in', box(x0 + 0.06 if z == 0.90 else x0 + 0.03, t, z - 0.018, x1 - t, 0.5 - t / 2, z), 'white_in')
+    add('wr_in', box(x0 + 0.03, t, 0.58, x1 - t, 0.5 - t / 2, 0.598), 'white_in')
     # bay B (baby): rail at 1.92, shelves at 1.30 / 0.95 / 0.60
     for z in (1.30, 0.95, 0.60):
-        add(b, box(x0 + 0.03, 0.5 + t / 2, z - 0.018, x1 - t, 1.0 - t / 2, z), 'white_in')
-    add(b, tube([(1.79, 0.5 + t, 1.92), (1.79, 1.0 - t, 1.92)], 0.009, 10), 'pgrey')
+        add('wr_in', box(x0 + 0.03, 0.5 + t / 2, z - 0.018, x1 - t, 1.0 - t / 2, z), 'white_in')
+    add('wr_in', tube([(1.79, 0.5 + t, 1.92), (1.79, 1.0 - t, 1.92)], 0.009, 10), 'pgrey')
     # bay C (parents): shelf at 0.55 (laundry basket below)
     # top cabinets over B and C (fixed birch doors) + the lift-up flap over A (separate)
     for (a, c2) in ((0.5, 1.0), (1.0, DECK_Y)):
@@ -467,9 +473,13 @@ def build_bridge():
     for bb in (box(x0, 0, z0, x1, y1, z0 + t), box(x0, 0, H - t, x1, y1, H), box(x0, 0, z0, x1, t, H),
                box(x0, 0, z0, x0 + t, y1, H), box(x1 - t, 0, z0, x1, y1, H), box(0.77, 0, z0, 0.788, y1, H)):
         add(b, bb, 'white_cab')
-    for (a, c) in ((x0, 0.78), (0.78, x1)):
-        add(b, box(a + 0.003, y1, z0 + 0.003, c - 0.003, y1 + t, H - 0.004), 'white_cab')
-        add(b, box((a + c) / 2 - 0.06, y1 + t, z0 + 0.03, (a + c) / 2 + 0.06, y1 + t + 0.008, z0 + 0.04), 'pgrey')
+    for nm, (a, c) in (('br_flapL', (x0, 0.78)), ('br_flapR', (0.78, x1))):
+        add(nm, box(a + 0.003, y1, z0 + 0.003, c - 0.003, y1 + t, H - 0.004), 'white_cab')
+        add(nm, box((a + c) / 2 - 0.06, y1 + t, z0 + 0.03, (a + c) / 2 + 0.06, y1 + t + 0.008, z0 + 0.04), 'pgrey')
+    if LONG:
+        add('br_c0', xform(lathe(rprof(0.15, -0.30, 0.30, 0.06, 4), 24, (0, 0)), T(0.38, 0.19, z0 + t + 0.16) @ R('y', math.pi / 2)), 'pil_white')
+        add('br_c1', rbox((1.00, 0.18, z0 + t + 0.20), (0.40, 0.24, 0.40), 0.04, 3), 'pk_coral')
+        add('br_c2', rbox((1.34, 0.18, z0 + t + 0.14), (0.30, 0.26, 0.28), 0.02, 3), 'pk_sky')
 
 
 def build():
@@ -486,6 +496,24 @@ def build():
     global P1, P2
     P1 = fg.figure('p1', 'adult', pose=P1_POSE(), at=P1_AT, seat=STEP_Z[1], mat='fig_p1')
     P2 = fg.figure('p2', 'adult', pose=P2_SIT, at=P2_AT, seat=MAT_Z + 0.03, mat='fig_p2')
+    if LONG:
+        build_long_extras()
+
+
+BUNDLE_LOCAL = (0.0, 0.085, -0.12)
+
+
+def build_long_extras():
+    """Pieces only the long cut uses: niche monitor + phone, next-size boxes, the swaddled bundle."""
+    nz0 = NICHE[4]
+    add('monitor', rbox((1.735, 3.06, nz0 + 0.06), (0.07, 0.03, 0.11), 0.012, 3), 'nl_shell')
+    add('monitor', box(1.708, 3.044, nz0 + 0.03, 1.762, 3.045, nz0 + 0.10), 'mon_glow')
+    add('phone', rbox((1.90, 3.035, nz0 + 0.0045), (0.07, 0.10, 0.009), 0.004, 3), 'phone')
+    for k, m in enumerate(('pk_sky', 'pk_teal', 'pk_coral')):                         # next-size boxes, colour-coded, no numbers
+        add(f'nb{k}', rbox((1.78, 0.10 + k * 0.15, 2.058 + 0.11), (0.36, 0.13, 0.22), 0.015, 3), m)
+    # the swaddled bundle, built in parent 1's left-forearm frame (so it rides on the forearm)
+    M = P1.bind['farm_l']
+    add('bundle', xform(ellipsoid(BUNDLE_LOCAL, (0.085, 0.085, 0.24), 12), M), 'swaddle')
 
 
 P1_AT = (0.25, 0.90, 180.0)
@@ -522,15 +550,33 @@ S5 = (P(1.0, -2.55, 0.98, 0.0, 3.0), P0)                        # hall wide: cra
 HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (13.25, 15.0, S5)]
 HALL15 = [0, 1, 3, 4]                                                 # hall holds (south wall hidden), others: west wall hidden
 
-HOLDS, HALL = HOLDS15, HALL15
+# long cut: 12 holds in 6 zones, joined by 0.3 s swings
+L1 = S1                                                                        # hall crane (as the 15 s cut)
+L2 = (P(1.18, 0.42, 2.18, -6.0, -15.0), P(0.86, 0.78, 2.12, 6.0, -15.0))      # inside, high from the south: bed + niche
+L3 = S2                                                                        # high over the stair (hall side)
+L4 = (P(1.55, -1.25, 1.05, -12.0, -14.0), P(1.12, -1.15, 1.05, -2.0, -14.0))   # low on the pull-out: slide west, turn right
+L5 = (P(1.30, 2.72, 2.15, 188.0, -6.0), P(0.80, 2.72, 2.12, 176.0, -6.0))      # from the bed looking south through the bars
+L6 = (P(-1.05, 0.76, 2.30, 89.0, -14.0), P(-0.95, 0.72, 1.95, 90.0, -9.0))     # high west, craning down
+L7 = (P(-0.62, 0.32, 0.95, 86.0, 2.0), P(-0.55, 0.34, 1.55, 88.0, 7.0))       # low on bay A, craning up with the reach
+L8 = (P(-1.12, 0.80, 1.60, 89.0, -8.0), P(-0.95, 0.70, 1.72, 91.0, -9.0))      # full-height wardrobe: the wow
+L9 = (P(-0.58, 0.48, 1.45, 92.0, -12.0), P(-0.46, 0.32, 1.40, 95.0, -14.0))    # closer on bay A: changing top
+L10 = (P(1.35, 2.62, 2.20, 190.0, -28.0), P(0.85, 2.62, 2.18, 176.0, -28.0))   # from the deck, south and down over the rail
+L11 = (P(1.15, -1.35, 1.00, -6.0, -8.0), P(0.75, -1.25, 1.05, -12.0, -10.0))   # low on the crib
+L12 = S5                                                                       # hall wide: crane up into P0
+HOLDSL = [(0.0, 3.4, L1), (3.7, 7.0, L2), (7.3, 10.8, L3), (11.1, 14.5, L4), (14.8, 18.3, L5), (18.6, 22.0, L6),
+          (22.3, 25.6, L7), (25.9, 29.4, L8), (29.7, 33.2, L9), (33.5, 37.0, L10), (37.3, 40.6, L11), (40.9, 44.0, L12)]
+HALLL = [0, 2, 3, 10, 11]
+INL = [1, 4, 9]                                                                   # camera inside the room: no wall hidden
+
+HOLDS, HALL, INSIDE = (HOLDSL, HALLL, INL) if LONG else (HOLDS15, HALL15, [])
 camera = hold_camera(HOLDS, VFOV, lift=1.0, final_lift=1.5, rest=REST)
 
 
 def wall_mode(t):
-    """'hall' | 'west' | 'swing' for the hold (or the swing) at time t."""
+    """'hall' | 'west' | 'in' | 'swing' for the hold (or the swing) at time t."""
     for i, (t0, t1, _) in enumerate(HOLDS):
         if t0 <= t < t1 or (i == len(HOLDS) - 1 and t >= t0) or (i == 0 and t < t0):
-            return 'hall' if i in HALL else 'west'
+            return 'in' if i in INSIDE else ('hall' if i in HALL else 'west')
         if i + 1 < len(HOLDS) and t1 <= t < HOLDS[i + 1][0] and i in HALL and i + 1 in HALL:
             return 'hall'                                            # swing between two hall holds
     return 'swing'
@@ -610,13 +656,15 @@ def timeline():
                 tl.custom(nm, hidden)
         # station 0, 3 are hall views (no south wall), 1, 2 west views (no west wall); the crib parked by day
         tl.custom('wall_S', lambda t: (I, int(t) == 2))
-        tl.custom('bridge', lambda t: (I, int(t) == 2))
+        for nm in ('bridge', 'br_flapL', 'br_flapR'):
+            tl.custom(nm, lambda t: (I, int(t) == 2))
         tl.custom('wall_W', lambda t: (I, int(t) != 2))
         tl.custom('handrail', lambda t: (I, int(t) != 2))
         tl.custom('wr_mat', hidden)
         if not REST_NIGHT:
             tl.custom('crib', lambda t: (T(0, CRIB_PARK, 0), True))
             tl.custom('crib_mat', lambda t: (T(0, CRIB_PARK, 0), True))
+            tl.custom('crib_dr', lambda t: (T(0, CRIB_PARK, 0), True))
             for nm in P1.pieces + P2.pieces:
                 tl.custom(nm, hidden)
         return tl
@@ -681,8 +729,8 @@ def timeline_15(tl):
     cen, ev = tl.cen, tl.ev
     drop, fly, slide, grow = tl.drop, tl.fly, tl.slide, tl.grow
     appear, drawer_fn, hinge, wall_vis = helpers(tl)
-    tl.custom('wall_S', lambda t: (I, wall_mode(t) == 'west'))
-    tl.custom('wall_W', lambda t: (I, wall_mode(t) == 'hall'))
+    tl.custom('wall_S', lambda t: (I, wall_mode(t) in ('west', 'in')))
+    tl.custom('wall_W', lambda t: (I, wall_mode(t) in ('hall', 'in')))
 
     # ================= S1 hall (0.0-3.2): crib, planks, posts, DECK SLAM, crib-bay shelf, crib parks, bed
     OFF0 = np.array([0.12, -2.3, 0.95])                              # starts big, near the lens, and lands at 0.26 s
@@ -753,6 +801,9 @@ def timeline_15(tl):
     # ================= S2 high west (3.5-7.0): stair blocks, handrail, riser drawers fill, baby pull-out
     br = drop('bridge', 7.30, 7.44, 0.35, 0.02, 0.6, 'thud')
     tl.custom('bridge', lambda t: (br(t)[0], br(t)[1] and wall_mode(t) == 'west'))
+    for nm in ('br_flapL', 'br_flapR'):
+        tl.custom(nm, tl.anims['bridge'])
+    tl.custom('crib_dr', tl.anims['crib'])
     steps = []
     for k in range(4):
         t1 = 3.56 + 0.13 * k
@@ -796,7 +847,7 @@ def timeline_15(tl):
     # ================= S3 wardrobe (7.3-10.7): carcass slides out, WOW (doors open, skinny rail, baby bays fill),
     # changing flap, nappy drawer
     body = slide('wr_body', 7.36, 7.70, (0.47, 0, 0), 0.8, 0.85, 'thud')
-    for nm in ('wr_topA', 'wr_step'):
+    for nm in ('wr_topA', 'wr_step', 'wr_in'):
         tl.custom(nm, body)
     hinge('wr_dA', (WR_X, 0.0, 0), 'z', math.radians(98), 8.22, 10.60, base=body, t_appear=7.36)
     hinge('wr_dB', (WR_X, 0.5, 0), 'z', math.radians(96), 8.28, 10.64, base=body, t_appear=7.36)
@@ -848,8 +899,360 @@ def timeline_15(tl):
     return tl
 
 
+CRADLE = dict(sh_l=34, sh_l_out=12, elbow_l=104, sh_r=44, sh_r_out=-4, elbow_r=92)
+SHRUG = dict(sh_l=18, sh_r=18, sh_l_out=38, sh_r_out=38, elbow_l=84, elbow_r=84, sh_l_rot=-30, sh_r_rot=-30, neck_turn=-22,
+             spine=-3)
+LAY = dict(spine=52, neck=18, sh_l=78, sh_r=78, sh_l_out=6, sh_r_out=6, elbow_l=30, elbow_r=30, hip_l=22, hip_r=22,
+           knee_l=18, knee_r=18)
+HAND_ON_CRIB = dict(spine=14, neck=12, sh_r=52, sh_r_out=6, elbow_r=24, sh_l_out=6, elbow_l=10)
+
+
 def timeline_long(tl):
-    raise NotImplementedError('long cut: to do after the 15 s cut')
+    """The 44 s long cut: six zones, the step-drawer person moment, the wow at 26.6 s, evening and the loop."""
+    I = np.eye(4)
+    ev = tl.ev
+    drop, fly, slide, grow = tl.drop, tl.fly, tl.slide, tl.grow
+    appear, drawer_fn, hinge, wall_vis = helpers(tl)
+    tl.custom('wall_S', lambda t: (I, wall_mode(t) in ('west', 'in')))
+    tl.custom('wall_W', lambda t: (I, wall_mode(t) in ('hall', 'in')))
+
+    # ================= Zone 1a, hall (0.0-3.4): crib, planks, crib drawer, posts, DECK SLAM, shelf, crib parks
+    OFF0 = np.array([0.12, -2.3, 0.95])
+
+    def crib_land(t, t0=-0.16, t1=0.26):
+        u = (t - t0) / (t1 - t0)
+        if u < 1:
+            return T(*((1 - eoc(u)) * OFF0 + np.array([0, 0, 0.18 * math.sin(math.pi * u)]))), True
+        tau = t - t1
+        return T(0, 0, 0.04 * math.exp(-tau / 0.09) * abs(math.sin(math.pi * tau / 0.13))), True
+    ev(0.26, 'crib', 0.6, 'thud')
+
+    def crib_y(t):
+        if t < 2.60:
+            return 0.0
+        if t < 3.00:
+            return CRIB_PARK * smooth((t - 2.60) / 0.40)
+        if t < 34.10:
+            return CRIB_PARK
+        if t < 34.80:
+            return CRIB_PARK * (1 - eoc((t - 34.10) / 0.70))
+        return 0.0
+
+    def crib_extra(t):
+        M = I
+        if 0.26 < t < 0.50:
+            M = T(0, 0, 0.025 * math.sin(math.pi * (t - 0.26) / 0.24))
+        if 42.90 < t < 43.50:
+            M = M @ T(0.010 * math.sin(2 * math.pi * (t - 42.9) / 0.25) * (1 - (t - 42.9) / 0.6), 0, 0)
+        return M
+
+    def crib(t):
+        M, v = crib_land(t)
+        return T(0, crib_y(t), 0) @ crib_extra(t) @ M, v
+    tl.custom('crib', crib)
+    tl.custom('crib_mat', crib)
+    ev(3.00, 'crib_park', 0.5, 'roll'); ev(34.80, 'crib_night', 0.5, 'roll')
+    for k in range(6):
+        t1 = 0.40 + 0.10 * (5 - k)
+        drop(f'floor{k}', t1 - 0.14, t1, 0.22, 0.05, 0.3 + 0.03 * (5 - k), 'tick')
+    cd = drawer_fn(-1.0, 1.05, 1.62, (0, -0.32, 0), base=crib)
+    tl.custom('crib_dr', cd)
+    ev(1.10, 'crib_dr_open', 0.4, 'swish'); ev(1.79, 'crib_dr_shut', 0.55, 'thud')
+    drop('crib_dr_c', 1.18, 1.32, 0.2, 0.05, 0.3, 'pip', parent=cd)
+    drop('posts', 1.60, 1.75, 0.6, 0.04, 0.6, 'thud')
+    drop('deck', 1.78, 1.95, 1.2, 0.035, 1.0, 'thud')
+    drop('cshelf', 1.96, 2.05, 0.5, 0.03, 0.55, 'thud')
+    for i, nm in enumerate(['cs_f00', 'cs_f01', 'cs_f02', 'cs_f10', 'cs_f11', 'cs_f12', 'cs_f20', 'cs_f21', 'cs_f22']):
+        t1 = 2.10 + 0.055 * i
+        drop(nm, t1 - 0.10, t1, 0.18, 0.06, 0.3, 'pip' if i % 2 == 0 else 'none')
+    drop('grail', 3.00, 3.10, 0.40, 0.03, 0.5, 'thud')
+    drop('mattress', 3.18, 3.30, 0.45, 0.04, 0.6, 'thud')
+
+    # ================= Zone 1b, west at deck height (3.7-7.0): bedding, niche fill, reading light
+    duv = drop('duvet', 3.68, 3.80, 0.40, 0.03, 0.45, 'tick')
+
+    def duvet(t):
+        M, v = duv(t)
+        if 42.8 < t < 43.3:
+            u = (t - 42.8) / 0.5
+            M = about((1.0, 2.3, MAT_Z), S(1, 1, 1 - 0.05 * math.sin(math.pi * u) * (1 - u))) @ M
+        return M, v
+    tl.custom('duvet', duvet)
+    drop('pil1', 3.90, 4.00, 0.35, 0.08, 0.35, 'tick')
+    drop('pil2', 4.10, 4.20, 0.35, 0.08, 0.35, 'tick')
+    grow('throw', 4.26, 4.40, 'y', (0, 1.70, 0), 0.4, 'tick')
+    drop('monitor', 4.58, 4.70, 0.16, 0.05, 0.3, 'pip')
+    drop('nlight', 5.00, 5.10, 0.16, 0.05, 0.3, 'pip')
+    drop('phone', 5.40, 5.50, 0.14, 0.05, 0.3, 'pip')
+    drop('books', 5.80, 5.92, 0.18, 0.05, 0.3, 'tick')
+    slide('rlight', 6.16, 6.30, (0, 0, 0.25), 1.0, 0.35, 'tick')
+    rl = tl.anims['rlight']
+    tl.custom('rl_on', lambda t: (rl(t)[0], t >= 40.4)); ev(40.4, 'read_on', 0.6, 'chime')
+
+    # ================= Zone 2a, high over the stair (7.3-10.8): stair blocks, handrail, riser drawers fill
+    steps = []
+    for k in range(4):
+        t1 = 7.45 + 0.13 * k
+        steps.append(drop(f'step{k + 1}', t1 - 0.14, t1, 0.45, 0.03, 0.45 + 0.1 * k, 'thud'))
+    hr = drop('handrail', 7.85, 7.95, 0.35, 0.04, 0.4, 'tick')
+    tl.custom("handrail", lambda t: (hr(t)[0], hr(t)[1] and not (18.45 <= t < 33.35)))
+    times = [(8.10, 8.62), (8.70, 9.22), (9.30, 9.82), (9.90, 10.55)]
+    for k in range(4):
+        to, tc = times[k]
+        f = drawer_fn(7.31 + 0.13 * k, to, tc, (0, -DR_OUT[k], 0), base=steps[k], out=0.14 if k < 3 else 0.24)
+        tl.custom(f'dr{k + 1}', f)
+        ev(to + 0.08, f'dr{k + 1}_open', 0.4, 'swish'); ev(tc + 0.17, f'dr{k + 1}_shut', 0.55 + 0.1 * k, 'thud')
+        for i in range(2 if k < 3 else 3):
+            t1 = to + 0.18 + 0.09 * i + (0.10 if k == 3 else 0.0)
+            drop(f'dc{k + 1}_{i}', t1 - 0.10, t1, 0.16, 0.06, 0.32, 'tick' if k == 0 else 'pip', parent=f)
+
+    # ================= Zone 2b, hall low (11.1-14.5): the baby pull-out
+    pf = PO_OUT
+
+    def pull(t):
+        if t < 11.20:
+            return I, False
+        if t < 11.70:
+            return T(0, -pf * eob((t - 11.20) / 0.50, 0.5), 0), True
+        if t < 13.70:
+            return T(0, -pf, 0), True
+        u = (t - 13.70) / 0.40
+        if u < 1:
+            return T(0, -pf * (1 - smooth(u)), 0), True
+        tau = t - 14.10
+        return T(0, -0.006 * math.exp(-tau / 0.05) * math.sin(2 * math.pi * tau / 0.12), 0), True
+    tl.custom('pullout', pull)
+    ev(11.30, 'po_open', 0.45, 'swish'); ev(14.10, 'po_shut', 0.85, 'thud')
+    for k in range(7):
+        t1 = 11.85 + 0.11 * k
+        drop(f'po_cl{k}', t1 - 0.10, t1, 0.18, 0.05, 0.3, 'pip', parent=pull)
+    for k in range(4):
+        t1 = 12.75 + 0.15 * k
+        drop(f'po_bin{k}', t1 - 0.10, t1, 0.15, 0.05, 0.3, 'pip', parent=pull)
+
+    # ================= Zone 3a, from the bed looking south (14.8-18.3): bridge cabinet fills, wardrobe carcass arrives
+    br = drop('bridge', 14.88, 15.00, 0.35, 0.02, 0.7, 'thud')
+    tl.custom('bridge', lambda t: (br(t)[0], br(t)[1] and wall_mode(t) in ('west', 'in')))
+    bz = 2.15 + 0.018
+    hinge('br_flapL', (0, 0.35, H - 0.004), 'x', math.radians(-100), 15.30, 16.95, t_appear=15.0, base=br)
+    hinge('br_flapR', (0, 0.35, H - 0.004), 'x', math.radians(-100), 15.36, 17.00, t_appear=15.0, base=br)
+    ev(15.45, 'br_open', 0.4, 'swish'); ev(17.18, 'br_shut', 0.75, 'thud')
+    for k in range(3):
+        t1 = 15.95 + 0.38 * k
+        fc = fly(f'br_c{k}', t1 - 0.22, t1, (0, 0.55, 0.03), 0.04, 0.5 if k == 1 else 0.35, 'thud' if k == 1 else 'tick')
+        tl.custom(f'br_c{k}', lambda t, fc=fc: (fc(t)[0], fc(t)[1] and wall_mode(t) in ('west', 'in')))
+    body = slide('wr_body', 17.35, 17.95, (0.47, 0, 0), 0.8, 0.85, 'thud')
+
+    # ================= Zone 3b, high west craning down (18.6-22.0): shelves, rails, step drawer, doors land open + shut
+    win = drop('wr_in', 18.70, 18.90, 0.35, 0.03, 0.5, 'thud')
+    tl.custom('wr_in', lambda t: (body(t)[0] @ win(t)[0], win(t)[1]))
+    for i, nm in enumerate(('wr_rail', 'wr_flap', 'wr_nap')):
+        pass
+    tl.custom('wr_topA', lambda t: (body(t)[0], body(t)[1]))
+    ws_land = slide('wr_step', 20.05, 20.20, (-0.3, 0, 0), 0.8, 0.5, 'thud')
+    sd = drawer_fn(20.05, 23.30, 26.00, (-0.32, 0, 0), base=lambda t: (body(t)[0] @ ws_land(t)[0], True), out=0.18)
+    tl.custom('wr_step', lambda t: (sd(t)[0], t >= 20.05))
+    ev(23.36, 'step_out', 0.45, 'swish'); ev(26.17, 'step_home', 0.6, 'thud')
+
+    def door_pre(name, piv, a_open, t_in, t_shut, t_open2, t_close2):
+        """Lands open (20.6-21.6), swings shut, re-opens for the wow, closes in the evening."""
+        piv = np.array(piv, float)
+
+        def ang(t):
+            if t < t_shut:
+                return a_open
+            if t < t_shut + 0.18:
+                u = (t - t_shut) / 0.18
+                return a_open * (1 - u * u)
+            if t < t_open2:
+                tau = t - t_shut - 0.18
+                return math.radians(1.6) * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08))
+            if t < t_close2:
+                return a_open * eob(c01((t - t_open2) / 0.22), 0.9)
+            u = (t - t_close2) / 0.18
+            if u < 1:
+                return a_open * (1 - u * u)
+            tau = t - t_close2 - 0.18
+            return math.radians(1.6) * math.exp(-tau / 0.05) * abs(math.sin(math.pi * tau / 0.08))
+
+        def f(t):
+            if t < t_in:
+                return I, False
+            M = body(t)[0] @ about(piv, R('z', ang(t)))
+            if t < t_in + 0.15:
+                u = (t - t_in) / 0.15
+                M = T(0, 0, 0.12 * (1 - eoc(u))) @ M
+            return M, True
+        tl.custom(name, f)
+        ev(t_shut + 0.18, name + '_shut', 0.75, 'thud')
+    door_pre('wr_dA', (WR_X, 0.0, 0), math.radians(92), 20.60, 21.00, 27.00, 33.62)
+    door_pre('wr_dB', (WR_X, 0.5, 0), math.radians(96), 20.75, 21.20, 27.06, 33.68)
+    door_pre('wr_dC', (WR_X, 1.0, 0), math.radians(94), 20.90, 21.40, 26.62, 33.74)
+    ev(27.10, 'doors_open', 0.5, 'swish'); ev(26.70, 'bayC_bwomp', 0.6, 'bwomp'); ev(33.92, 'doors_shut', 0.85, 'thud')
+    tl.custom('wr_rail', lambda t: (body(t)[0], t >= 18.90))
+
+    # ================= Zone 4a (22.3-25.6): parent 1 walks in, hooks the step drawer out, steps up, boxes go up
+    fpiv_top = (WR_X, 0, 2.058)
+
+    def topflap(t):
+        if t < 23.80:
+            a = 0.0
+        elif t < 25.00:
+            a = math.radians(-100) * eob(c01((t - 23.80) / 0.25), 0.6)
+        else:
+            a = math.radians(-100) * (1 - smooth(c01((t - 25.00) / 0.22)))
+        piv = np.array([WR_X, 0, H - 0.01])
+        return body(t)[0] @ about(piv, R('y', -a)), t >= 17.35
+    tl.custom('wr_topA', topflap)
+    ev(23.90, 'top_open', 0.4, 'swish'); ev(25.22, 'top_shut', 0.7, 'thud')
+    for k in range(3):
+        t1 = 24.25 + 0.30 * k
+        fly(f'nb{k}', t1 - 0.25, t1, (-0.45, 0, -0.12), 0.05, 0.35, 'pip')
+
+    # ================= Zone 4b (25.9-29.4): THE WOW (26.6): the parents' sparse bay opens first, then the baby's two fill
+    fills = ['wb_cl0', 'wa_f0', 'wb_cl1', 'wb_f0', 'wb_cl2', 'wa_f1', 'wb_cl3', 'wb_f1', 'wb_cl4', 'wa_f2', 'wb_cl5', 'wb_f2', 'wb_f3']
+    for i, nm in enumerate(fills):
+        t1 = 27.22 + 0.12 * i
+        fly(nm, t1 - 0.14, t1, (-0.40 if nm.startswith('wb_cl') else -0.45, 0, 0.06), 0.04, 0.3, 'pip')
+
+    # ================= Zone 5a (29.7-33.2): changing top, nappy drawer
+    fpiv = (WR_X + 0.04, 0, 0.902)
+
+    def flap_ang(t):
+        if t < 29.90:
+            return 0.0
+        if t < 33.40:
+            return -math.radians(90) * min(1.0, eob(c01((t - 29.90) / 0.40), 0.4))
+        return -math.radians(90) * (1 - smooth(c01((t - 33.40) / 0.20)))
+
+    def flap(t):
+        return body(t)[0] @ about(fpiv, R('y', flap_ang(t))), t >= 18.90
+    tl.custom('wr_flap', flap)
+    ev(30.30, 'flap_down', 0.6, 'thud')
+    md = drop('wr_mat', 30.35, 30.50, 0.25, 0.05, 0.4, 'pip')
+    tl.custom('wr_mat', lambda t: (flap(t)[0] @ about(fpiv, R('y', math.radians(90))) @ md(t)[0], md(t)[1] and t < 33.42))
+    fn = drawer_fn(18.90, 30.80, 31.62, (-0.40, 0, 0), base=body)
+    tl.custom('wr_nap', fn)
+    ev(30.88, 'nap_open', 0.4, 'swish'); ev(31.79, 'nap_shut', 0.7, 'thud')
+    drop('wn_c0', 30.98, 31.12, 0.18, 0.05, 0.3, 'pip', parent=fn)
+    drop('wn_c1', 31.22, 31.36, 0.16, 0.05, 0.3, 'pip', parent=fn)
+
+    # ================= Zone 5b + 6: evening, crib out, parent 1 brings the baby, lights, loop
+    T_D = 33.55
+    appear('bd_day', -1.0, T_D)
+    appear('bd_dusk', T_D)
+    ev(T_D, 'dusk', 0.4, 'swish')
+    for i, tt in enumerate((40.95, 41.15, 41.35, 41.55)):
+        appear(f'led{i + 1}', tt); ev(tt, f'led{i + 1}', 0.5 + 0.05 * i, 'chime')
+    appear('cshelf_led', 41.85); ev(41.85, 'shelf_led', 0.6, 'chime')
+    nl = tl.anims['nlight']
+    tl.custom('nl_on', lambda t: (nl(t)[0], t >= 42.15)); ev(42.15, 'nightlight', 0.6, 'chime')
+    P2.animate(tl, pose=fg.track([(0.0, P2_SIT), (42.4, P2_SIT), (43.0, P2_LIE)]), at=P2_AT, seat=MAT_Z + 0.03, pop=37.4)
+
+    # parent 1: one path (x, y, yaw) and one pose track for the whole cut, feet on the floor (or the step drawer)
+    w_in, a_in = fg.walk([(22.40, (1.00, -0.55, 0.0)), (23.15, (1.05, 0.25, 90.0))], P1)
+    w_out, a_out = fg.walk([(29.40, (0.85, 0.10, 80.0)), (30.30, (1.00, -0.90, 180.0))], P1)
+    w_back, a_back = fg.walk([(35.00, (1.00, -0.90, 0.0)), (35.90, (1.00, 0.18, 0.0)), (36.60, (0.28, 0.40, 180.0))], P1)
+    w_lay, a_lay = fg.walk([(38.90, (0.40, 0.30, 90.0)), (39.25, (1.38, 0.30, 90.0)), (39.55, (1.40, 0.95, -90.0))], P1)
+    sit = P1_POSE()
+    stand = fg.pose_of('stand')
+
+    def lerpat(a, b, u):
+        u = smooth(c01(u))
+        dy = (b[2] - a[2] + 180) % 360 - 180
+        return (a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, a[2] + dy * u)
+
+    def p1_at(t):
+        if t < 23.15:
+            return a_in(t)
+        if t < 23.50:
+            return (1.05, 0.25, 90.0)
+        if t < 23.80:
+            return lerpat((1.05, 0.25, 90.0), (1.36, 0.25, 90.0), (t - 23.50) / 0.30)
+        if t < 25.20:
+            return (1.36, 0.25, 90.0)
+        if t < 25.60:
+            return lerpat((1.36, 0.25, 90.0), (0.85, 0.10, 80.0), (t - 25.20) / 0.40)
+        if t < 29.40:
+            return (0.85, 0.10, 80.0)
+        if t < 35.00:
+            return a_out(t) if t < 30.30 else (1.00, -0.90, 180.0)
+        if t < 37.40:
+            return a_back(t)
+        if t < 37.90:
+            return lerpat((0.28, 0.40, 180.0), P1_AT, (t - 37.40) / 0.50)
+        if t < 38.60:
+            return P1_AT
+        if t < 38.90:
+            return lerpat(P1_AT, (0.40, 0.30, 90.0), (t - 38.60) / 0.30)
+        return a_lay(t) if t < 39.55 else (1.40, 0.95, -90.0)
+
+    def p1_floor(t):
+        if 23.50 <= t < 25.20:
+            return 0.19 * smooth(c01((t - 23.50) / 0.30))
+        if 25.20 <= t < 25.50:
+            return 0.19 * (1 - smooth((t - 25.20) / 0.30))
+        if 28.70 <= t < 29.30:
+            return 0.03 * math.sin(math.pi * (t - 28.70) / 0.30) ** 2
+        return 0.0
+
+    def p1_pose(t):
+        if t < 23.15:
+            return w_in(t)
+        if t < 23.50:                                               # foot hooks the step drawer out
+            return fg.lerp_pose(stand, dict(stand, hip_r=28, knee_r=40, ankle_r=-25), math.sin(math.pi * c01((t - 23.15) / 0.35)))
+        if t < 23.80:
+            return fg.lerp_pose('step_up', 'reach_up', smooth((t - 23.50) / 0.30))
+        if t < 25.00:                                               # reaching the boxes up, one by one
+            q = dict(fg.pose_of('reach_up'))
+            q['sh_l'] = 150 + 18 * math.sin(2 * math.pi * (t - 23.8) / 0.3)
+            return q
+        if t < 25.60:
+            return fg.lerp_pose('reach_up', stand, smooth((t - 25.00) / 0.4))
+        if t < 26.60:
+            return stand
+        if t < 28.70:                                               # head turns to the baby's two bays
+            return dict(stand, neck_turn=-22 * smooth(c01((t - 26.6) / 0.4)))
+        if t < 29.30:
+            return fg.lerp_pose(dict(stand, neck_turn=-22), SHRUG, math.sin(math.pi * (t - 28.70) / 0.60))
+        if t < 29.40:
+            return dict(stand, neck_turn=-22)
+        if t < 35.00:
+            return w_out(t) if t < 30.30 else stand
+        if t < 37.40:
+            return {**w_back(t), **CRADLE}
+        if t < 37.90:
+            return {**fg.lerp_pose(stand, sit, smooth((t - 37.40) / 0.50)), **CRADLE}
+        if t < 38.60:                                               # rocks the bundle
+            q = {**sit, **CRADLE}
+            q['spine_side'] = 6 * math.sin(2 * math.pi * (t - 37.9) / 0.7)
+            return q
+        if t < 38.90:
+            return {**fg.lerp_pose(sit, stand, smooth((t - 38.60) / 0.30)), **CRADLE}
+        if t < 39.55:
+            return {**w_lay(t), **CRADLE}
+        if t < 39.90:
+            return fg.lerp_pose({**stand, **CRADLE}, LAY, smooth((t - 39.55) / 0.35))
+        if t < 40.50:
+            return fg.lerp_pose(LAY, stand, smooth((t - 39.90) / 0.60))
+        if t < 42.90:
+            return stand
+        return fg.lerp_pose(stand, dict(stand, **HAND_ON_CRIB), math.sin(math.pi * c01((t - 42.9) / 1.1)) if t < 44.0 else 1.0)
+    P1.animate(tl, pose=p1_pose, at=p1_at, floor=p1_floor, visible=lambda t: t >= 22.40)
+    # the bundle rides on parent 1's left forearm, then lies on its back in the bare crib
+    Bw = P1.bind['farm_l'] @ T(*BUNDLE_LOCAL)
+    M_crib = T(0.835, 0.82, 0.37) @ R('x', math.pi / 2) @ np.linalg.inv(Bw)
+    farm = tl.anims['p1_farm_l']
+
+    def bundle(t):
+        if t < 35.00:
+            return I, False
+        if t < 39.90:
+            return farm(t)[0], True
+        return crib(t)[0] @ M_crib, True
+    tl.custom('bundle', bundle)
+    ev(39.92, 'bundle_down', 0.25, 'pip')
+    return tl
 
 
 if __name__ == '__main__':
