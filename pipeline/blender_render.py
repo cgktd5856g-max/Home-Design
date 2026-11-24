@@ -524,7 +524,7 @@ def main():
     cy.max_bounces = mb; cy.diffuse_bounces = db; cy.glossy_bounces = gb; cy.transmission_bounces = 4; cy.transparent_max_bounces = 8
     cy.sample_clamp_indirect = 6.0
     cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0
-    sc.render.use_persistent_data = True
+    sc.render.use_persistent_data = bool(BL.get('persistent', True))   # False avoids rare black-floor frames in long runs
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
     sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_depth = '8'

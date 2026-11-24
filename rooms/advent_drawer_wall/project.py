@@ -90,7 +90,7 @@ def materials():
     mat('lamp_bulb', col=(0, 0, 0), emis=(9.0, 7.6, 5.6))
     mat('lampshade', col=srgb(244, 242, 236), rough=0.6, emis=(0.0, 0.0, 0.0))
     mat('glint_glow', col=(0, 0, 0), emis=(16.0, 14.5, 11.0))
-    mat('duvet_gold', tex=3, col=srgb(200, 166, 100) if CUT == 'long' else srgb(208, 188, 146), rough=0.95, p=(0.04,))
+    mat('duvet_gold', tex=3, col=srgb(208, 188, 146), rough=0.95, p=(0.04,))
     mat('star_glow', col=(0, 0, 0), emis=(9.0, 7.4, 4.0))
     mat('blackm', col=srgb(34, 34, 36), rough=0.4, f0=0.04, glossy=True)
     # outside (camera-only emitters: they never light the room)
@@ -718,7 +718,7 @@ SE = (P(0.64, 0.72, 1.82, 30.0, -13.0), SA[0])                                  
 HOLDS_SHORT = [(0.0, 2.90, SA), (3.15, 5.20, SB), (5.42, 8.55, SC), (8.75, 10.75, SC2), (11.0, 12.75, SD), (13.02, DUR_SHORT, SE)]
 HOLDS_LONG = [
     (0.00, 2.90, SA),
-    (3.20, 5.70, (P(1.95, 1.35, 2.05, -12.0, -24.0), P(0.95, 1.35, 2.05, 8.0, -24.0))),      # the loft from above, sliding west
+    (3.20, 5.70, (P(1.95, 1.10, 2.40, -12.0, -28.0), P(0.95, 1.10, 2.40, 8.0, -28.0))),      # the loft from above, sliding west
     (6.00, 8.50, (P(1.90, 0.28, 1.05, -50.0, -20.0), P(1.78, 0.52, 0.98, -36.0, -18.0))),    # rug, slippers, pouf, basket
     (8.80, 11.30, SB),                                                                       # den: desk
     (11.60, 14.10, (P(0.45, 1.50, 0.58, -8.0, -6.0), P(0.50, 1.95, 0.52, -2.0, -8.0))),      # den cubby push-in
@@ -728,10 +728,10 @@ HOLDS_LONG = [
     (22.80, 25.40, (P(0.40, 0.30, 0.95, 48.0, -6.0), P(0.52, 0.52, 1.40, 58.0, -12.0))),     # rising wide toward the stair
     (25.70, 28.80, SC),                                                                      # the cascade: low push up the stair
     (29.00, 31.10, SC2),                                                                     # all 24 open, push in
-    (31.40, 33.70, (P(0.60, 1.85, 1.15, 140.0, -10.0), P(0.80, 1.72, 1.10, 124.0, -8.0))),   # side view: the child walks in
-    (34.00, 36.90, (P(0.98, 0.52, 0.95, 55.0, 6.0), P(1.04, 0.88, 1.42, 45.0, 10.0))),       # rising with the child
-    (37.20, 39.60, (P(1.22, 1.02, 1.72, 40.0, 6.0), P(1.36, 1.22, 1.84, 34.0, 4.0))),        # close 3/4 on the top steps, lights on
-    (39.90, 41.60, (P(1.60, 1.40, 1.15, 22.0, 12.0), P(1.10, 1.48, 1.20, -6.0, 12.0))),      # slow orbit under the rail
+    (31.40, 33.70, (P(1.35, 1.95, 1.10, 205.0, -12.0), P(1.45, 1.90, 1.10, 140.0, -10.0))),   # side view: the child walks in
+    (34.00, 36.90, (P(0.98, 0.52, 0.95, 55.0, 6.0), P(0.80, 0.60, 1.40, 46.0, 14.0))),       # rising with the child
+    (37.20, 39.60, (P(0.55, 0.45, 1.65, 40.0, -4.0), P(0.62, 0.58, 1.70, 36.0, -2.0))),        # close 3/4 on the top steps, lights on
+    (39.90, 41.60, (P(1.20, 0.90, 1.30, 30.0, 8.0), P(0.90, 1.00, 1.35, 10.0, 8.0))),      # slow orbit under the rail
     (41.90, DUR_LONG, (P(0.62, 0.70, 1.82, 30.0, -13.0), SA[0])),                            # final wide into the frame-1 pose
 ]
 HOLDS = HOLDS_LONG if CUT == 'long' else HOLDS_SHORT
@@ -774,13 +774,14 @@ def lights(mats4, vis):
 
 SEPARATE = ['sky_day', 'snow_day', 'pineo_day', 'house_day', 'roof_day', 'flake', 'bulb_on', 'star_glow', 'led', 'dl_emis', 'lamp_bulb', 'glint_glow']
 BLENDER = dict(
-    exposure=-0.40,
+    exposure=-0.40 if CUT != 'long' else -0.30,
     look='AgX - Medium High Contrast',
     translucent={'lampshade': 0.5},
     separate=SEPARATE,
     fill_lights=[2, 3],
     wood_scale=(55.0, 1.6),
     bake_px={'floor': 0.0015},
+    persistent=False,        # persistent data gave black-floor frames in long sequential renders
 )
 
 
