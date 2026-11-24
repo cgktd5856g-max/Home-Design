@@ -53,6 +53,9 @@ looks better.
 - **Check every final frame before encoding.** In one long run, 62 frames came out with a black floor (advent, 23 Nov),
   and a fresh process did not reproduce it.
   - Compute each frame's mean brightness, flag the outliers, and re-render those frames in fresh processes.
+- **Root cause of the black-floor frames: Cycles "persistent data" in long sequential runs** (advent, 24 Nov). A long
+  run produced 135 bad frames in 218; fresh renders are clean. Set `BLENDER['persistent'] = False` in the project for
+  any long render (`pipeline/blender_render.py` reads it; the default stays on), and still scan every frame.
 - **Detect black-frame glitches automatically** (advent, 23 Nov). After every render, flag frames where pixels under 12
   cover more than 2% of the frame. Re-render those with a slightly different sample count, which changes the sampling
   pattern; a plain re-render can repeat the glitch.
