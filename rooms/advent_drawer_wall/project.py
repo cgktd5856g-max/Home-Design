@@ -781,6 +781,7 @@ BLENDER = dict(
     fill_lights=[2, 3],
     wood_scale=(55.0, 1.6),
     bake_px={'floor': 0.0015},
+    persistent=False,        # persistent data gave black-floor frames in long sequential renders
 )
 
 
