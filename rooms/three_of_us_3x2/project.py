@@ -634,6 +634,7 @@ def lights(mats4, vis):
 # Blender (Cycles) look: see pipeline/blender_render.py
 BLENDER = dict(
     exposure=0.05,
+    persistent=False,                           # avoids black-floor frames in long Cycles runs
     look='AgX - Medium High Contrast',
     separate=['backdrop', 'backdrop_dusk'],
     fill_lights=[2, 3, 4, 5, 13],
