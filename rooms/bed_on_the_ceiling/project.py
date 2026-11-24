@@ -69,7 +69,7 @@ def materials():
     mat('blackm', col=srgb(30, 30, 32), rough=0.4, f0=0.04, glossy=True)
     mat('winframe', col=srgb(238, 238, 236), rough=0.4)
     mat('sill', col=srgb(240, 238, 233), rough=0.25, f0=0.04, glossy=True)
-    mat('mirror', col=srgb(236, 237, 239), rough=0.22, metal=1)
+    mat('mirror', col=srgb(240, 241, 243), rough=0.03, metal=1)
     mat('linen', tex=3, col=srgb(244, 242, 238), rough=0.9, p=(0.04,))
     mat('blind', tex=4, col=srgb(236, 230, 218), emis=(0.05, 0.05, 0.048), p=(0.12,))
     mat('mattress', tex=5, col=srgb(246, 245, 241), p=(0, 0.02))
@@ -369,7 +369,7 @@ def build_bay(rng):
     # ottoman contents (slippers + a spare throw) and the rug (long cut)
     for dy in (-0.05, 0.05):
         add('ot_items', ellipsoid((ox - 0.08, oy + dy, 0.30), (0.12, 0.045, 0.03), 10), 'cl_cream')
-    add('ot_items', rbox((ox + 0.08, oy, 0.31), (0.16, 0.30, 0.06), 0.025, 3), 'throw')
+    add('ot_items', rbox((ox + 0.08, oy, 0.31), (0.16, 0.30, 0.06), 0.025, 3), 'pil_paleblue')
     add('rug', rbox((1.20, 1.50, 0.008), (1.10, 1.60, 0.016), 0.006, 3), 'rug')
 
 
@@ -1360,7 +1360,7 @@ def timeline_long(tl, kit):
         dict(t=23.80, kind='stand', at=(2.45, 2.08, 0)),
         dict(t=24.05, kind='pose', pose=dict(sh_l=60, sh_r=60, elbow_l=20, elbow_r=20, spine=14)),
         dict(t=24.35, kind='pose', pose='stand'),
-        dict(t=25.30, kind='walk', to=(1.88, 2.24, -49)),
+        dict(t=25.30, kind='walk', to=(1.95, 2.18, -49)),
         dict(t=25.55, kind='pose', pose=PRESS),
         dict(t=25.95, kind='pose', pose=PRESS),
         dict(t=26.60, kind='walk', to=(1.92, 1.35, -40), pose=LOOKUP),
@@ -1377,7 +1377,7 @@ def timeline_long(tl, kit):
         dict(t=42.55, kind='pose', pose=dict(sh_r=40, elbow_r=40, sh_l=30, elbow_l=40, spine=8, neck=16)),
         dict(t=42.85, kind='pose', pose=dict(sh_r=70, elbow_r=30, sh_l=50, elbow_l=40, spine=10, neck=10)),
         dict(t=43.10, kind='pose', pose='stand'),
-        dict(t=44.15, kind='walk', to=(1.88, 2.24, -49)),
+        dict(t=44.15, kind='walk', to=(1.95, 2.18, -49)),
         dict(t=44.30, kind='pose', pose=PRESS),
         dict(t=44.60, kind='pose', pose=PRESS),
         dict(t=45.20, kind='walk', to=(1.92, 1.35, -40), pose=LOOKUP),
