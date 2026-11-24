@@ -631,6 +631,7 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
+    persistent=False,                          # persistent data gave black-floor frames in long runs
     exposure=-0.10,
     look='AgX - Medium High Contrast',
     separate=['backdrop'],
