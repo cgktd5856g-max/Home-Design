@@ -551,18 +551,18 @@ HOLDS15 = [(0.0, 3.2, S1), (3.5, 7.0, S2), (7.3, 10.7, S3), (11.0, 12.95, S4), (
 HALL15 = [0, 1, 3, 4]                                                 # hall holds (south wall hidden), others: west wall hidden
 
 # long cut: 12 holds in 6 zones, joined by 0.3 s swings
-L1 = S1                                                                        # hall crane (as the 15 s cut)
-L2 = (P(1.25, -0.70, 2.30, -5.0, -21.0), P(0.70, -0.35, 2.12, 8.0, -18.0))     # high from the hall: bed + niche
+L1 = (P0, P(0.45, -1.00, 2.05, 14.0, -18.0))   # hall crane (as the 15 s cut)
+L2 = (P(1.45, -0.75, 2.30, -14.0, -22.0), P(0.55, -0.30, 2.10, 12.0, -18.0))   # high from the hall: bed + niche
 L3 = S2                                                                        # high over the stair (hall side)
-L4 = (P(1.65, -1.30, 1.15, -15.0, -15.0), P(0.95, -1.05, 0.95, 0.0, -13.0))   # low on the pull-out: slide west, turn right
-L5 = (P(1.10, 2.45, 1.92, 189.0, 8.0), P(0.66, 2.30, 2.05, 173.0, 5.0))       # over the bed, looking south at the bridge
-L6 = (P(-1.10, 0.80, 2.40, 88.0, -16.0), P(-0.90, 0.70, 1.85, 91.0, -8.0))     # high west, craning down
-L7 = (P(-0.62, 0.32, 0.95, 86.0, 2.0), P(-0.55, 0.34, 1.55, 88.0, 7.0))       # low on bay A, craning up with the reach
-L8 = (P(-1.15, 0.78, 1.38, 89.0, -3.0), P(-0.92, 0.73, 1.85, 90.0, -13.0))      # full-height wardrobe: the wow
+L4 = (P(1.75, -1.35, 1.20, -22.0, -15.0), P(0.85, -0.95, 0.95, 6.0, -12.0))   # low on the pull-out: slide west, turn right
+L5 = (P(1.30, 2.50, 1.90, 198.0, 8.0), P(0.55, 2.25, 2.05, 166.0, 4.0))   # over the bed, looking south at the bridge
+L6 = (P(-1.15, 1.05, 2.45, 84.0, -16.0), P(-0.90, 0.55, 1.80, 94.0, -6.0))   # high west, craning down
+L7 = (P(-0.75, 0.55, 0.95, 80.0, 2.0), P(-0.50, 0.15, 1.60, 94.0, 7.0))   # low on bay A, craning up with the reach
+L8 = (P(-1.18, 0.88, 1.38, 87.0, -3.0), P(-0.92, 0.66, 1.85, 92.0, -13.0))   # full-height wardrobe: the wow
 L9 = (P(-0.70, 0.62, 1.55, 90.0, -12.0), P(-0.40, 0.28, 1.35, 97.0, -15.0))    # closer on bay A: changing top
 L10 = (P(0.45, -1.40, 2.15, 12.0, -30.0), P(0.92, -1.25, 2.02, 2.0, -27.0))    # high from the hall: crib rolls out, parent 1 walks in
-L11 = (P(1.20, -1.45, 1.00, -5.0, -8.0), P(0.62, -1.25, 1.12, -12.0, -10.0))   # low on the crib
-L12 = S5                                                                       # hall wide: crane up into P0
+L11 = (P(1.35, -1.50, 1.00, -12.0, -8.0), P(0.45, -1.20, 1.15, 10.0, -10.0))   # low on the crib
+L12 = (P(1.60, -2.60, 1.00, -14.0, 3.0), P0)   # hall wide: crane up into P0
 HOLDSL = [(0.0, 3.4, L1), (3.7, 7.0, L2), (7.3, 10.8, L3), (11.1, 14.5, L4), (14.8, 18.3, L5), (18.6, 22.0, L6),
           (22.3, 25.6, L7), (25.9, 29.4, L8), (29.7, 33.2, L9), (33.5, 37.0, L10), (37.3, 40.6, L11), (40.9, 44.0, L12)]
 HALLL = [0, 1, 2, 3, 9, 10, 11]
