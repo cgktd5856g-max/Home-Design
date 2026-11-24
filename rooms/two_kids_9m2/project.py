@@ -618,11 +618,12 @@ S1B = (P(1.80, 0.64, 1.50, -32.0, -13.0), P(1.62, 0.78, 1.44, -42.0, -12.0))    
 S2 = (P(1.12, 0.18, 0.98, 60.0, -11.0), P(1.42, 0.72, 0.86, 74.0, -6.0))              # B: stair drawers + den
 S3 = (P(1.30, 0.30, 1.95, 16.0, -17.0), P(0.92, 0.16, 1.86, 18.0, -16.0))
 S3B = (P(2.98, 1.62, 1.74, -44.0, -13.0), P(2.86, 1.76, 1.72, -58.0, -11.0))
-S3W = (P(CX, -0.40, 1.88, 0.0, -17.0, 95.0), P(CX, -0.28, 1.84, 0.0, -17.0, 95.0))      # daylight payoff wide on the tape          # face B: the cubbies fill   # near-overhead: the swing (wow)
+S3W = (P(CX, 0.04, 1.92, 0.0, -19.0, 95.0), P(CX, 0.14, 1.86, 0.0, -19.0, 95.0))        # daylight payoff wide on the tape (inside the door)
+S3O = (P(1.95, 0.40, 2.56, 4.0, -57.0, 100.0), P(2.10, 0.56, 2.54, -8.0, -62.0, 100.0))  # near-overhead: the swing          # face B: the cubbies fill   # near-overhead: the swing (wow)
 S4 = (P(CX, 0.14, 2.22, -24.0, -22.0, 98.0), P(CX, 0.16, 2.18, -10.0, -23.0, 98.0))      # night: A's side
 S5 = (P(CX, 0.16, 2.18, 20.0, -24.0, 98.0), F1)                                        # B's side -> frame 1                                                # the two bedrooms -> frame 1
-HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.72, 7.00, S2), (7.04, 9.00, S3), (9.04, 9.95, S3W), (10.15, 11.30, S3B),
-         (11.55, 12.35, S4), (12.55, DUR, S5)]
+HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.72, 7.00, S2), (7.04, 8.00, S3), (8.04, 9.56, S3O), (9.60, 10.32, S3W),
+         (10.52, 11.45, S3B), (11.65, 12.40, S4), (12.60, DUR, S5)]
 
 
 def make_camera(holds):
@@ -654,8 +655,8 @@ LSUN = (95000.0, 86000.0, 72000.0)
 LDOOR = (2.2, 2.2, 2.15)
 LFILL = (0.6, 0.6, 0.59)
 LLED = (40.0, 36.0, 29.0)
-LRL = (1100.0, 1000.0, 860.0)
-LLAMP = (90.0, 80.0, 64.0)
+LRL = (1300.0, 1060.0, 760.0)
+LLAMP = (110.0, 90.0, 62.0)
 LDOWN = (1050.0, 1065.0, 1070.0)
 LDEN = (70.0, 60.0, 44.0)
 
@@ -1110,11 +1111,11 @@ class Story:
         self.stairs_beat(4.00, step=0.25, hold=0.45)
         self.den_beat(6.00, 6.78)
         self.doorsA_beat(7.10, 7.72)
-        self.swing(7.95, 8.92, 0.0, -90.0)
-        self.panel(9.22, 12.62)
-        self.bins_beat(10.25)
-        self.night_beat(11.40)
-        KID_A.animate(tl, pop=11.62)
+        self.swing(8.08, 9.43, 0.0, -90.0)
+        self.panel(9.72, 12.62)
+        self.bins_beat(10.62, gap=0.05)
+        self.night_beat(11.55, long=True)
+        KID_A.animate(tl, pop=11.75)
         KID_B.animate(tl, pop=12.50)
         self.swing(12.95, 13.95, -90.0, 0.0)
         tl.drop('plushB', 14.30, 14.48, 0.5, 0.12, 0.4)
