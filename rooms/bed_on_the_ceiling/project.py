@@ -682,12 +682,12 @@ L_ST = [
     (20.4, 23.4, (P(1.55, 1.45, 1.45, 30.0, -14.0), P(2.05, 1.40, 1.45, 8.0, -14.0))),   # L7 orbit behind the chair
     (23.7, 25.2, (P(2.92, 2.92, 2.40, -136.0, -30.0), P(2.80, 2.80, 2.32, -133.0, -26.0))),  # L8a NE corner: chair, ottoman, pillows hop
     (25.35, 26.8, (P(0.90, 1.30, 1.40, 42.0, -4.0), P(1.00, 1.42, 1.38, 40.0, -2.0))),      # L8b front-on to the button press
-    (27.1, 31.0, (P(2.30, 0.12, 1.50, -38.0, 12.0), P(2.22, 0.20, 1.15, -44.0, 0.0))),     # L9 the ride
+    (27.1, 31.0, (P(2.30, 0.12, 1.50, -32.0, 12.0), P(2.22, 0.20, 1.15, -38.0, 0.0))),     # L9 the ride
     (31.3, 34.4, (P(2.45, 0.85, 0.85, -58.0, -12.0), P(2.45, 1.20, 0.90, -85.0, -12.0))), # L10 low slide along the front rail
-    (34.7, 37.5, (P(2.40, 1.10, 1.40, -38.0, -12.0), P(2.05, 1.55, 1.30, -62.0, -14.0))),  # L11 orbit round the head end
+    (34.7, 37.5, (P(2.65, 0.70, 1.45, -52.0, -12.0), P(2.05, 1.55, 1.30, -62.0, -14.0))),  # L11 orbit round the head end
     (37.8, 40.9, (P(0.95, 0.95, 1.35, 100.0, -8.0), P(1.15, 1.90, 1.30, 78.0, -6.0))),     # L12 facing east, slide north
     (41.2, 44.0, (P(1.28, 0.50, 1.30, 46.0, -20.0), P(1.40, 0.72, 1.25, 38.0, -20.0))),    # L13 push in on the north section
-    (44.3, 47.2, (P(2.22, 0.20, 1.15, -44.0, 2.0), P(2.30, 0.12, 1.45, -40.0, 14.0))),  # L14 NE corner, tilt up with the bed
+    (44.3, 47.2, (P(2.22, 0.20, 1.15, -34.0, 2.0), P(2.30, 0.12, 1.45, -34.0, 14.0))),  # L14 NE corner, tilt up with the bed
     (47.5, 49.5, (P(2.32, 0.12, 1.60, -40.0, 4.0), S1[0])),                                # L15 drifting wide back to frame 1
 ]
 if LONG:
@@ -1264,7 +1264,7 @@ def timeline_long(tl, kit):
             return T(*(p - c0)) @ about(c0, R('z', 0.0) @ S(s_, s_, s_)), True
         tl.custom(nm, hop)
         ev(t0 + 0.22, nm + '_hop', 0.35, 'boing' if nm == 'spil1' else 'tick')
-    ev(25.80, 'button', 0.35, 'bip')
+    ev(25.70, 'button', 0.35, 'bip')
     ev(26.40, 'downlights', 0.3, 'chime')
     # ---- L9 (27.1-31.0): the ride
     tl.events.append(dict(t=T_DN0, name='hum', strength=0.0, kind='hum', dur=T_DN1 - T_DN0))
@@ -1347,7 +1347,7 @@ def timeline_long(tl, kit):
     tl.custom('wr_shoe', shoe)
     ev(43.15, 'shoe_out', 0.5, 'swish'); ev(43.85, 'shoe_in', 0.6, 'thud')
     # ---- L14 (44.3-47.2) / L15 (47.5-49.5): button, downlights, the bed rises, lights on
-    ev(44.40, 'button2', 0.35, 'bip')
+    ev(44.45, 'button2', 0.35, 'bip')
     ev(44.60, 'downlights2', 0.3, 'chime')
     appear('rail_led', 47.50); ev(47.50, 'rail_on', 0.6, 'chime')
     appear('twN_led', 47.58); appear('twS_led', 47.62)
@@ -1360,29 +1360,30 @@ def timeline_long(tl, kit):
         dict(t=23.80, kind='stand', at=(2.45, 2.08, 0)),
         dict(t=24.05, kind='pose', pose=dict(sh_l=60, sh_r=60, elbow_l=20, elbow_r=20, spine=14)),
         dict(t=24.35, kind='pose', pose='stand'),
-        dict(t=25.45, kind='walk', to=(1.88, 2.24, -49)),
-        dict(t=25.72, kind='pose', pose=PRESS),
-        dict(t=25.86, kind='pose', pose=PRESS),
-        dict(t=26.15, kind='walk', to=(1.66, 1.55, -45), pose=LOOKUP),
+        dict(t=25.30, kind='walk', to=(1.88, 2.24, -49)),
+        dict(t=25.55, kind='pose', pose=PRESS),
+        dict(t=25.95, kind='pose', pose=PRESS),
+        dict(t=26.60, kind='walk', to=(1.92, 1.35, -40), pose=LOOKUP),
         dict(t=30.40, kind='pose', pose=LOOKUP),
         dict(t=30.80, kind='pose', pose='stand'),
         dict(t=31.40, kind='walk', to=(2.10, 2.35, -45)),
         dict(t=33.60, kind='pose', pose='stand'),
-        dict(t=34.40, kind='walk', to=(1.80, 1.40, 92)),
-        dict(t=34.50, kind='sit', at=(1.36, 1.40, 92), seat=BED_SEAT),
+        dict(t=34.80, kind='walk', to=(1.80, 1.40, 92)),
+        dict(t=34.90, kind='sit', at=(1.36, 1.40, 92), seat=BED_SEAT),
         dict(t=37.60, kind='hide'),
-        dict(t=41.20, kind='show', at=(1.95, 0.45, 0)),
-        dict(t=42.00, kind='walk', to=(2.05, 1.70, -10)),
+        dict(t=41.20, kind='show', at=(2.02, 2.38, 160)),
+        dict(t=42.00, kind='pose', pose='stand'),
         dict(t=42.20, kind='pose', pose=dict(sh_r=70, elbow_r=30, sh_l=50, elbow_l=40, spine=10, neck=10)),
         dict(t=42.55, kind='pose', pose=dict(sh_r=40, elbow_r=40, sh_l=30, elbow_l=40, spine=8, neck=16)),
         dict(t=42.85, kind='pose', pose=dict(sh_r=70, elbow_r=30, sh_l=50, elbow_l=40, spine=10, neck=10)),
         dict(t=43.10, kind='pose', pose='stand'),
         dict(t=44.15, kind='walk', to=(1.88, 2.24, -49)),
         dict(t=44.30, kind='pose', pose=PRESS),
-        dict(t=44.42, kind='pose', pose=PRESS),
-        dict(t=44.70, kind='walk', to=(1.66, 1.55, -45), pose=LOOKUP),
+        dict(t=44.60, kind='pose', pose=PRESS),
+        dict(t=45.20, kind='walk', to=(1.92, 1.35, -40), pose=LOOKUP),
         dict(t=47.30, kind='pose', pose=LOOKUP),
         dict(t=47.90, kind='pose', pose='stand'),
+        dict(t=48.90, kind='walk', to=(2.75, 1.35, 90)),
     ])
 
 
