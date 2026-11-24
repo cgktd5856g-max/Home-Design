@@ -21,6 +21,9 @@ looks better.
   every session.
 - **There is also a 7-day limit.** `get_session` shows `rate_limit_info`. Status `allowed_warning` means it is
   close; check it before starting a new wave.
+- **The weekly limit can stop everything overnight** (23-24 Nov). Ten sessions working in parallel went silent from
+  about 23:50 to 15:15 UTC the next day, 15 hours with no pushes, then all resumed at once. Ten parallel sessions burn
+  the weekly limit fast. Run at most 5 at once, and plan post dates with a day of slack.
 - **Workflows run only 2 agents at a time on this 4-core machine** (the cap is CPUs minus 2, per workflow). For a big
   fan-out, run several workflows side by side: 4 batches of 3 ideas ran 8 agents at once.
 - **A stopped workflow resumes from cache.** `resumeFromRunId` with the same script and args reuses every finished
