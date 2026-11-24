@@ -31,6 +31,10 @@ looks better.
 - **Shared pipeline files get conflicts.** Sessions add sound kinds to `pipeline/music.py` (bonk, clack, clunk, pip
   and more) on their own branches. When merging, keep both sides' additions and test every event kind (23 Nov: 3
   merges, 20 kinds, all fine).
+- **Shared settings must keep one meaning** (24 Nov). Two sessions gave the grade's third value opposite meanings, and
+  two defined different `clack` sounds. The shared code keeps: grade gamma above 1 brightens the mid-tones (below 1
+  darkens); `clack` is the single wooden tile clack, `ratchet` the three-knock lock-out, `clink` plates and cups. Before
+  adding a parameter or sound to a shared file, check that the name isn't already taken.
 - **Talking to sessions.** `send_message` to a child session works, and children reply with `send_message` to
   `@parent`. Send short pointers to files in the repo instead of long pasted text.
 - **Decide the concept before a session starts.** Switching mid-build made the two-kids session rebuild its whole
@@ -135,3 +139,4 @@ Fill in the views after posting (7 days).
 | #5 The Bed on the Ceiling | 12.7 / 0.4 s / 10.88 / 0.2 s / 150 / 0.25 / 36.3: all in range | 6 | | |
 | #3 Three of Us in 3 × 2 m | 8.6 / 0.6 s / 5.72 / 0.6 s / 142 / 0.30 / 42.5: misses clear-change share (0.36) and first move (0.6 s) | – | | |
 | #1 Tape Line, Turning Wall (v1) | 9.3 / 0.4 s / 6.31 / 0.4 s / 151 / 0.24 / 34.4: all in range; dusk too dark, v2 ordered | 8.5 / 7.5 | | |
+| #8 Dinner for Eight | 10.3 / 0.6 s / 8.51 / 0.6 s / 154 / 0.23 / 36.0: misses first move (0.6 s) | – | | |

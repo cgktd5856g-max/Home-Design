@@ -10,7 +10,7 @@ clack), 'scrape' (furniture sliding; event 'len' = seconds), 'zip' (runner glide
 'clunk' (a mechanism docking), 'deep' (the heaviest landing), 'tink' (steel), 'riffle' (a shelf of books), 'bip' (a
 button), 'boing' (cartoon bounce) and 'hum' (a motor; the event's 'dur' sets its length, and the music dips about
 4.5 dB under it), 'pip' (baby-sized items: higher, softer tick), 'bwomp' (two falling
-notes) and 'roll' (a soft castor roll).
+notes), 'roll' (a soft castor roll), 'clink' (ceramic plates and cups) and 'ratchet' (three quick wooden knocks).
 """
 import os
 import sys
@@ -249,6 +249,23 @@ def boing():
     return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.18) * np.clip(t / 0.005, 0, 1)
 
 
+def clink(f=2350.0):
+    """Ceramic clink: a few inharmonic partials with fast decay (plates, cups)."""
+    n = int(0.45 * SR); t = t_arr(n); out = np.zeros(n)
+    for r, a, d in ((1.0, 1.0, 0.09), (2.32, 0.55, 0.05), (3.71, 0.35, 0.03), (5.1, 0.2, 0.02)):
+        out += a * np.sin(2 * np.pi * f * r * t) * np.exp(-t / d)
+    return out * 0.6 + hp(rng.standard_normal(n), 4000) * np.exp(-t / 0.002) * 0.4
+
+
+def ratchet():
+    """Ratchet clack-clack-clack (three quick wooden knocks, the last one firmest)."""
+    n = int(0.3 * SR); out = np.zeros(n)
+    for k, (d, a) in enumerate(((0.0, 0.5), (0.045, 0.6), (0.09, 1.0))):
+        i = int(d * SR); m = n - i; t = t_arr(m)
+        out[i:] += a * (bp(rng.standard_normal(m), 600, 2600) * np.exp(-t / 0.012) + 0.6 * np.sin(2 * np.pi * 420 * t) * np.exp(-t / 0.03))
+    return out
+
+
 def reverb(x, secs=1.6, mix=0.18):
     n = int(secs * SR); t = t_arr(n)
     ir = lp(rng.standard_normal(n) * np.exp(-t / (secs / 5.5)), 6000)
@@ -327,6 +344,10 @@ def build(cfg, sfx_only=False):
             add(sfx, thud(s.get('f0', 70)), t, g)
         elif k == 'tick':
             add(sfx, tick(s.get('freq', 1300)), t, g)
+        elif k == 'clink':
+            add(sfx, clink(), t, g)
+        elif k == 'ratchet':                   # three quick wooden knocks (a table or rail locking out)
+            add(sfx, ratchet(), t - 0.09, g)
         elif k == 'chime':
             add(sfx, chime(), t, g)
             add(sfx, whoosh(1.2, up=False), t, 0.10)
@@ -443,6 +464,10 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='bwomp', gain=0.55)
         elif k == 'roll':
             sfx = dict(kind='roll', gain=0.5)
+        elif k == 'clink':
+            sfx = dict(kind='clink', gain=0.20 + 0.25 * a)
+        elif k == 'ratchet':
+            sfx = dict(kind='ratchet', gain=0.45 + 0.3 * a)
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         cfg.EVENTS.append(dict(name=e['name'], land=e['t'], dur=0.2, motion='drop', sfx=sfx))

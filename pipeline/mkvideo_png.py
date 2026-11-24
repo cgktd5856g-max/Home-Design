@@ -62,7 +62,7 @@ for i, f in enumerate(files):
     k = OW / W * s
     M = np.float32([[k, 0, (OW - W * k) / 2], [0, k, (OH - H * k) / 2 + dy * OH / 1920.0]])
     img = cv2.warpAffine(img, M, (OW, OH), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
-    if GRADE != (1.0, 0.0):   # saturation around luma, then warmth (BGR order)
+    if GRADE[:2] != (1.0, 0.0) or len(GRADE) > 2:   # saturation around luma, then warmth (BGR order), then gamma
         f = img.astype(np.float32)
         yl = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
         f = yl + (f - yl) * GRADE[0]
