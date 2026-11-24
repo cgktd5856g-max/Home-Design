@@ -836,6 +836,7 @@ def lights(mats4, vis):
 
 BLENDER = dict(
     exposure=-0.30,
+    persistent=False,                 # avoids black-patch frames in long runs (see production/LESSONS.md)
     look='AgX - Medium High Contrast',
     separate=['backdrop'],
     fill_lights=[2, 3, 4, 5],
