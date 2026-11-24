@@ -757,6 +757,7 @@ def lights(mats4, vis):
 # Blender (Cycles) look: see pipeline/blender_render.py
 BLENDER = dict(
     exposure=-0.38,
+    persistent=False,                  # fresh scene data each frame: avoids black-patch frames in long runs
     look='AgX - Medium High Contrast',
     translucent={'blind': 0.45},
     separate=['backdrop'],
