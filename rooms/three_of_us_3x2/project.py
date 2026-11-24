@@ -66,7 +66,7 @@ def materials():
     mat('pgrey', col=srgb(208, 208, 206), rough=0.35, f0=0.04)
     mat('castor', col=srgb(120, 120, 122), rough=0.4)
     wood_mats('birch', srgb(228, 206, 172), seed=8.0)
-    mat('celery', tex=3, col=srgb(192, 208, 150), rough=0.5, p=(0.02,))
+    mat('celery', tex=3, col=srgb(190, 202, 164), rough=0.5, p=(0.02,))
     mat('winframe', col=srgb(236, 236, 234), rough=0.4)
     mat('sill', col=srgb(240, 238, 233), rough=0.25, f0=0.04, glossy=True)
     mat('mattress', tex=5, col=srgb(245, 243, 238), p=(0, 0.02))
@@ -96,7 +96,8 @@ def materials():
                   ('bk_mustard', (214, 168, 70)), ('bk_white', (240, 238, 232))):
         mat(nm, col=srgb(*c), rough=0.6)
     mat('basket', tex=6, col=srgb(214, 196, 166))
-    mat('swaddle', tex=5, col=srgb(244, 240, 232), p=(0, 0.01))
+    mat('swaddle', tex=5, col=srgb(168, 202, 230), p=(0, 0.01))
+    mat('swaddle_hood', tex=5, col=srgb(246, 236, 222), p=(0, 0.01))
     mat('fig_p1', col=srgb(206, 200, 192), rough=0.85)
     mat('fig_p2', col=srgb(168, 184, 208), rough=0.85)
 
@@ -477,9 +478,9 @@ def build_bridge():
         add(nm, box(a + 0.003, y1, z0 + 0.003, c - 0.003, y1 + t, H - 0.004), 'white_cab')
         add(nm, box((a + c) / 2 - 0.06, y1 + t, z0 + 0.03, (a + c) / 2 + 0.06, y1 + t + 0.008, z0 + 0.04), 'pgrey')
     if LONG:
-        add('br_c0', xform(lathe(rprof(0.15, -0.30, 0.30, 0.06, 4), 24, (0, 0)), T(0.38, 0.19, z0 + t + 0.16) @ R('y', math.pi / 2)), 'pil_white')
+        add('br_c0', xform(lathe(rprof(0.15, -0.30, 0.30, 0.06, 4), 24, (0, 0)), T(0.38, 0.19, z0 + t + 0.16) @ R('y', math.pi / 2)), 'cl_sky')
         add('br_c1', rbox((1.00, 0.18, z0 + t + 0.20), (0.40, 0.24, 0.40), 0.04, 3), 'pk_coral')
-        add('br_c2', rbox((1.34, 0.18, z0 + t + 0.14), (0.30, 0.26, 0.28), 0.02, 3), 'pk_sky')
+        add('br_c2', rbox((1.34, 0.18, z0 + t + 0.14), (0.30, 0.26, 0.28), 0.02, 3), 'pk_teal')
 
 
 def build():
@@ -500,7 +501,7 @@ def build():
         build_long_extras()
 
 
-BUNDLE_LOCAL = (0.0, 0.085, -0.12)
+BUNDLE_LOCAL = (0.0, 0.080, -0.06)
 
 
 def build_long_extras():
@@ -513,7 +514,10 @@ def build_long_extras():
         add(f'nb{k}', rbox((1.78, 0.10 + k * 0.15, 2.058 + 0.11), (0.36, 0.13, 0.22), 0.015, 3), m)
     # the swaddled bundle, built in parent 1's left-forearm frame (so it rides on the forearm)
     M = P1.bind['farm_l']
-    add('bundle', xform(ellipsoid(BUNDLE_LOCAL, (0.085, 0.085, 0.24), 12), M), 'swaddle')
+    hx, hy, hz = BUNDLE_LOCAL
+    add('bundle', xform(ellipsoid((hx, hy, hz - 0.03), (0.072, 0.078, 0.21), 14), M), 'swaddle')                  # swaddled body
+    add('bundle', xform(tube([(hx - 0.075, hy, hz + 0.05), (hx, hy + 0.08, hz + 0.07), (hx + 0.075, hy, hz + 0.05)], 0.018, 8), M), 'swaddle')
+    add('bundle', xform(ellipsoid((hx, hy + 0.01, hz + 0.19), (0.062, 0.064, 0.07), 12), M), 'swaddle_hood')       # small pale head end
 
 
 P1_AT = (0.25, 0.90, 180.0)
@@ -552,21 +556,21 @@ HALL15 = [0, 1, 3, 4]                                                 # hall hol
 
 # long cut: 12 holds in 6 zones, joined by 0.3 s swings
 L1 = (P0, P(0.45, -1.00, 2.05, 14.0, -18.0))   # hall crane (as the 15 s cut)
-L2 = (P(1.45, -0.75, 2.30, -14.0, -22.0), P(0.55, -0.30, 2.10, 12.0, -18.0))   # high from the hall: bed + niche
+L2 = (P(1.55, -0.75, 2.30, -8.0, -22.0), P(0.95, -0.30, 2.10, 10.0, -18.0))   # high from the hall: bed + niche
 L3 = S2                                                                        # high over the stair (hall side)
 L4 = (P(1.75, -1.35, 1.20, -22.0, -15.0), P(0.85, -0.95, 0.95, 6.0, -12.0))   # low on the pull-out: slide west, turn right
-L5 = (P(1.30, 2.50, 1.90, 198.0, 8.0), P(0.55, 2.25, 2.05, 166.0, 4.0))   # over the bed, looking south at the bridge
+L5 = (P(1.20, 1.95, 2.15, 196.0, 7.0), P(0.60, 1.80, 2.25, 168.0, 4.0))   # over the bed, looking south at the bridge
 L6 = (P(-1.15, 1.05, 2.45, 84.0, -16.0), P(-0.90, 0.55, 1.80, 94.0, -6.0))   # high west, craning down
-L7 = (P(-0.75, 0.55, 0.95, 80.0, 2.0), P(-0.50, 0.15, 1.60, 94.0, 7.0))   # low on bay A, craning up with the reach
+L7 = (P(-1.05, 0.48, 1.00, 84.0, 10.0), P(-0.88, 0.28, 1.20, 92.0, 12.0))   # low on bay A, craning up with the reach
 L8 = (P(-1.18, 0.88, 1.38, 87.0, -3.0), P(-0.92, 0.66, 1.85, 92.0, -13.0))   # full-height wardrobe: the wow
 L9 = (P(-0.70, 0.62, 1.55, 90.0, -12.0), P(-0.40, 0.28, 1.35, 97.0, -15.0))    # closer on bay A: changing top
-L10 = (P(0.45, -1.40, 2.15, 12.0, -30.0), P(0.92, -1.25, 2.02, 2.0, -27.0))    # high from the hall: crib rolls out, parent 1 walks in
+L10 = (P(1.30, 1.72, 2.18, 192.0, -24.0), P(0.80, 1.66, 2.10, 172.0, -24.0))    # high from the hall: crib rolls out, parent 1 walks in
 L11 = (P(1.35, -1.50, 1.00, -12.0, -8.0), P(0.45, -1.20, 1.15, 10.0, -10.0))   # low on the crib
-L12 = (P(1.60, -2.60, 1.00, -14.0, 3.0), P0)   # hall wide: crane up into P0
+L12 = (P(1.38, -2.60, 1.00, -8.0, 3.0), P0)   # hall wide: crane up into P0
 HOLDSL = [(0.0, 3.4, L1), (3.7, 7.0, L2), (7.3, 10.8, L3), (11.1, 14.5, L4), (14.8, 18.3, L5), (18.6, 22.0, L6),
           (22.3, 25.6, L7), (25.9, 29.4, L8), (29.7, 33.2, L9), (33.5, 37.0, L10), (37.3, 40.6, L11), (40.9, 44.0, L12)]
-HALLL = [0, 1, 2, 3, 9, 10, 11]
-INL = [4]                                                                   # camera inside the room: no wall hidden
+HALLL = [0, 1, 2, 3, 10, 11]
+INL = [4, 9]                                                                   # camera inside the room: no wall hidden
 
 HOLDS, HALL, INSIDE = (HOLDSL, HALLL, INL) if LONG else (HOLDS15, HALL15, [])
 camera = hold_camera(HOLDS, VFOV, lift=1.0, final_lift=1.5, rest=REST)
@@ -1042,11 +1046,10 @@ def timeline_long(tl):
         t1 = 15.95 + 0.38 * k
         fc = fly(f'br_c{k}', t1 - 0.22, t1, (0, 0.55, 0.03), 0.04, 0.5 if k == 1 else 0.35, 'thud' if k == 1 else 'tick')
         tl.custom(f'br_c{k}', lambda t, fc=fc: (fc(t)[0], fc(t)[1] and wall_mode(t) in ('west', 'in')))
-    body = slide('wr_body', 17.35, 17.95, (0.47, 0, 0), 0.8, 0.85, 'thud')
+    body = slide('wr_body', 18.70, 19.15, (0.47, 0, 0), 0.8, 0.85, 'thud')
 
     # ================= Zone 3b, high west craning down (18.6-22.0): shelves, rails, step drawer, doors land open + shut
-    win = drop('wr_in', 18.70, 18.90, 0.35, 0.03, 0.5, 'thud')
-    tl.custom('wr_in', lambda t: (body(t)[0] @ win(t)[0], win(t)[1]))
+    tl.custom('wr_in', body)                                         # arrives closed: the interior stays a surprise
     for i, nm in enumerate(('wr_rail', 'wr_flap', 'wr_nap')):
         pass
     tl.custom('wr_topA', lambda t: (body(t)[0], body(t)[1]))
@@ -1055,11 +1058,13 @@ def timeline_long(tl):
     tl.custom('wr_step', lambda t: (sd(t)[0], t >= 20.05))
     ev(23.36, 'step_out', 0.45, 'swish'); ev(26.17, 'step_home', 0.6, 'thud')
 
-    def door_pre(name, piv, a_open, t_in, t_shut, t_open2, t_close2):
+    def door_pre(name, piv, a_open, t_in, t_shut, t_open2, t_close2, closed=False):
         """Lands open (20.6-21.6), swings shut, re-opens for the wow, closes in the evening."""
         piv = np.array(piv, float)
 
         def ang(t):
+            if closed and t < t_open2:
+                return 0.0
             if t < t_shut:
                 return a_open
             if t < t_shut + 0.18:
@@ -1085,10 +1090,10 @@ def timeline_long(tl):
                 M = T(0, 0, 0.12 * (1 - eoc(u))) @ M
             return M, True
         tl.custom(name, f)
-        ev(t_shut + 0.18, name + '_shut', 0.75, 'thud')
-    door_pre('wr_dA', (WR_X, 0.0, 0), math.radians(92), 20.60, 21.00, 27.00, 33.62)
-    door_pre('wr_dB', (WR_X, 0.5, 0), math.radians(96), 20.75, 21.20, 27.06, 33.68)
-    door_pre('wr_dC', (WR_X, 1.0, 0), math.radians(94), 20.90, 21.40, 26.62, 33.74)
+        ev(t_in + 0.15 if closed else t_shut + 0.18, name + '_shut', 0.75, 'thud')
+    door_pre('wr_dA', (WR_X, 0.0, 0), math.radians(92), 19.30, 19.30, 27.00, 33.62, closed=True)
+    door_pre('wr_dB', (WR_X, 0.5, 0), math.radians(96), 19.50, 19.50, 27.06, 33.68, closed=True)
+    door_pre('wr_dC', (WR_X, 1.0, 0), math.radians(94), 19.70, 19.70, 26.62, 33.74, closed=True)
     ev(27.10, 'doors_open', 0.5, 'swish'); ev(26.70, 'bayC_bwomp', 0.6, 'bwomp'); ev(33.92, 'doors_shut', 0.85, 'thud')
     tl.custom('wr_rail', lambda t: (body(t)[0], t >= 18.90))
 
@@ -1103,7 +1108,7 @@ def timeline_long(tl):
         else:
             a = math.radians(-100) * (1 - smooth(c01((t - 25.00) / 0.22)))
         piv = np.array([WR_X, 0, H - 0.01])
-        return body(t)[0] @ about(piv, R('y', -a)), t >= 17.35
+        return body(t)[0] @ about(piv, R('y', -a)), t >= 18.70
     tl.custom('wr_topA', topflap)
     ev(23.90, 'top_open', 0.4, 'swish'); ev(25.22, 'top_shut', 0.7, 'thud')
     for k in range(3):
