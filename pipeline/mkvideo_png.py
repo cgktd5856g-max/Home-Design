@@ -1,6 +1,6 @@
 """Rendered PNG frames (Blender) -> 1080x1920 MP4 with the landing punch, light sharpening and music.
 
-usage: mkvideo_png.py <frames_dir> <fps> <frames.json> <out.mp4> <W> <H> [audio.wav] [captions.json] [--grade SAT,WARM]
+usage: mkvideo_png.py <frames_dir> <fps> <frames.json> <out.mp4> <W> <H> [audio.wav] [captions.json] [--grade SAT,WARM[,GAMMA]]
 frames.json is the timeline export (landing events in seconds); audio comes from music.py.
 captions.json: [[t0, t1, "line one\nline two"], ...] drawn bold white with a black outline near the top.
 """
@@ -62,11 +62,13 @@ for i, f in enumerate(files):
     k = OW / W * s
     M = np.float32([[k, 0, (OW - W * k) / 2], [0, k, (OH - H * k) / 2 + dy * OH / 1920.0]])
     img = cv2.warpAffine(img, M, (OW, OH), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
-    if GRADE != (1.0, 0.0):   # saturation around luma, then warmth (BGR order)
+    if GRADE[:2] != (1.0, 0.0) or len(GRADE) > 2:   # saturation around luma, then warmth (BGR order), then gamma
         f = img.astype(np.float32)
         yl = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
         f = yl + (f - yl) * GRADE[0]
         f[..., 2] *= 1 + GRADE[1]; f[..., 0] *= 1 - GRADE[1]
+        if len(GRADE) > 2:    # optional third value: gamma on 0..1 (above 1 darkens the midtones, whites stay white)
+            f = 255.0 * (np.clip(f, 0, 255) / 255.0) ** GRADE[2]
         img = np.clip(f, 0, 255).astype(np.uint8)
     blur = cv2.GaussianBlur(img, (0, 0), 1.1)
     img = cv2.addWeighted(img, 1.35, blur, -0.35, 0)
