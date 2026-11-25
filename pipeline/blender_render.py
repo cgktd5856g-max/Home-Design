@@ -460,12 +460,12 @@ def main():
     cam.clip_start, cam.clip_end = 0.02, 80.0
     cobj = bpy.data.objects.new('cam', cam); coll.objects.link(cobj); sc.camera = cobj
     cobj.rotation_mode = 'QUATERNION'
-    cams = [P.camera(f / fps) for f in range(nfr)]
-    key_transform(cobj, np.array([camera_matrix(c) for c in cams]), np.ones(nfr, bool), nfr, insert_vis=False)
+    key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
     # hard cuts (a jump between two frames): hold the pose up to the cut so motion blur never smears across it
     # (with the shutter opening at the frame, see motion_blur_position below)
-    cuts = [f for f in range(1, nfr) if np.linalg.norm(np.subtract(cams[f]['pos'], cams[f - 1]['pos'])) > 0.6
-            or abs((cams[f]['yaw'] - cams[f - 1]['yaw'] + 180) % 360 - 180) > 40 or abs(cams[f]['pitch'] - cams[f - 1]['pitch']) > 40]
+    cams_ = [P.camera(f / fps) for f in range(nfr)]
+    cuts = [f for f in range(1, nfr) if np.linalg.norm(np.subtract(cams_[f]['pos'], cams_[f - 1]['pos'])) > 0.6
+            or abs((cams_[f]['yaw'] - cams_[f - 1]['yaw'] + 180) % 360 - 180) > 40 or abs(cams_[f]['pitch'] - cams_[f - 1]['pitch']) > 40]
     if cuts and cobj.animation_data and cobj.animation_data.action:
         act = cobj.animation_data.action
         fcs = list(getattr(act, 'fcurves', []) or [])
@@ -476,9 +476,16 @@ def main():
                         fcs += list(cb.fcurves)
         for fc in fcs:
             for kp in fc.keyframe_points:
-                if int(round(kp.co[0])) in cuts:          # keyframe at Blender frame f = index f - 1, just before the cut
+                if int(round(kp.co[0])) in cuts:          # the keyframe just before the cut
                     kp.interpolation = 'CONSTANT'
         print(f'camera cuts at frames {[c + 1 for c in cuts]}', flush=True)
+    vfs = [float(P.camera(f / fps).get('vfov', 85.0)) for f in range(nfr)]
+    # Optional per-frame field of view: a project's camera(t) may return a different 'vfov' per frame (e.g. a wider lens
+    # for an overhead). Only then are lens keyframes added; a constant vfov renders exactly as before.
+    if max(vfs) - min(vfs) > 1e-6:
+        for f in range(nfr):
+            cam.angle_y = math.radians(vfs[f])
+            cam.keyframe_insert('lens', frame=f + 1)
 
     # lights (one Blender light per slot)
     fill = set(BL.get('fill_lights', []))
@@ -520,7 +527,7 @@ def main():
     world = bpy.data.worlds.new('world'); sc.world = world
     world.use_nodes = True
     bg = next(n for n in world.node_tree.nodes if n.type == 'BACKGROUND')
-    bg.inputs['Color'].default_value = (0.05, 0.05, 0.05, 1); bg.inputs['Strength'].default_value = 1.0
+    wc = BL.get('world', 0.05); bg.inputs['Color'].default_value = (wc, wc, wc, 1); bg.inputs['Strength'].default_value = 1.0
     sc.render.engine = 'CYCLES'
     cy = sc.cycles
     cy.device = 'CPU'
@@ -535,9 +542,7 @@ def main():
     cy.max_bounces = mb; cy.diffuse_bounces = db; cy.glossy_bounces = gb; cy.transmission_bounces = 4; cy.transparent_max_bounces = 8
     cy.sample_clamp_indirect = 6.0
     cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0
-    # persistent data left stale light data after a light switched on mid-render (black floors in rooms/not_one_handle);
-    # a full sync per frame costs a few seconds, so it is opt-in
-    sc.render.use_persistent_data = '--persist' in args
+    sc.render.use_persistent_data = bool(BL.get('persistent', True))   # False avoids rare black-floor frames in long runs
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
     sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5
     try:
@@ -585,7 +590,7 @@ def main():
         m4, vis = states[f]
         c = P.camera(f / fps)
         parts = [np.concatenate([m4[k].ravel(), [float(vis[k] > 0)]]) for k in rk.ORDER]
-        parts += [np.array([*c['pos'], c['yaw'], c['pitch']], float)] + [np.asarray(L, float).ravel() for L in lrecs[f]]
+        parts += [np.array([*c['pos'], c['yaw'], c['pitch'], c.get('vfov', 85.0)], float)] + [np.asarray(L, float).ravel() for L in lrecs[f]]
         sigs.append(np.round(np.concatenate(parts), 6))
     dup = [2 <= i < nfr - 1 and all(np.array_equal(sigs[i], sigs[g]) for g in (i - 2, i - 1, i + 1)) for i in range(nfr)]
     todo = [f for f in range(a, b + 1) if not os.path.exists(os.path.join(fdir, f'f_{f:04d}.png'))]
