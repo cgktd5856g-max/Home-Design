@@ -461,6 +461,24 @@ def main():
     cobj = bpy.data.objects.new('cam', cam); coll.objects.link(cobj); sc.camera = cobj
     cobj.rotation_mode = 'QUATERNION'
     key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
+    # hard cuts (a jump between two frames): hold the pose up to the cut so motion blur never smears across it
+    # (with the shutter opening at the frame, see motion_blur_position below)
+    cams_ = [P.camera(f / fps) for f in range(nfr)]
+    cuts = [f for f in range(1, nfr) if np.linalg.norm(np.subtract(cams_[f]['pos'], cams_[f - 1]['pos'])) > 0.6
+            or abs((cams_[f]['yaw'] - cams_[f - 1]['yaw'] + 180) % 360 - 180) > 40 or abs(cams_[f]['pitch'] - cams_[f - 1]['pitch']) > 40]
+    if cuts and cobj.animation_data and cobj.animation_data.action:
+        act = cobj.animation_data.action
+        fcs = list(getattr(act, 'fcurves', []) or [])
+        if not fcs:
+            for layer in getattr(act, 'layers', []):
+                for strip in layer.strips:
+                    for cb in strip.channelbags:
+                        fcs += list(cb.fcurves)
+        for fc in fcs:
+            for kp in fc.keyframe_points:
+                if int(round(kp.co[0])) in cuts:          # the keyframe just before the cut
+                    kp.interpolation = 'CONSTANT'
+        print(f'camera cuts at frames {[c + 1 for c in cuts]}', flush=True)
     vfs = [float(P.camera(f / fps).get('vfov', 85.0)) for f in range(nfr)]
     # Optional per-frame field of view: a project's camera(t) may return a different 'vfov' per frame (e.g. a wider lens
     # for an overhead). Only then are lens keyframes added; a constant vfov renders exactly as before.
@@ -527,6 +545,10 @@ def main():
     sc.render.use_persistent_data = bool(BL.get('persistent', True))   # False avoids rare black-floor frames in long runs
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
     sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5
+    try:
+        sc.render.motion_blur_position = 'START'
+    except Exception:
+        pass
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_depth = '8'
     vs = sc.view_settings
     vs.view_transform = 'AgX'
