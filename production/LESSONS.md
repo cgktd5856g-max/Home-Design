@@ -35,6 +35,11 @@ looks better.
   two defined different `clack` sounds. The shared code keeps: grade gamma above 1 brightens the mid-tones (below 1
   darkens); `clack` is the single wooden tile clack, `ratchet` the three-knock lock-out, `clink` plates and cups. Before
   adding a parameter or sound to a shared file, check that the name isn't already taken.
+- **Keep Claude out of the render loop** (25 Nov). Once a render starts, Claude should cost almost nothing. Put the
+  whole tail in one detached shell script, `.render/<slug>/autopipe.sh`: restart Blender if it dies, scan and
+  re-render bad frames, encode both versions, run hh_metrics, git push. Claude starts it, arms one background waiter
+  (2 h maximum, re-armed with no other work) and ends its turn. Each wake-up re-reads the whole chat history, so long
+  sessions get expensive: keep wake-ups to 1-2 tool calls, and don't polish after the final render has started.
 - **Talking to sessions.** `send_message` to a child session works, and children reply with `send_message` to
   `@parent`. Send short pointers to files in the repo instead of long pasted text.
 - **Decide the concept before a session starts.** Switching mid-build made the two-kids session rebuild its whole
