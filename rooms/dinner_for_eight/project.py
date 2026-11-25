@@ -637,6 +637,7 @@ def lights(mats4, vis):
 
 BLENDER = dict(
     exposure=-0.30,
+    persistent=False,
     look='AgX - Medium High Contrast',
     separate=['backdrop', 'backdrop_dusk', 'snow'],
     fill_lights=[1, 2, 3],
@@ -783,7 +784,7 @@ def stage_island(kit, t_drop, t_split, t_leaf, t_legs, t_pre=None):
         if t < t_split:
             return 1.0
         return 1 - eob((t - t_split) / 0.22, 0.6)
-    tl.ev(t_split + 0.22, 'clack1', 0.9, 'clack')
+    tl.ev(t_split + 0.22, 'clack1', 0.9, 'ratchet')
 
     def half(sign):
         def f(t):
@@ -811,7 +812,7 @@ def stage_island(kit, t_drop, t_split, t_leaf, t_legs, t_pre=None):
         if t < t_leaf + 0.10:
             return math.pi
         return math.pi * (1 - eob((t - t_leaf - 0.10) / 0.24, 0.5))
-    tl.ev(t_leaf + 0.34, 'clack2', 0.9, 'clack')
+    tl.ev(t_leaf + 0.34, 'clack2', 0.9, 'ratchet')
 
     def leaf_s(t):
         z = drop_off(t)
@@ -842,7 +843,7 @@ def stage_island(kit, t_drop, t_split, t_leaf, t_legs, t_pre=None):
         tl.custom(nm, f)
     legs('leg_s', 1, sF, TY0 + 0.07)
     legs('leg_n', -1, nF, TY1 - 0.07)
-    tl.ev(t_legs + 0.2, 'clack3', 0.9, 'clack')
+    tl.ev(t_legs + 0.2, 'clack3', 0.9, 'ratchet')
     return sF, nF
 
 
@@ -959,7 +960,7 @@ def timeline_short():
         slide(nm, t - 0.16, t, (-0.62, 0, 0), 0.8, 0.7)
     sP = slide('pantry', 1.70, 1.92, (0.9, 0, 0), 0.8, 0.8)
     slide('fridge', 1.82, 2.02, (0.9, 0, 0), 0.8, 0.9)
-    slide('grille', 6.86, 6.98, (0.25, 0, 0), 0.8, 0.5, 'clack')
+    slide('grille', 6.86, 6.98, (0.25, 0, 0), 0.8, 0.5, 'tick')
     slide_din = tl.anims['base_din']
     sF, nF = stage_island(kit, 2.00, 7.32, 7.62, 7.98)
     drop('worktop', 2.52, 2.68, 0.35, 0.02, 0.8, 'thud')
@@ -1140,7 +1141,7 @@ def timeline_long():
     tl.custom('plate_dr', fD)
     sP = slide('pantry', 7.80, 8.04, (0.9, 0, 0), 0.8, 0.8)
     slide('fridge', 8.10, 8.34, (0.9, 0, 0), 0.8, 0.9)
-    slide('grille', 8.70, 8.86, (0.25, 0, 0), 0.8, 0.5, 'clack')
+    slide('grille', 8.70, 8.86, (0.25, 0, 0), 0.8, 0.5, 'tick')
     for i in range(8):
         px, py = PLACES[i][0], PLACES[i][1]
         tp = plank_t(py)

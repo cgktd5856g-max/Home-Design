@@ -67,8 +67,8 @@ for i, f in enumerate(files):
         yl = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
         f = yl + (f - yl) * GRADE[0]
         f[..., 2] *= 1 + GRADE[1]; f[..., 0] *= 1 - GRADE[1]
-        if len(GRADE) > 2:    # optional third value: gamma on 0..1 (above 1 darkens the midtones, whites stay white)
-            f = 255.0 * (np.clip(f, 0, 255) / 255.0) ** GRADE[2]
+        if len(GRADE) > 2:    # optional third value: brightness gamma (1.15 lifts the mids, keeps white and black)
+            f = 255.0 * (np.clip(f, 0, 255) / 255.0) ** (1.0 / GRADE[2])
         img = np.clip(f, 0, 255).astype(np.uint8)
     blur = cv2.GaussianBlur(img, (0, 0), 1.1)
     img = cv2.addWeighted(img, 1.35, blur, -0.35, 0)
