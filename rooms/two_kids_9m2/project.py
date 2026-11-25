@@ -297,10 +297,11 @@ def build_shell():
 
 # ------------------------------------------------------------------------------------------- west: loft (child A)
 def build_west(rng):
-    for (y0, y1) in ((LY0, LY0 + 0.06), (D - 0.06, D)):
-        add('loftPosts', box(LX1 - 0.06, y0, 0.0, LX1, y1, LZ1 + 0.33), 'oak_z')
+    for (y0, y1) in ((LY0 - 0.004, LY0 + 0.056), (D - 0.06, D)):        # the front post stands 4 mm proud of the deck face
+        add('loftPosts', box(LX1 - 0.058, y0, 0.0, LX1 + 0.006, y1, LZ1 + 0.33), 'oak_z')
     add('loftDeck', box(0, LY0, LZ0, LX1, D, LZ0 + 0.004), 'white_in')
     wood('loftDeck', 0, LY0, LZ0 + 0.004, LX1 + 0.004, D, LZ1, 'oak')
+    add('loftDeck', box(0.0, LY0 - 0.008, LZ0 - 0.006, LX1 - 0.058, LY0 - 0.001, LZ1 + 0.002), 'oak_x')     # front fascia
     add('loftDeck', box(LX1 - 0.09, LY0 + 0.1, LZ0 - 0.012, LX1 - 0.075, D - 0.1, LZ0), 'led_off')
     g = 'loftRail'
     wood(g, LX1 - 0.035, 1.78, LZ1 + 0.30, LX1, D, LZ1 + 0.33, 'oak')
@@ -329,6 +330,8 @@ def build_west(rng):
     xb1 = LX1 - 0.06
     add(f, box(0.0, LY0 - 0.012, 0.0, xb1, LY0, LZ0), 'white_in')
     add(f, box(xb1 - 0.018, BW_Y0, 0.0, xb1, LY0, LZ0), 'white_cab')
+    add(f, box(0.0, BW_Y0, LZ0 - 0.02, xb1 - 0.018, LY0 - 0.012, LZ0 - 0.001), 'white_cab')   # top: closes the gap under the deck corner
+    add(f, box(xb1, BW_Y0, LZ0 - 0.14, LX1, BW_Y0 + 0.018, LZ0), 'white_cab')
     for z in (0.0, 0.39, 0.77, 1.15):
         add(f, box(0.0, BW_Y0, z, xb1, LY0, z + 0.022), 'white_cab')
     pal = ['bk_terra', 'bk_mustard', 'bk_cream', 'bk_sage', 'bk_terra', 'bk_rust', 'bk_white', 'bk_mustard', 'bk_blue', 'bk_cream']
@@ -615,11 +618,12 @@ S1B = (P(1.80, 0.64, 1.50, -32.0, -13.0), P(1.62, 0.78, 1.44, -42.0, -12.0))    
 S2 = (P(1.12, 0.18, 0.98, 60.0, -11.0), P(1.42, 0.72, 0.86, 74.0, -6.0))              # B: stair drawers + den
 S3 = (P(1.30, 0.30, 1.95, 16.0, -17.0), P(0.92, 0.16, 1.86, 18.0, -16.0))
 S3B = (P(2.98, 1.62, 1.74, -44.0, -13.0), P(2.86, 1.76, 1.72, -58.0, -11.0))
-S3W = (P(CX, -0.40, 1.88, 0.0, -17.0, 95.0), P(CX, -0.28, 1.84, 0.0, -17.0, 95.0))      # daylight payoff wide on the tape          # face B: the cubbies fill   # near-overhead: the swing (wow)
+S3W = (P(CX, 0.04, 1.92, 0.0, -19.0, 95.0), P(CX, 0.14, 1.86, 0.0, -19.0, 95.0))        # daylight payoff wide on the tape (inside the door)
+S3O = (P(1.95, 0.40, 2.56, 4.0, -57.0, 100.0), P(2.10, 0.56, 2.54, -8.0, -62.0, 100.0))  # near-overhead: the swing          # face B: the cubbies fill   # near-overhead: the swing (wow)
 S4 = (P(CX, 0.14, 2.22, -24.0, -22.0, 98.0), P(CX, 0.16, 2.18, -10.0, -23.0, 98.0))      # night: A's side
 S5 = (P(CX, 0.16, 2.18, 20.0, -24.0, 98.0), F1)                                        # B's side -> frame 1                                                # the two bedrooms -> frame 1
-HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.74, 7.00, S2), (7.04, 9.00, S3), (9.04, 9.95, S3W), (10.15, 11.30, S3B),
-         (11.55, 12.35, S4), (12.55, DUR, S5)]
+HOLDS = [(0.0, 2.45, S1), (2.70, 3.70, S1B), (3.72, 7.00, S2), (7.04, 8.00, S3), (8.04, 9.56, S3O), (9.60, 10.32, S3W),
+         (10.52, 11.45, S3B), (11.65, 12.40, S4), (12.60, DUR, S5)]
 
 
 def make_camera(holds):
@@ -651,8 +655,8 @@ LSUN = (95000.0, 86000.0, 72000.0)
 LDOOR = (2.2, 2.2, 2.15)
 LFILL = (0.6, 0.6, 0.59)
 LLED = (40.0, 36.0, 29.0)
-LRL = (1100.0, 1000.0, 860.0)
-LLAMP = (90.0, 80.0, 64.0)
+LRL = (1300.0, 1060.0, 760.0)
+LLAMP = (110.0, 90.0, 62.0)
 LDOWN = (1050.0, 1065.0, 1070.0)
 LDEN = (70.0, 60.0, 44.0)
 
@@ -683,6 +687,7 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
+    persistent=False,                       # fresh render data per frame: avoids black patches in long runs
     exposure=-0.30,
     look='AgX - Medium High Contrast',
     separate=['backdrop', 'backdrop_night'],
@@ -1107,11 +1112,11 @@ class Story:
         self.stairs_beat(4.00, step=0.25, hold=0.45)
         self.den_beat(6.00, 6.78)
         self.doorsA_beat(7.10, 7.72)
-        self.swing(7.95, 8.92, 0.0, -90.0)
-        self.panel(9.22, 12.62)
-        self.bins_beat(10.25)
-        self.night_beat(11.40)
-        KID_A.animate(tl, pop=11.62)
+        self.swing(8.08, 9.43, 0.0, -90.0)
+        self.panel(9.72, 12.62)
+        self.bins_beat(10.62, gap=0.05)
+        self.night_beat(11.55, long=True)
+        KID_A.animate(tl, pop=11.75)
         KID_B.animate(tl, pop=12.50)
         self.swing(12.95, 13.95, -90.0, 0.0)
         tl.drop('plushB', 14.30, 14.48, 0.5, 0.12, 0.4)
