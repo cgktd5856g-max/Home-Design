@@ -706,6 +706,7 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
+    persistent=False,
     exposure=-0.12,
     look='AgX - Medium High Contrast',
     separate=['sky_day', 'sky_dusk', 'roof_snow', 'roof_tile', 'house_day', 'house_day2', 'roof_snow_dusk', 'roof_tile_dusk',
