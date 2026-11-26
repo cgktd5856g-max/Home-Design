@@ -96,6 +96,10 @@ looks better.
 - **Tilted openings.** A camera tilted down for frame 1 loses a rising object off the top of the frame. Set the
   opening pitch from that object's height.
 - **Seated figures.** `figure.sit_pose` puts the pelvis at `at`; for a bed edge, place `at` 0.1 m inside the mattress.
+- **A low "first movement" score isn't always a dead opening** (Dinner long cut, 26 Nov). hh_metrics reported 3.0 s,
+  but plates were falling and the floor sliding in from frame 1; the landings were just gentle (change 6-9 per 0.2 s,
+  under its threshold of 10). Look at the first 3 s before re-rendering: make the first landing bigger and closer if it
+  really is soft.
 - **Make the hook register.** `hh_metrics` counts the first movement only when the mean change on its 45x80 grid tops
   10, so planks close in brightness to the subfloor never count. Make the subfloor clearly darker and land the planks
   big and early.
