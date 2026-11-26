@@ -31,6 +31,8 @@ looks better.
 - **Shared pipeline files get conflicts.** Sessions add sound kinds to `pipeline/music.py` (bonk, clack, clunk, pip
   and more) on their own branches. When merging, keep both sides' additions and test every event kind (23 Nov: 3
   merges, 20 kinds, all fine).
+- **Name clashes keep happening in shared files** (25-26 Nov: `boing` twice, `pluck` with two meanings). When merging,
+  keep the existing name's meaning and give the newcomer a new name (`pluck_step`); test every sound kind after.
 - **Shared settings must keep one meaning** (24 Nov). Two sessions gave the grade's third value opposite meanings, and
   two defined different `clack` sounds. The shared code keeps: grade gamma above 1 brightens the mid-tones (below 1
   darkens); `clack` is the single wooden tile clack, `ratchet` the three-knock lock-out, `clink` plates and cups. Before
@@ -145,3 +147,8 @@ Fill in the views after posting (7 days).
 | #3 Three of Us in 3 × 2 m | 8.6 / 0.6 s / 5.72 / 0.6 s / 142 / 0.30 / 42.5: misses clear-change share (0.36) and first move (0.6 s) | – | | |
 | #1 Tape Line, Turning Wall (v1) | 9.3 / 0.4 s / 6.31 / 0.4 s / 151 / 0.24 / 34.4: all in range; dusk too dark, v2 ordered | 8.5 / 7.5 | | |
 | #8 Dinner for Eight | 10.3 / 0.6 s / 8.51 / 0.6 s / 154 / 0.23 / 36.0: misses first move (0.6 s) | – | | |
+| #10 Kitchen Behind the Wall | 10.1 / 0.4 s / 7.14 / 0.2 s / 154 / 0.27 / 42.4: all in range | – | | |
+| #7 Not One Handle in Sight | 11.6 / 1.0 s / 8.29 / 0.2 s / 173 / 0.23 / 37.3: all in range | – | | |
+| #9 Count the Beds | 9.7 / 0.2 s / 6.77 / 0.2 s / 167 / 0.22 / 32.1: all in range | – | | |
+| #6 Pull One Book | 11.4 / 0.0 s / 7.63 / 0.2 s / 176 / 0.24 / 44.8: all in range | – | | |
+| #1 Tape Line v2 (posting version) | 10.5 / 0.4 s / 7.07 / 0.4 s / 163 / 0.22 / 33.9: all in range; one second at 131 | – | | |
