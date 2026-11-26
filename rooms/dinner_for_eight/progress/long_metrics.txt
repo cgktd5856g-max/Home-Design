@@ -1,0 +1,12 @@
+out/dinner_for_eight_long.mp4
+  ok  dmed     7.8  target 7.5-       motion: median change per 0.2 s (hits 8.4, flops 5.1)
+  OFF s10     0.34  target 0.39-      share of 0.2 s steps with a clear change (hits 0.43, flops 0.35)
+  ok  calm     1.2  target -1.8       longest near-still stretch in seconds (hits 1.4, flops 2.6)
+  ok  camera   4.67  target 1.8-       camera movement: change in the quietest tiles per 0.4 s (hits 2.9, flops 1.0)
+  OFF fb       3.0  target -0.4       first clear movement in seconds
+  ok  lum      158  target 138-178    mean brightness 0-255 (hits 10th-90th percentile)
+  ok  sat     0.21  target 0.17-0.38  mean saturation (hits 10th-90th percentile; flops run warmer and more saturated)
+  ok  warm    33.1  target 22-57      mean red minus blue (hits 10th-90th percentile; above 60: cream or orange cast)
+  ok  len     46.0  target 34-46      seconds, for the long cut (hits 25th-75th percentile; the 15 s cut is a separate test)
+bad frames: 
+frames 1150 per-second mean (raw): [192, 197, 202, 198, 195, 191, 193, 192, 197, 199, 184, 178, 182, 193, 193, 188, 187, 182, 176, 180, 187, 182, 184, 191, 179, 181, 183, 181, 181, 174, 167, 168, 171, 171, 174, 180, 176, 160, 159, 162, 176, 180, 179, 177, 165, 164]
