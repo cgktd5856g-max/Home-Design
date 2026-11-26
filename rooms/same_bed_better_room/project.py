@@ -27,6 +27,20 @@ from roomkit import (srgb, mat, add, box, grid_tris, lathe, rprof, tube, ellipso
 from animkit import Timeline, c01, eoc, eob, smooth
 import figure as fg
 
+# Boxes that overlap and share a face render black in Cycles (the hit lands inside the other solid). Shrink every
+# box by its own 0.2-0.8 mm so no two faces are ever coplanar; far below a pixel at 720x1280.
+_box_exact, _BOXN = rk.box, [0]
+
+
+def box(x0, y0, z0, x1, y1, z1):
+    _BOXN[0] += 1
+    e = 0.0002 + 0.00005 * ((_BOXN[0] * 37) % 13)
+    e = min(e, 0.2 * min(x1 - x0, y1 - y0, z1 - z0))
+    return _box_exact(x0 + e, y0 + e, z0 + e, x1 - e, y1 - e, z1 - e)
+
+
+rk.box = box
+
 FIG = [None]
 
 REST = os.environ.get('ROOM_REST') == '1'
@@ -77,13 +91,13 @@ def materials():
     mat('box_linen', tex=3, col=srgb(214, 208, 196), p=(0.06,))
     mat('box_white', col=srgb(240, 240, 238), rough=0.5)
     mat('suitcase', col=srgb(124, 150, 176), rough=0.3, f0=0.05, glossy=True)
-    for nm, c in (('cl_rust', (174, 110, 86)), ('cl_mustard', (206, 178, 112)), ('cl_terra', (198, 126, 92)), ('cl_white', (242, 242, 240)),
-                  ('cl_sage', (146, 166, 138)), ('cl_navy', (54, 66, 100)), ('cl_denim', (90, 114, 152)), ('cl_grey', (192, 192, 196))):
+    for nm, c in (('cl_rust', (150, 160, 174)), ('cl_mustard', (216, 210, 198)), ('cl_terra', (112, 140, 178)), ('cl_white', (242, 242, 240)),
+                  ('cl_sage', (176, 190, 206)), ('cl_navy', (54, 66, 100)), ('cl_denim', (90, 114, 152)), ('cl_grey', (192, 192, 196))):
         mat(nm, tex=5, col=srgb(*c), p=(2, 0.008))
-    for nm, c in (('bk_sage', (150, 168, 144)), ('bk_white', (240, 238, 232)), ('bk_terra', (194, 116, 84)), ('bk_navy', (56, 68, 102)),
-                  ('bk_mustard', (214, 168, 70)), ('bk_blue', (110, 138, 172)), ('bk_grey', (176, 176, 180))):
+    for nm, c in (('bk_sage', (196, 204, 214)), ('bk_white', (240, 238, 232)), ('bk_terra', (150, 170, 196)), ('bk_navy', (56, 68, 102)),
+                  ('bk_mustard', (226, 224, 218)), ('bk_blue', (110, 138, 172)), ('bk_grey', (176, 176, 180))):
         mat(nm, col=srgb(*c), rough=0.6)
-    mat('shoe_white', col=srgb(244, 244, 240), rough=0.5); mat('shoe_tan', col=srgb(184, 140, 98), rough=0.4, f0=0.04, glossy=True)
+    mat('shoe_white', col=srgb(244, 244, 240), rough=0.5); mat('shoe_tan', col=srgb(206, 204, 198), rough=0.5)
     mat('sole', col=srgb(236, 232, 224), rough=0.7)
 
 
@@ -462,8 +476,8 @@ def build():
     build_wardrobe(rng)
     build_desk(rng)
     if LONG:
-        fg.materials()
-        FIG[0] = fg.figure('fig', 'adult', pose='stand', at=(0.74, 0.70, 58.0))
+        mat('fig_mid', col=srgb(128, 132, 140), rough=0.48)               # mid grey: reads against the white walls
+        FIG[0] = fg.figure('fig', 'adult', pose='stand', at=(0.74, 0.70, 58.0), mat='fig_mid')
 
 
 # ------------------------------------------------------------------------------------------- camera
@@ -534,23 +548,24 @@ def rise(a, b, u):
 
 def segs_long():
     """45 s cut: orbit, descent, then one zone at a time (see PLAN.md, long cut), rising back to frame 1 at 45 s."""
-    o_end = orbit(PHI0 + RATE * 5.0, 5.0)
+    RL = 10.0                                  # faster circling in the long cut's opening
+    o_end = orbit(PHI0 + RL * 5.0, 5.0)
     LA = P(0.62, -1.30, 2.92, 18.0, -31.0, VF_OVER)
-    A = (P(0.74, 0.75, 1.55, 0.0, 6.0), P(0.76, 1.85, 1.42, 2.0, -22.0))                 # window desk, push in
-    Bs = (P(1.36, 2.15, 1.40, -55.0, -16.0), P(1.30, 1.70, 1.32, -35.0, -14.0))          # slide along the window
-    C = (P(0.62, 0.42, 0.95, 52.0, 6.0), P(0.95, 0.22, 0.90, 28.0, 8.0))                 # low circle, bed corner
-    Ds = (P(0.62, 0.18, 1.55, 72.0, -32.0), P(1.05, 0.10, 1.75, 84.0, -40.0))            # along the stairs
-    E = (P(1.42, 1.22, 1.50, 270.0, 14.0), P(1.42, 1.62, 1.40, 266.0, -6.0))             # wardrobe, straight on
-    F = (P(1.35, 1.25, 1.15, 260.0, -24.0), P(1.35, 1.90, 1.25, 245.0, -20.0))           # wardrobe drawers, toward the desk
-    G = (P(1.88, 0.06, 1.30, 2.0, -4.0), P(1.90, 0.45, 2.02, 8.0, -24.0))                # rising glide up the stairs
-    Hs = (P(1.12, 0.10, 1.05, 4.0, -12.0, 56.0), P(0.98, 0.42, 0.98, 14.0, -10.0, 56.0))  # the rail, low in the aisle
-    J1 = (P(1.40, 0.12, 1.35, -28.0, -12.0), P(1.38, 0.45, 1.30, -48.0, -12.0))            # dolly: the person comes in
-    J2 = (P(0.92, 2.50, 1.55, 176.0, -14.0), P(0.98, 2.20, 1.45, 168.0, -16.0))          # window end, down the aisle
-    K = (P(2.85, 0.12, 2.40, -42.0, -30.0), P(2.62, 0.22, 2.32, -36.0, -27.0))           # high south-east corner
+    A = (P(0.74, 0.65, 1.55, -16.0, 6.0), P(0.82, 2.05, 1.40, 14.0, -26.0))                 # window desk, push in
+    Bs = (P(1.38, 2.40, 1.45, -78.0, -20.0), P(1.25, 1.40, 1.30, -12.0, -12.0))          # slide along the window
+    C = (P(0.50, 0.60, 0.95, 72.0, 6.0), P(1.20, 0.12, 0.90, 4.0, 10.0))                 # low circle, bed corner
+    Ds = (P(0.50, 0.30, 1.50, 50.0, -28.0), P(1.05, 0.15, 1.75, 84.0, -36.0))            # along the stairs
+    E = (P(1.42, 1.10, 1.55, 276.0, 16.0), P(1.42, 1.80, 1.36, 260.0, -8.0))             # wardrobe, straight on
+    F = (P(1.38, 1.05, 1.10, 285.0, -26.0), P(1.30, 2.10, 1.30, 235.0, -18.0))           # wardrobe drawers, toward the desk
+    G = (P(1.20, 0.55, 1.45, 14.0, -10.0), P(1.38, 1.05, 2.00, 60.0, -30.0))                # rising glide up the stairs
+    Hs = (P(1.15, 0.04, 1.32, -2.0, -18.0, 70.0), P(0.95, 0.42, 1.22, 14.0, -16.0, 70.0))  # the rail, low in the aisle
+    J1 = (P(1.40, 2.58, 1.58, 196.0, -16.0), P(1.42, 2.25, 1.45, 214.0, -12.0))            # dolly: the person comes in
+    J2 = (P(1.28, 0.06, 1.35, -12.0, -8.0), P(1.20, 0.30, 1.25, 8.0, -10.0))          # window end, down the aisle
+    K = (P(2.88, 0.10, 2.40, -60.0, -30.0), P(2.40, 0.38, 2.30, -18.0, -26.0))           # high south-east corner
     sw = lambda a, b: (lambda u, t: mix(a, b, smooth(u), lift=2.0))
     gl = lambda st: (lambda u, t: mix(st[0], st[1], u))
     return [
-        (0.0, 5.0, lambda u, t: orbit(PHI0 + RATE * t, t)),
+        (0.0, 5.0, lambda u, t: orbit(PHI0 + RL * t, t)),
         (5.0, 5.5, lambda u, t: mix(o_end, LA, smooth(u))),
         (5.5, 7.0, lambda u, t: mix(LA, A[0], ease_in_out(u, 1.6), sa=smooth(c01((u - 0.4) / 0.6)), sv=smooth(c01((u - 0.45) / 0.55)))),
         (7.0, 9.8, gl(A)), (9.8, 10.1, sw(A[1], Bs[0])), (10.1, 12.75, gl(Bs)), (12.75, 13.0, sw(Bs[1], C[0])),
@@ -559,7 +574,7 @@ def segs_long():
         (24.25, 27.3, gl(G)), (27.3, 27.6, sw(G[1], Hs[0])), (27.6, 31.0, gl(Hs)), (31.0, 31.25, sw(Hs[1], J1[0])),
         (31.25, 34.6, gl(J1)), (34.6, 34.9, sw(J1[1], J2[0])), (34.9, 38.6, gl(J2)), (38.6, 38.9, sw(J2[1], K[0])),
         (38.9, 41.0, gl(K)),
-        (41.0, 45.0, lambda u, t: rise(K[1], orbit(PHI0 + RATE * (t - 45.0), t - 45.0), u)),
+        (41.0, 45.0, lambda u, t: rise(K[1], orbit(PHI0 + RL * (t - 45.0), t - 45.0), u)),
     ]
 
 
@@ -616,6 +631,7 @@ def lights(mats4, vis):
 
 
 BLENDER = dict(
+    persistent=False,                          # persistent data gave black-floor frames in long runs
     exposure=-0.10,
     look='AgX - Medium High Contrast',
     separate=['backdrop'],
@@ -708,10 +724,10 @@ def beats_long():
              chair_out=(10.30, 12.55), desk_lamp=10.75, desk_nb=11.05, desk_pl=11.35,
              legs=(13.35, 13.52), plat=(13.50, 14.50), steps=(14.80, 15.10, 15.40),
              sdr=[(16.40, 16.95), (16.62, 17.17), (16.84, 17.39)], ddr=(17.85, 18.80),
-             wr_top=(19.50, 19.95), wd_opens=[(20.10, 23.40), (32.80, 33.80)], wr_cl=(20.35, 20.75),
+             wr_top=(19.50, 19.95), wd_opens=[(20.10, 23.40), (32.90, 34.40)], wr_cl=(20.35, 20.75),
              wr_drs=[(21.80, 22.60), (22.05, 22.85)],
              ledge=(24.50, 24.68), ledge_bk=24.85, ledge_pl=25.08, hb_lamp=25.30, slippers=25.50, mslide=(25.80, 26.55),
-             rails=[((27.80, 28.50), (30.40, 30.75)), ((37.05, 37.65), (38.60, 38.95))], on=39.40)
+             rails=[((27.80, 28.50), (29.75, 30.10)), ((37.05, 37.65), (38.60, 38.95))], on=39.40)
     return B
 
 
@@ -723,8 +739,8 @@ def person(tl, B):
     wpose, wat = fg.walk([(31.35, A0), (31.95, A1), (32.50, A2), (36.0, A2), (36.65, A3)], fig)
     OPEN = dict(sh_r=72, sh_r_out=4, elbow_r=18, sh_l=10, sh_l_out=6, elbow_l=10, spine=4)
     PULL = dict(sh_r=48, sh_l=40, sh_r_out=6, sh_l_out=8, elbow_r=12, elbow_l=20, spine=22, neck=8, hip_l=12, hip_r=6, knee_l=10, knee_r=4)
-    poses = fg.track([(32.45, 'stand'), (32.70, OPEN), (33.05, OPEN), (33.35, 'stand'), (33.65, OPEN), (33.95, 'stand'),
-                      (35.20, 'stand'), (35.45, 'reach_both'), (35.80, 'reach_both'), (36.0, 'stand'),
+    poses = fg.track([(32.50, 'stand'), (32.80, OPEN), (33.15, OPEN), (33.45, 'stand'), (34.15, OPEN), (34.50, 'stand'),
+                      (34.75, 'stand'), (35.05, 'reach_both'), (35.80, 'reach_both'), (36.0, 'stand'),
                       (36.65, 'stand'), (36.95, PULL), (38.45, PULL), (38.75, 'stand')])
 
     def pose(t):
