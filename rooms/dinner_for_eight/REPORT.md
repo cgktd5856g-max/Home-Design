@@ -83,8 +83,27 @@ LONG_SECTION
 
 ## What I'd improve
 
-IMPROVE
+- **The hook:** first clear movement measures 0.6 s (target 0.4). A small plate on a grey floor is a small change; a
+  bigger first landing (the island or a plank band close to the camera at 0.2 s) would fix it.
+- **Preview reviews stopped at 6.5/10.** Open notes: the tumbler lift-up is small in frame at 11.4 s; the clacks could
+  be framed lower and closer still; napkins read as paper squares (no folds); floor and wall veneer could use a touch
+  of gloss and roughness variation.
+- **Long cut:** its low-res previews missed the pacing targets (longest still 3.0 s, motion 6.6) because several
+  stations look at large white surfaces (uppers, columns) where camera motion barely changes the frame. I made one more
+  round of fixes (planks spread over the first 2.5 s, upper doors flipping open on the bowls during the bins beat,
+  steeper pitches) and rendered it without a further preview, in lean mode. Measured results are below.
 
 ## Lessons for next time
 
-LESSONS
+- A gliding-camera preview at 360x640 takes about 12 minutes for 15 s; background tool calls die at 20 minutes, so run
+  previews with `setsid nohup` and poll, never as one long foreground or background call.
+- Probe stations with `ROOM_ST=S1,S3a,...` (a switch in the project) before animating: it caught a camera inside the
+  pantry column and a chair-wall angle that could not see the wall.
+- White shells hide motion from `hh_metrics.py`: a station looking at white uppers or columns reads as "still" even
+  while the camera glides. Keep colour or texture (open storage, wood, floor) in every station.
+- The standard `--grade 1.35,0.03` pushed this white-and-oak kitchen to warmth 60 (cream cast); `1.15,-0.01` with a
+  darkening gamma landed it at 36. Measure the grade on a sample of frames before encoding.
+- Read `production/LESSONS.md` before animating: I had to rework the tall columns (they grew) and the uppers (they
+  dropped through the ceiling) after the render had started.
+- Coloured seat boards on the folding chairs made the 4 x 2 chair wall read at phone size; plain oak chairs on an oak
+  wall had no contrast.

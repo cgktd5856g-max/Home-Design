@@ -577,6 +577,23 @@ A11 = (P(TCX, 3.35, 2.32, 180.0, -52.0), P(TCX, 3.28, 1.72, 180.0, -30.0))      
 A12 = (P(2.88, 0.95, 1.42, 288.0, -22.0), P(2.88, 2.60, 1.38, 252.0, -22.0))    # low from the east, sliding north
 A13 = (P(2.88, 0.22, 1.98, 328.0, -24.0), P(2.62, 0.72, 1.82, 322.0, -21.0))    # south-east corner push-in
 A14 = (P(2.86, 2.55, 2.02, 236.0, -38.0), F1)                                    # 2 s drift into the frame-1 pose
+def _amp(st, k=2.0):
+    a, b = st
+    return (a, dict(pos=tuple(np.array(a['pos']) + k * (np.array(b['pos']) - np.array(a['pos']))),
+                    yaw=a['yaw'] + k * (b['yaw'] - a['yaw']), pitch=a['pitch'] + k * (b['pitch'] - a['pitch'])))
+
+
+A2 = (P(2.92, 0.70, 2.02, 300.0, -24.0), P(2.92, 3.20, 1.95, 252.0, -14.0))
+A3 = (P(2.92, 3.00, 2.00, 250.0, -16.0), P(2.92, 0.95, 1.92, 240.0, -12.0))
+A4 = (P(1.30, 2.75, 1.85, 205.0, -16.0), P(1.10, 1.95, 1.65, 200.0, -9.0))
+A5 = (P(2.92, 0.70, 1.95, 292.0, -22.0), P(2.92, 2.60, 1.85, 255.0, -18.0))
+A6 = (P(2.75, 3.30, 1.95, 245.0, -18.0), P(1.75, 2.85, 1.70, 262.0, -10.0))
+A7 = (P(2.25, 1.30, 1.80, 310.0, -8.0), P(2.25, 3.35, 1.76, 228.0, -8.0))
+A8 = (P(0.95, 0.75, 1.75, 82.0, -9.0), P(0.95, 2.60, 1.68, 72.0, -9.0))
+A10 = (P(0.80, 0.45, 2.15, 54.0, -27.0), P(1.10, 0.95, 2.05, 66.0, -26.0))
+A11 = (P(TCX, 3.35, 2.32, 180.0, -52.0), P(TCX, 3.20, 1.30, 180.0, -16.0))
+A12 = (P(2.88, 0.70, 1.45, 292.0, -22.0), P(2.88, 3.00, 1.38, 244.0, -22.0))
+A13 = (P(2.88, 0.22, 1.98, 330.0, -24.0), P(2.30, 1.05, 1.70, 318.0, -18.0))
 HOLDS_LONG = [(0.0, 3.0, A1), (3.3, 6.3, A2), (6.6, 9.6, A3), (9.9, 12.9, A4), (13.2, 16.2, A5), (16.5, 19.5, A6),
               (19.8, 23.1, A7), (23.4, 26.4, A8), (26.7, 29.1, A9), (29.4, 33.0, A10), (33.3, 36.3, A11),
               (36.6, 39.6, A12), (39.9, 43.7, A13), (44.0, 46.0, A14)]
@@ -620,6 +637,7 @@ def lights(mats4, vis):
 
 BLENDER = dict(
     exposure=-0.30,
+    persistent=False,
     look='AgX - Medium High Contrast',
     separate=['backdrop', 'backdrop_dusk', 'snow'],
     fill_lights=[1, 2, 3],
@@ -766,7 +784,7 @@ def stage_island(kit, t_drop, t_split, t_leaf, t_legs, t_pre=None):
         if t < t_split:
             return 1.0
         return 1 - eob((t - t_split) / 0.22, 0.6)
-    tl.ev(t_split + 0.22, 'clack1', 0.9, 'clack')
+    tl.ev(t_split + 0.22, 'clack1', 0.9, 'ratchet')
 
     def half(sign):
         def f(t):
@@ -794,7 +812,7 @@ def stage_island(kit, t_drop, t_split, t_leaf, t_legs, t_pre=None):
         if t < t_leaf + 0.10:
             return math.pi
         return math.pi * (1 - eob((t - t_leaf - 0.10) / 0.24, 0.5))
-    tl.ev(t_leaf + 0.34, 'clack2', 0.9, 'clack')
+    tl.ev(t_leaf + 0.34, 'clack2', 0.9, 'ratchet')
 
     def leaf_s(t):
         z = drop_off(t)
@@ -825,7 +843,7 @@ def stage_island(kit, t_drop, t_split, t_leaf, t_legs, t_pre=None):
         tl.custom(nm, f)
     legs('leg_s', 1, sF, TY0 + 0.07)
     legs('leg_n', -1, nF, TY1 - 0.07)
-    tl.ev(t_legs + 0.2, 'clack3', 0.9, 'clack')
+    tl.ev(t_legs + 0.2, 'clack3', 0.9, 'ratchet')
     return sF, nF
 
 
@@ -942,7 +960,7 @@ def timeline_short():
         slide(nm, t - 0.16, t, (-0.62, 0, 0), 0.8, 0.7)
     sP = slide('pantry', 1.70, 1.92, (0.9, 0, 0), 0.8, 0.8)
     slide('fridge', 1.82, 2.02, (0.9, 0, 0), 0.8, 0.9)
-    slide('grille', 6.86, 6.98, (0.25, 0, 0), 0.8, 0.5, 'clack')
+    slide('grille', 6.86, 6.98, (0.25, 0, 0), 0.8, 0.5, 'tick')
     slide_din = tl.anims['base_din']
     sF, nF = stage_island(kit, 2.00, 7.32, 7.62, 7.98)
     drop('worktop', 2.52, 2.68, 0.35, 0.02, 0.8, 'thud')
@@ -1095,8 +1113,8 @@ def timeline_long():
     cen = tl.cen
     rides = lambda base, t_on: (lambda t: (base(t)[0], t >= t_on))
     # ===== Zone 1 / A1 (0-3.0): plate ring, planks far to near
-    T_PL = [0.30 + 0.10 * k for k in range(8)]
-    band_t = [0.36 + 0.40 * k for k in range(6)]
+    T_PL = [0.24 + 0.093 * k for k in range(8)]
+    band_t = [0.36 + 0.42 * k for k in range(6)]
     edges = [-0.12, 0.6, 1.2, 1.8, 2.4, 3.0, D + 0.01]
     for k in range(6):
         drop(f'floor{k}', band_t[k] - 0.16, band_t[k], 0.30, 0.04, 0.35 + 0.05 * k, 'thud' if k % 2 == 0 else 'tick')
@@ -1115,15 +1133,15 @@ def timeline_long():
     sU = slide('uppers', 4.50, 4.66, (-0.40, 0, 0), 0.8, 0.9)
     for nm in ('up_bowls', 'dlift', 'dlift_arms'):
         tl.custom(nm, rides(sU, 4.50))
-    kit.flap('updoor0', (UX, Y_SINK, 0), 'z', math.radians(-100), rides(sU, 4.50), 4.82, 5.30)
-    kit.flap('updoor1', (UX, Y_DIN, 0), 'z', math.radians(100), rides(sU, 4.50), 4.90, 5.38)
+    kit.flap('updoor0', (UX, Y_SINK, 0), 'z', math.radians(-100), rides(sU, 4.50), [4.82, 14.70], [5.30, 15.55])
+    kit.flap('updoor1', (UX, Y_DIN, 0), 'z', math.radians(100), rides(sU, 4.50), [4.90, 14.80], [5.38, 15.65])
     sF, nF = stage_island(kit, 5.48, 27.38, 27.86, 28.60)
     # ===== A3 (6.6-9.6): plate drawer swallows the stack; pantry + fridge columns; fridge grille
     fD = kit.drawer(3.76, [6.62, 28.82], [7.58, 29.42], (0.45, 0, 0), base=slide_din, events='plate_dr')
     tl.custom('plate_dr', fD)
     sP = slide('pantry', 7.80, 8.04, (0.9, 0, 0), 0.8, 0.8)
     slide('fridge', 8.10, 8.34, (0.9, 0, 0), 0.8, 0.9)
-    slide('grille', 8.70, 8.86, (0.25, 0, 0), 0.8, 0.5, 'clack')
+    slide('grille', 8.70, 8.86, (0.25, 0, 0), 0.8, 0.5, 'tick')
     for i in range(8):
         px, py = PLACES[i][0], PLACES[i][1]
         tp = plank_t(py)
@@ -1143,9 +1161,9 @@ def timeline_long():
     PO, PB = 10.00, 12.50
     pull = kit.drawer(7.80, PO, PB, (0.52, 0, 0), base=sP, out=0.24, shut=0.22, events='pantry')
     tl.custom('pan_pull', pull)
-    camA4 = np.array([2.4, 1.4, 1.8])
+    camA4 = np.array([1.2, 2.3, 1.75])
     for k in range(6):
-        t0 = 10.30 + 0.30 * k
+        t0 = 10.22 + 0.26 * k
         piv = np.array([*cen[f'jar{k}'], 1.0])
 
         def fill(t, t0=t0, piv=piv):
