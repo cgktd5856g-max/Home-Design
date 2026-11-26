@@ -37,3 +37,10 @@ Blender 5.3 Cycles, 720x1280, 16 spp, adaptive 0.04, bounces 4,2,2, `--nobevel`:
 - Contact sheets made with ffmpeg's `fps=2` can show a mid-motion frame as "0.0 s". Make reviewer sheets with `select='not(mod(n,12))'` so tile 0 is frame 0.
 - Set `persistent=False` from the start of any final render longer than about 100 frames (67 bad frames here).
 - A Bash waiter can't outlive 2 h. Re-arm it, and after any container restart check `pgrep` and restart the render script.
+
+## Long cut (46.0 s, 1,150 frames)
+`out/kitchen_behind_wall_long.mp4` and `_long_sfx_only.mp4`, graded `--grade 1.35,0.03`. Rendered with no preview and no review gates: the owner asked to save credits, so `.render/kitchen_behind_wall/autopipe.sh` rendered, scanned, encoded and pushed it on its own. The render took about 13.3 h at about 42 s a frame. The scan found 0 bad frames.
+
+**Metrics:** brightness 153, saturation 0.25, warmth 38.2, camera 3.79 and length 46.0 are in range. **Off:** motion 5.7 (target 7.5+), clear changes 0.22 (target 0.39+), longest still 3.8 s (target 1.8 or less), first clear movement 3.4 s (target 0.4 or less).
+
+The long cut was never tuned on a preview the way the 15 s cut was. Its first shot builds slowly, with tiles every 0.11 s and base units at 1.2-2.0 s, and several stations hold close on a single mechanism. To bring it into range, apply the 15 s fixes: a faster first push-in and fold, shorter and closer holds in A1, A7 and A8, and more landings in the bed and over-bed beats. Preview at 216x384 and check `hh_metrics.py` before re-rendering.
