@@ -37,6 +37,10 @@ looks better.
   two defined different `clack` sounds. The shared code keeps: grade gamma above 1 brightens the mid-tones (below 1
   darkens); `clack` is the single wooden tile clack, `ratchet` the three-knock lock-out, `clink` plates and cups. Before
   adding a parameter or sound to a shared file, check that the name isn't already taken.
+- **Skipping the preview pass costs quality on long cuts** (26 Nov). Under the no-polish rule, two long cuts rendered
+  without a tuned preview (Three of Us, Not One Handle) and each missed 3 pacing targets, with 2.6-6 s of near-still
+  camera on plain white panels or closed doors. Keep the cheap low-res preview plus hh_metrics step even in lean mode:
+  it costs minutes, and a weak 44 s render costs 9 hours.
 - **Keep Claude out of the render loop** (25 Nov). Once a render starts, Claude should cost almost nothing. Put the
   whole tail in one detached shell script, `.render/<slug>/autopipe.sh`: restart Blender if it dies, scan and
   re-render bad frames, encode both versions, run hh_metrics, git push. Claude starts it, arms one background waiter
