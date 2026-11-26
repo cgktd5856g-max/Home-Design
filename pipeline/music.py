@@ -12,7 +12,9 @@ button), 'boing' (cartoon bounce) and 'hum' (a motor; the event's 'dur' sets its
 4.5 dB under it), 'pip' (baby-sized items: higher, softer tick), 'bwomp' (two falling
 notes), 'roll' (a soft castor roll), 'clink' (ceramic plates and cups), 'ratchet' (three quick wooden knocks), 'pluck' (a pitched note:
 event key 'note' = MIDI number), 'bell' (two-note doorbell), 'rumble' (rolling; event key 'len' = seconds ending at t)
-and 'clank' (metal).
+'clank' (metal), 'click' (a latch), 'creak' (a slow wooden slide; event key 'dur') and
+'pluck_step' (a rising plucked note; event key 'note' = step on a pentatonic scale).
+MUSIC may also hold "hush": [[t0, t1], ...], stretches where the drums drop out.
 """
 import os
 import sys
@@ -165,6 +167,27 @@ def thud(f0=70):
 def tick(f=1200):
     n = int(0.18 * SR); t = t_arr(n)
     return np.sin(2 * np.pi * f * t) * np.exp(-t / 0.035) + 0.4 * np.sin(2 * np.pi * f * 1.5 * t) * np.exp(-t / 0.02)
+
+
+def click():
+    """Crisp latch click: two short high transients."""
+    n = int(0.12 * SR); t = t_arr(n)
+    a = hp(rng.standard_normal(n), 2500, 2) * np.exp(-t / 0.0025)
+    b = np.zeros(n); i = int(0.018 * SR)
+    b[i:] = hp(rng.standard_normal(n - i), 3500, 2) * np.exp(-t[:n - i] / 0.0018) * 0.7
+    return (a + b + 0.5 * np.sin(2 * np.pi * 3100 * t) * np.exp(-t / 0.01)) * 0.9
+
+
+def creak(length=1.7):
+    """Slow wooden creak with a soft runner roll underneath (the bookcase section moving by hand)."""
+    n = int(length * SR); t = t_arr(n)
+    f = 190 + 60 * np.sin(2 * np.pi * 0.7 * t) + 25 * np.sin(2 * np.pi * 2.3 * t)
+    ph = np.cumsum(f) / SR
+    pulses = (np.sin(2 * np.pi * ph) > 0.92).astype(float)
+    body = bp(pulses * (0.6 + 0.4 * rng.random(n)), 300, 2400) * 0.9
+    roll = bp(rng.standard_normal(n), 80, 400) * 0.35
+    e = np.clip(t / 0.12, 0, 1) * np.clip((length - t) / 0.25, 0, 1)
+    return (body + roll) * e
 
 
 def chime():
@@ -419,6 +442,16 @@ def build(cfg, sfx_only=False):
         elif k == 'clank':
             add(sfx, thud(95), t, g * 0.6)
             add(sfx, tick(2300) + 0.6 * tick(3400), t, g * 0.7)
+        elif k == 'click':
+            add(sfx, click(), t, g)
+        elif k == 'creak':
+            add(sfx, creak(s.get('dur', 1.7)), t, g)
+        elif k == 'pluck_step':
+            add(sfx, pluck(s.get('note', 72), 0.4), t, g)
+            add(sfx, whoosh(0.12, up=True), t - 0.12, g * 0.25)
+    for h0, h1 in M.get('hush', []):
+        i0, i1 = int(h0 * SR), int(h1 * SR)
+        drums[i0:i1] *= np.linspace(1, 0, max(i1 - i0, 1)) ** 4
     if sfx_only:
         mix = 0.8 * reverb(sfx, 1.0, 0.12)
     else:
@@ -507,6 +540,14 @@ def load_cfg(workdir, bpm=None):
             sfx = dict(kind='rumble', gain=0.3 + 0.5 * a, len=e.get('len', 0.9))
         elif k == 'clank':
             sfx = dict(kind='clank', gain=0.3 + 0.5 * a)
+        elif k == 'click':
+            sfx = dict(kind='click', gain=0.45 + 0.4 * a)
+        elif k == 'creak':
+            sfx = dict(kind='creak', gain=0.35 + 0.3 * a, dur=e.get('dur', 1.7))
+        elif k == 'pluck_step':
+            scale = [0, 2, 4, 7, 9]
+            nt = int(e.get('note', 0))
+            sfx = dict(kind='pluck_step', gain=0.30 + 0.2 * a, note=74 + 12 * (nt // 5) + scale[nt % 5])
         else:
             sfx = dict(kind='tick', gain=0.26 + 0.25 * a, freq=980 + 140 * (i % 6))
         if 'f0' in e:                                    # per-event pitch override (e.g. wooden clacks)

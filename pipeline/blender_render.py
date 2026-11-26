@@ -544,7 +544,7 @@ def main():
     cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0
     sc.render.use_persistent_data = bool(BL.get('persistent', True))   # False avoids rare black-floor frames in long runs
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
-    sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5
+    sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = BL.get('shutter', 0.5)
     try:
         sc.render.motion_blur_position = 'START'
     except Exception:
