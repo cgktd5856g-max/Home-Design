@@ -903,7 +903,8 @@ def timeline():
         return tl
     if LONG:
         import long_cut as LC
-        return LC.timeline(tl, kit, sys.modules[__name__])
+        import types
+        return LC.timeline(tl, kit, types.SimpleNamespace(**globals()))
     return short_timeline(tl, kit)
 
 
