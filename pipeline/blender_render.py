@@ -12,7 +12,7 @@ usage: <python with bpy> blender_render.py <project.py> <outdir> [options]
   --adaptive X      adaptive-sampling noise threshold (default 0.02)   --bounces M,D,G   max, diffuse, glossy (default 6,3,3)
   --nobevel         skip the bevel shader (faster)
 The project's BLENDER dict tunes the look (exposure, look, sun, glass, bevel, separate, fill_lights, wood_scale,
-bake_rect, bake_px, shutter = motion-blur shutter in frames, default 0.5). Frames go to <outdir>/frames/f_0001.png ...; finished frames are skipped on a re-run.
+bake_rect, bake_px). Frames go to <outdir>/frames/f_0001.png ...; finished frames are skipped on a re-run.
 """
 import importlib.util
 import math
@@ -461,6 +461,13 @@ def main():
     cobj = bpy.data.objects.new('cam', cam); coll.objects.link(cobj); sc.camera = cobj
     cobj.rotation_mode = 'QUATERNION'
     key_transform(cobj, np.array([camera_matrix(P.camera(f / fps)) for f in range(nfr)]), np.ones(nfr, bool), nfr, insert_vis=False)
+    vfs = [float(P.camera(f / fps).get('vfov', 85.0)) for f in range(nfr)]
+    # Optional per-frame field of view: a project's camera(t) may return a different 'vfov' per frame (e.g. a wider lens
+    # for an overhead). Only then are lens keyframes added; a constant vfov renders exactly as before.
+    if max(vfs) - min(vfs) > 1e-6:
+        for f in range(nfr):
+            cam.angle_y = math.radians(vfs[f])
+            cam.keyframe_insert('lens', frame=f + 1)
 
     # lights (one Blender light per slot)
     fill = set(BL.get('fill_lights', []))
@@ -502,7 +509,7 @@ def main():
     world = bpy.data.worlds.new('world'); sc.world = world
     world.use_nodes = True
     bg = next(n for n in world.node_tree.nodes if n.type == 'BACKGROUND')
-    bg.inputs['Color'].default_value = (0.05, 0.05, 0.05, 1); bg.inputs['Strength'].default_value = 1.0
+    wc = BL.get('world', 0.05); bg.inputs['Color'].default_value = (wc, wc, wc, 1); bg.inputs['Strength'].default_value = 1.0
     sc.render.engine = 'CYCLES'
     cy = sc.cycles
     cy.device = 'CPU'
@@ -517,7 +524,7 @@ def main():
     cy.max_bounces = mb; cy.diffuse_bounces = db; cy.glossy_bounces = gb; cy.transmission_bounces = 4; cy.transparent_max_bounces = 8
     cy.sample_clamp_indirect = 6.0
     cy.caustics_reflective = False; cy.caustics_refractive = False; cy.blur_glossy = 1.0
-    sc.render.use_persistent_data = True
+    sc.render.use_persistent_data = bool(BL.get('persistent', True))   # False avoids rare black-floor frames in long runs
     sc.render.resolution_x, sc.render.resolution_y, sc.render.resolution_percentage = W, H, 100
     sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = BL.get('shutter', 0.5)
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_depth = '8'
@@ -561,7 +568,7 @@ def main():
         m4, vis = states[f]
         c = P.camera(f / fps)
         parts = [np.concatenate([m4[k].ravel(), [float(vis[k] > 0)]]) for k in rk.ORDER]
-        parts += [np.array([*c['pos'], c['yaw'], c['pitch']], float)] + [np.asarray(L, float).ravel() for L in lrecs[f]]
+        parts += [np.array([*c['pos'], c['yaw'], c['pitch'], c.get('vfov', 85.0)], float)] + [np.asarray(L, float).ravel() for L in lrecs[f]]
         sigs.append(np.round(np.concatenate(parts), 6))
     dup = [2 <= i < nfr - 1 and all(np.array_equal(sigs[i], sigs[g]) for g in (i - 2, i - 1, i + 1)) for i in range(nfr)]
     todo = [f for f in range(a, b + 1) if not os.path.exists(os.path.join(fdir, f'f_{f:04d}.png'))]

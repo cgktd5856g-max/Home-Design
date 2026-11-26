@@ -44,9 +44,47 @@ share `build()`.
 Storage moments: book wall, book stair, wardrobe, desk drawer, the sliding section, the bench chest, the den cubbies
 (7), plus the cart.
 
+## Deliverables (15 s cut)
+
+- `out/pull_one_book_15s.mp4`: 1080x1920, 25 fps, with the original 120 BPM cue.
+- `out/pull_one_book_15s_sfx_only.mp4`: the same picture with sound effects only, for TikTok and Instagram trending
+  sounds.
+- `out/pull_one_book_still.jpg`: the final wide at 14.85 s, with the lights on and the child in the lit den.
+
 ## Measurements
 
-(filled in below as the work finished)
+`research/hh_metrics.py` on the final 15 s cut, graded `--grade 1.35,0.03`:
+
+| Metric | Final | Hits' target |
+|---|---|---|
+| motion (median change per 0.2 s) | 11.4 | 7.5+ |
+| share of clear changes | 0.62 | 0.39+ |
+| longest still stretch | 0.0 s | 1.8 s or less |
+| camera movement | 7.63 | 1.8+ |
+| first clear movement | 0.2 s | 0.4 s or less |
+| brightness | 176 | 138-178 |
+| saturation | 0.24 | 0.17-0.38 |
+| warmth | 44.8 | 22-57 |
+
+All eight hit; length is a target for the long cut only.
+
+- **Preview (code renderer):** motion 8.4, clear changes 0.39, longest still 0.6 s, camera 4.02, first movement 0.4 s.
+  Brightness (211) and saturation (0.13) miss there only because of the code renderer's grade.
+- **Per-frame checks before encoding:**
+  - no frame has black patches (pixels under 12 over more than 2% of the frame);
+  - per-second graded brightness runs 154-194, so none is under 140.
+- **`qa.py`:** the format is correct. Sound sync is exact by construction. The offsets it lists after 12 s are the
+  detector merging close sounds (the lights cascade, the sit and the cushion), the known issue in HANDOFF.md.
+
+## Render time
+
+- **Blender:** 720x1280, 16 samples, adaptive 0.04, bounces 4,2,2, `--nobevel`, motion-blur shutter 0.3.
+  - About 26-35 s a frame with the machine to itself; about 58 s while the long-cut preview shared the CPU.
+  - About 4 hours in all, over three runs:
+    - the first run stalled when the idle container slept;
+    - the second died at frame 303 in a container restart;
+    - the last 72 frames were rendered with `persistent=False`.
+- **Encode:** about 2 minutes per version.
 
 ## Reviews
 
@@ -76,3 +114,27 @@ Storage moments: book wall, book stair, wardrobe, desk drawer, the sliding secti
   - **Motion blur on the toy flight.** The shutter is now 0.3 frames, set by a new `BLENDER['shutter']` key in
     `blender_render.py`.
   - **The clue book read as a box.** It is now 7.5 cm proud with a smaller tilt.
+
+## What I would improve
+
+- **The child figure:** it is a stand-in. Its hands only approximate contact with the section's edge, which is fine at
+  medium-wide but would not hold in a close-up.
+- **The toy flight:** it lasts about 1 s and is still fast to follow on one view. That is intended, for rewatches, but
+  a 0.2 s slow-down at the chest would read better.
+- **S2B:** the wardrobe pan starts with the open coral door filling the right edge for about 0.5 s.
+- **Reviews:** all three Gate 1 rounds and Gate 2 scored 6/10. The measured numbers all hit after the fixes.
+
+## Lessons for next time
+
+- Ending the turn while a render runs pauses the container: the first run froze at frame 7 for about an hour. Keep a
+  foreground until-loop or a background waiter alive the whole time.
+- Coplanar overlapping faces render as black L-lines in Cycles (a stair cubby floor and back flush with the side
+  panel). Inset inner parts by the panel thickness; the code renderer hides this.
+- Metal (`metal=1`) tracks and runners reflect the near-black world and read as black slots or silver debris. Use a
+  matte light grey for hardware in shadowed recesses.
+- `run.py preview` under `timeout 6000` died at record 3178 of 3414 on a 45 s cut. Allow about 2 s a record when a
+  render shares the CPU; the raw buffers survive, so finish with `pt <start> <end>`, `dn`, `music.py`, `mkvideo.py`.
+- Three review rounds stayed at 6/10 while every measured target hit. Spend the rounds on concrete framing (a stand-in
+  blocking the wow, a toy mess out of shot) and stop there.
+- Taking `pipeline/blender_render.py` from another branch silently dropped my `BLENDER['shutter']` key. Grep for your
+  own keys after any checkout of a shared pipeline file.

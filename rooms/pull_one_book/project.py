@@ -668,6 +668,7 @@ def lights(mats4, vis):
 BLENDER = dict(
     exposure=-0.48,
     shutter=0.3,
+    persistent=False,
     look='AgX - Medium High Contrast',
     translucent={'blind': 0.5},
     separate=['backdrop', 'backdrop_night'],
