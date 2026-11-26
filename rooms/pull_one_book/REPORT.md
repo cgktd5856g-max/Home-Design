@@ -138,3 +138,32 @@ All eight hit; length is a target for the long cut only.
   blocking the wow, a toy mess out of shot) and stop there.
 - Taking `pipeline/blender_render.py` from another branch silently dropped my `BLENDER['shutter']` key. Grep for your
   own keys after any checkout of a shared pipeline file.
+
+## Long cut (45.5 s)
+
+- `out/pull_one_book_long.mp4` and `out/pull_one_book_long_sfx_only.mp4`: 1,138 frames, the same settings, with
+  `persistent=False`. No frame has black patches.
+- The tail ran unattended through `.render/pull_one_book/autopipe.sh`: it restarted the render on death, checked
+  frames for black patches, encoded, measured and pushed.
+- **`hh_metrics`:**
+
+  | Metric | Long cut | Hits' target |
+  |---|---|---|
+  | motion | 7.7 | 7.5+ |
+  | share of clear changes | 0.30 | 0.39+ (miss) |
+  | longest still | 1.2 s | 1.8 s or less |
+  | camera movement | 5.22 | 1.8+ |
+  | first clear movement | 0.2 s | 0.4 s or less |
+  | brightness | 181 | 138-178 (miss, by 3) |
+  | saturation | 0.23 | 0.17-0.38 |
+  | warmth | 42.2 | 22-57 |
+  | length | 45.4 s | 34-46 s |
+
+  It misses two targets, against the aim of one.
+- **Changes from the plan:**
+  - The inside-den shot is now a lateral slide just outside the opening, because the inside view was cramped. The plan
+    allows this ("cut E and stretch D2").
+  - The pull station has its own camera, because the desk and chair stand where the 15 s camera is.
+  - The window shows a dimmed day view for "evening" instead of a night city.
+- Under the owner's credit limit, the long cut skipped the review-gate subagents. It was checked with probes and a
+  Blender look test instead.
