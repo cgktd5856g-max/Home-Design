@@ -10,7 +10,8 @@ ceiling in second 1 and later glides 2.06 m down onto the sofa on four 65 mm ste
 | `out/bed_on_the_ceiling_15s.mp4` | 15 s cut, 1080x1920, 25 fps, original music + sounds (YouTube Shorts) |
 | `out/bed_on_the_ceiling_15s_sfx_only.mp4` | same, sound effects only (TikTok / Instagram, add a trending sound) |
 | `out/bed_on_the_ceiling_still.jpg` | wide at 10.6 s: the bed down on the sofa, posts, rail, book tower |
-| long cut | not rendered yet (see Status) |
+| `out/bed_on_the_ceiling_long.mp4` | 49.5 s long cut, 1080x1920, 25 fps, original music + sounds |
+| `out/bed_on_the_ceiling_long_sfx_only.mp4` | same, sound effects only |
 
 ## What was built (`project.py`)
 
@@ -52,6 +53,7 @@ pedestal, bed drawer, fold-out nightstand, mirror front). The sofa lids, ottoman
 | target | ≥7.5 | ≥0.39 | ≤1.8 | ≥1.8 | ≤0.4 | 138–178 | 0.17–0.38 | 22–57 |
 | preview (round 3) | 12.1 | 0.59 | 0.2 | 7.95 | 0.2 | 173 | 0.22 | 33.3 |
 | **final 15 s** | **12.7** | **0.59** | **0.4** | **10.88** | **0.2** | **150** | **0.25** | **36.3** |
+| **final long (49.4 s)** | **9.9** | **0.49** | **0.8** | **6.59** | **0.2** | **156** | **0.21** | **29.1** |
 
 All eight pass (length is the long-cut test). Grade: `--grade 1.22,0.025,1.18` (the default 1.35,0.03 gave brightness
 138, on the edge of the band). `qa.py`: 1080x1920 h264 25 fps, AAC, 15.000 s. Sound sync: almost every landing
@@ -102,6 +104,11 @@ flag, frame 81, is the swing across the white wall).
 
 ## Lessons for next time
 
+- Station yaw interpolates linearly, not the short way: a station whose start and end yaw differ by ~180° swings through blank
+  wall. Split it into two holds.
+- A wardrobe close-up with dark garment gaps trips the black-patch scan and the 140-per-second check; light the interior or
+  use paler garments if those checks are hard rules.
+
 - Check the plan's dimensions for drawer clearance before modelling: the east-end pedestal drawer would have opened into
   the wardrobe, which cost a layout change after two review rounds.
 - `hh_metrics` "first movement" needs a mean change over 10 on the 45x80 grid at 0.2–0.4 s: planks of a similar
@@ -115,9 +122,25 @@ flag, frame 81, is the swing across the white wall).
 - Background waiters stop at 2 h; re-arm them, and check the render process after any container restart.
 - The default grade 1.35,0.03 put this neutral-white room at brightness 138 (edge of band); a gamma of 1.18 fixed it.
 
+## Long cut (49.5 s)
+
+- 17 stations: build (planks, rise and dock, posts, towers, books), sofa lids with games and throws, ottoman, desk scene with
+  the seated stand-in, pillows hop into the empty cubby, the stand-in presses the post button, **the bed descends 27.6-30.0 s
+  (61 %)**, bed drawer, the stand-in sits, nightstand, wardrobe (garments, tee drawer, stacks, mirror and oak fronts), ironing
+  board, shoe pull-out, the bed goes back up 44.7-47.0, lights on, the stand-in walks off, drift into the frame-1 pose.
+- Metrics: all pass except length (49.4 s vs. the 34-46 target; the brief allows 40-50 s). Same grade as the 15 s cut.
+- Review gate 1: 6.5 → 6 → 6 over three rounds; fixed each round (tower shots, the button press in view, the stand-in clear
+  of the moving bed and in frame for both rides, sit and nightstand staging, ironing board with the stand-in, sofa-storage
+  view, no camera pass through the post). Gate 2 (Blender stills): 7/10; fixed the mirror, the ottoman items and the hand
+  through the post. Not adopted: the final frame cannot equal frame 1 (the bed is docked by then).
+- Render: 1,238 frames, Cycles as the 15 s cut, `persistent` off (black-patch fix), about 35 s per frame (~12 h, paused once
+  at the owner's request and resumed). Run unattended by `.render/bed_on_the_ceiling/autopipe.sh`.
+- Frame scan: 58 frames have >2 % pixels under 12 both before and after a fresh re-render; they are the dark gaps between
+  hanging garments (38.5-40.6 s, 43 s) and one frame of the chair base, not black patches. Seconds 38-43 (wardrobe
+  close-ups) average 104-133 brightness, the rest is 140+; the whole clip averages 156.
+- `qa.py`: sync mostly within ±60 ms; clustered quiet sounds read up to ±260 ms (onset-detector misses, as in the 15 s cut).
+
 ## Status
 
 - 15 s cut: done and pushed.
-- Long cut (49.5 s, `ROOM_CUT=long`): timeline and 15 stations written and probed (books, sofa lids, ottoman, desk scene,
-  pillows hopping into the cubby, the ride, bed drawer, nightstand, wardrobe, ironing board, shoe pull-out, the bed going
-  back up, lights). Next: low-res preview + metrics, both review gates, then about 10–12 h of Blender rendering.
+- Long cut: done and pushed.
