@@ -1,6 +1,6 @@
 video 1080x1920 h264 25/1 fps, yuv420p
 audio aac 44100 Hz 2 ch
-duration 41.480000 s
+duration 44.000000 s
 wrote qa_sequence.jpg and qa_events.jpg in .render/two_kids_9m2/lwork
 landing        time   nearest sound   offset
 tape           0.24    0.314      +74 ms
